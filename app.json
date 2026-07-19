@@ -3,6 +3,7 @@
     "name": "PaisaPilot",
     "slug": "PaisaPilot",
     "version": "1.0.0",
+    "scheme": "paisapilot",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -21,10 +22,22 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.shahid310.PaisaPilot"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "1eb90e68-fe72-474c-ab2f-f08d1ffbd592"
+      }
     }
   }
 }
