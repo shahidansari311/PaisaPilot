@@ -2,9 +2,10 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useEffect, useState } from 'react';
-import { TrendingUp, TrendingDown, Repeat, ChevronRight, Plus, Minus, Moon, Sun, Home } from 'lucide-react-native';
+import { TrendingUp, TrendingDown, Repeat, ChevronRight, Plus, Minus, Moon, Sun, Home, Cloud } from 'lucide-react-native';
 import { Transaction } from '../../types/database';
 import { router, useFocusEffect } from 'expo-router';
+import { useSharedRoomStore } from '../../store/useSharedRoomStore';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -32,6 +33,9 @@ export default function Dashboard() {
   const [totalBorrowed, setTotalBorrowed] = useState(0);
   const [totalLent, setTotalLent] = useState(0);
   const [roommateNet, setRoommateNet] = useState(0);
+  const { rooms, loadRooms, loaded: sharedLoaded } = useSharedRoomStore();
+
+  useEffect(() => { if (!sharedLoaded) loadRooms(); }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -246,6 +250,21 @@ export default function Dashboard() {
           </View>
           <ChevronRight size={20} color={muted} />
         </TouchableOpacity>
+
+        {/* SHARED ROOMS (CLOUD) */}
+        {rooms.length > 0 && (
+          <TouchableOpacity onPress={() => router.navigate('/(tabs)/split-groups')} activeOpacity={0.8}
+            style={{ marginHorizontal: 20, marginBottom: 32, backgroundColor: card, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: border, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <View style={{ backgroundColor: '#3B82F6' + '20', width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' }}>
+              <Cloud size={20} color="#3B82F6" strokeWidth={2.5} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 15, fontWeight: '800', color: ink, marginBottom: 6 }}>Shared Rooms ☁️</Text>
+              <Text style={{ fontSize: 13, fontWeight: '700', color: '#3B82F6' }}>{rooms.length} active room{rooms.length > 1 ? 's' : ''} • Live synced</Text>
+            </View>
+            <ChevronRight size={20} color={muted} />
+          </TouchableOpacity>
+        )}
 
         {/* RECENT */}
         <View style={{ marginHorizontal: 20 }}>

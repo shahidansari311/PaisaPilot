@@ -2,16 +2,20 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-nativ
 import { CustomAlert as Alert } from '../../utils/alert';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { router, useFocusEffect } from 'expo-router';
-import { Users, Plus, ChevronRight, X, Home, ArrowUpRight, ArrowDownLeft } from 'lucide-react-native';
+import { Users, Plus, ChevronRight, X, Home, ArrowUpRight, ArrowDownLeft, Cloud } from 'lucide-react-native';
 import { SplitGroup, RoommateLedger } from '../../types/database';
+import { useSharedRoomStore } from '../../store/useSharedRoomStore';
 
 export default function SplitGroups() {
   const { isDark, accentColor } = useThemeStore();
   const db = useSQLiteContext();
   const [groups, setGroups] = useState<SplitGroup[]>([]);
   const [ledgers, setLedgers] = useState<(RoommateLedger & { net: number })[]>([]);
+  const { rooms, loadRooms, loaded: sharedLoaded } = useSharedRoomStore();
+
+  useEffect(() => { if (!sharedLoaded) loadRooms(); }, []);
 
   // Group form
   const [isAddingGroup, setIsAddingGroup] = useState(false);
@@ -131,6 +135,57 @@ export default function SplitGroups() {
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
+
+        {/* ============ SHARED ROOMS (CLOUD) SECTION ============ */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Cloud size={18} color={accentColor} />
+            <Text style={{ fontSize: 16, fontWeight: '900', color: ink }}>Shared Rooms</Text>
+            <View style={{ backgroundColor: accentColor + '20', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 }}>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: accentColor }}>LIVE</Text>
+            </View>
+          </View>
+          <TouchableOpacity onPress={() => router.push('/join-shared-room' as any)} activeOpacity={0.7}
+            style={{ width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: accentColor }}>
+            <Plus size={16} color="#fff" strokeWidth={2.5} />
+          </TouchableOpacity>
+        </View>
+
+        {rooms.length === 0 ? (
+          <TouchableOpacity onPress={() => router.push('/join-shared-room' as any)} activeOpacity={0.8}
+            style={{ backgroundColor: card, borderRadius: 16, padding: 28, alignItems: 'center', borderWidth: 1, borderColor: border, borderStyle: 'dashed', marginBottom: 28 }}>
+            <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: raised, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+              <Cloud size={24} color={muted} />
+            </View>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 4 }}>No shared rooms</Text>
+            <Text style={{ fontSize: 12, color: muted, textAlign: 'center', lineHeight: 18 }}>
+              Create or join a room to sync expenses with your roommate in real-time.
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={{ marginBottom: 28 }}>
+            {rooms.map(room => (
+              <TouchableOpacity
+                key={room.roomCode}
+                onPress={() => router.push({ pathname: '/shared-room', params: { code: room.roomCode } } as any)}
+                activeOpacity={0.75}
+                style={{ backgroundColor: card, borderRadius: 16, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: border, flexDirection: 'row', alignItems: 'center', gap: 14 }}
+              >
+                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: accentColor + '15', alignItems: 'center', justifyContent: 'center' }}>
+                  <Cloud size={20} color={accentColor} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 15, fontWeight: '700', color: ink }}>{room.roomName}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                    <Text style={{ fontSize: 11, fontWeight: '700', color: accentColor, backgroundColor: accentColor + '12', paddingHorizontal: 6, paddingVertical: 1, borderRadius: 6 }}>{room.roomCode}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: '600', color: muted }}>as {room.myName}</Text>
+                  </View>
+                </View>
+                <ChevronRight size={18} color={muted} />
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         {/* ============ ROOMMATE LEDGERS SECTION ============ */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>

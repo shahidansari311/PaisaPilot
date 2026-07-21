@@ -128,3 +128,27 @@ export interface RoommateEntry {
   isPaid: number; // 0 = pending, 1 = settled
   createdAt: string;
 }
+
+// ─── Shared Room (Cloud-synced) ───
+
+export interface SharedRoomMeta {
+  createdAt: string;
+  createdBy: string;
+  roomName: string;
+}
+
+export interface SharedRoomMember {
+  name: string;
+  joinedAt: string;
+}
+
+export interface SharedRoomEntry {
+  id: string;
+  paidByName: string;
+  paidByMemberId: string;
+  amount: number;
+  description: string;
+  date: string;
+  isPaid: boolean;
+  createdAt: string;
+}
