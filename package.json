@@ -14,7 +14,6 @@
     "@shopify/flash-list": "2.0.2",
     "@types/papaparse": "^5.5.2",
     "expo": "~54.0.35",
-    "expo-clipboard": "~8.0.8",
     "expo-constants": "~18.0.13",
     "expo-document-picker": "~14.0.8",
     "expo-file-system": "~19.0.23",
