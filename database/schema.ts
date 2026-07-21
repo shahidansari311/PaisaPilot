@@ -108,12 +108,31 @@ export async function initializeDatabase(db: SQLiteDatabase) {
         FOREIGN KEY (participantId) REFERENCES split_participants (id) ON DELETE CASCADE
       );
 
+      CREATE TABLE IF NOT EXISTS roommate_ledgers (
+        id TEXT PRIMARY KEY NOT NULL,
+        name TEXT NOT NULL,
+        createdAt TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS roommate_entries (
+        id TEXT PRIMARY KEY NOT NULL,
+        ledgerId TEXT NOT NULL,
+        paidBy TEXT NOT NULL,
+        amount REAL NOT NULL,
+        description TEXT NOT NULL,
+        date TEXT NOT NULL,
+        isPaid INTEGER NOT NULL DEFAULT 0,
+        createdAt TEXT NOT NULL,
+        FOREIGN KEY (ledgerId) REFERENCES roommate_ledgers (id) ON DELETE CASCADE
+      );
+
       CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
       CREATE INDEX IF NOT EXISTS idx_transactions_type ON transactions(type);
       CREATE INDEX IF NOT EXISTS idx_transactions_month ON transactions(strftime('%Y-%m', date));
       CREATE INDEX IF NOT EXISTS idx_budgets_month ON budgets(month);
       CREATE INDEX IF NOT EXISTS idx_borrow_status ON borrow_records(status);
       CREATE INDEX IF NOT EXISTS idx_lend_status ON lend_records(status);
+      CREATE INDEX IF NOT EXISTS idx_roommate_entries_ledger ON roommate_entries(ledgerId);
     `);
 
     // Migrations (safe to run on existing installs)

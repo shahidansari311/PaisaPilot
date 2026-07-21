@@ -111,3 +111,20 @@ export interface SplitShare {
   participantId: string;
   owedAmount: number;
 }
+
+export interface RoommateLedger {
+  id: string;
+  name: string;
+  createdAt: string;
+}
+
+export interface RoommateEntry {
+  id: string;
+  ledgerId: string;
+  paidBy: 'me' | 'roommate';
+  amount: number;
+  description: string;
+  date: string;
+  isPaid: number; // 0 = pending, 1 = settled
+  createdAt: string;
+}
