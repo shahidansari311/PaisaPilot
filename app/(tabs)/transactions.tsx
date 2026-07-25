@@ -63,16 +63,19 @@ export default function Transactions() {
   };
 
   // Modern Student Theme Tokens
-  const bg = isDark ? '#0F172A' : '#F8FAFC';
-  const card = isDark ? '#1E293B' : '#FFFFFF';
-  const raised = isDark ? '#334155' : '#F1F5F9';
-  const border = isDark ? '#334155' : '#E2E8F0';
-  const ink = isDark ? '#F8FAFC' : '#0F172A';
-  const muted = isDark ? '#94A3B8' : '#64748B';
-  const primary = '#8B5CF6';
-  const success = '#10B981';
-  const danger = '#F43F5E';
-
+  const bg = isDark ? '#0D1B16' : '#F7F6F1';
+  const card = isDark ? '#173229' : '#FFFFFF';
+  const raised = isDark ? '#254A3D' : '#F7F6F1';
+  const border = isDark ? '#254A3D' : '#E7E4DD';
+  const ink = isDark ? '#F5F5F2' : '#173229';
+  const muted = isDark ? '#6D9773' : '#60716A';
+  const primary = isDark ? '#6D9773' : '#0C3B2E';
+  const secondary = isDark ? '#0C3B2E' : '#6D9773';
+  const accent = '#BB8A52';
+  const highlight = '#FFBA00';
+  const success = '#3A8F5A';
+  const danger = '#C44D4D';
+  const warning = '#D89B00';
   const renderItem = ({ item }: { item: TxWithCategory }) => {
     const isExp = item.type === 'expense';
     const amountColor = isExp ? danger : success;
@@ -103,27 +106,27 @@ export default function Transactions() {
           backgroundColor: catColor + '20', alignItems: 'center', justifyContent: 'center',
           borderWidth: 1, borderColor: catColor + '40'
         }}>
-          {IconComp ? <IconComp size={22} color={catColor} strokeWidth={2.5} /> : <Text style={{ fontSize: 20, fontWeight: '900', color: catColor }}>{initial}</Text>}
+          {IconComp ? <IconComp size={22} color={catColor} strokeWidth={2.5} /> : <Text style={{ fontSize: 20, fontWeight: '900', color: catColor , fontFamily: 'CormorantGaramond_700Bold'}}>{initial}</Text>}
         </View>
         
-        <View style={{ flex: 1, marginRight: 10 }}>
-          <Text style={{ fontSize: 16, fontWeight: '800', color: ink, marginBottom: 4 }} numberOfLines={1}>
+        <View style={{ flex: 1, marginRight: 10 , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 16, fontWeight: '800', color: ink, marginBottom: 4 , fontFamily: 'CormorantGaramond_700Bold'}} numberOfLines={1}>
             {item.note || 'Transaction'}
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 , fontFamily: 'DMSans_500Medium'}}>
             {item.categoryName && (
-              <View style={{ backgroundColor: raised, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 }}>
-                <Text style={{ fontSize: 10, fontWeight: '700', color: muted, textTransform: 'uppercase' }}>{item.categoryName}</Text>
+              <View style={{ backgroundColor: raised, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 , fontFamily: 'DMSans_500Medium'}}>
+                <Text style={{ fontSize: 10, fontWeight: '700', color: muted, textTransform: 'uppercase' , fontFamily: 'DMSans_700Bold'}}>{item.categoryName}</Text>
               </View>
             )}
-            <Text style={{ fontSize: 12, fontWeight: '600', color: muted }}>
+            <Text style={{ fontSize: 12, fontWeight: '600', color: muted , fontFamily: 'DMSans_500Medium'}}>
               {new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
             </Text>
           </View>
         </View>
         
-        <View style={{ alignItems: 'flex-end' }}>
-          <Text style={{ fontSize: 17, fontWeight: '900', color: amountColor, fontVariant: ['tabular-nums'] }}>
+        <View style={{ alignItems: 'flex-end' , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 17, fontWeight: '900', color: amountColor, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
             {isExp ? '−' : '+'}₹{item.amount.toLocaleString('en-IN')}
           </Text>
         </View>
@@ -132,17 +135,17 @@ export default function Transactions() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg }}>
+    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
       {/* Header */}
-      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: border, backgroundColor: bg, zIndex: 10 }}>
-        <Text style={{ fontSize: 32, fontWeight: '900', color: ink, letterSpacing: -1 }}>History 📜</Text>
-        <Text style={{ fontSize: 14, fontWeight: '600', color: muted, marginTop: 4 }}>
+      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: border, backgroundColor: bg, zIndex: 10 , fontFamily: 'DMSans_500Medium'}}>
+        <Text style={{ fontSize: 32, fontWeight: '900', color: ink, letterSpacing: -1 , fontFamily: 'CormorantGaramond_700Bold'}}>History 📜</Text>
+        <Text style={{ fontSize: 14, fontWeight: '600', color: muted, marginTop: 4 , fontFamily: 'DMSans_500Medium'}}>
           {transactions.length} total move{transactions.length !== 1 ? 's' : ''} • Long press to edit/delete
         </Text>
       </View>
 
       {/* List Card */}
-      <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
+      <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 , fontFamily: 'DMSans_500Medium'}}>
         <FlashList
           data={transactions}
           renderItem={renderItem}
@@ -151,7 +154,7 @@ export default function Transactions() {
           estimatedItemSize={90}
           contentContainerStyle={{ paddingBottom: 120, paddingTop: 10 }}
           ListEmptyComponent={
-            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 100, paddingHorizontal: 40 }}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 100, paddingHorizontal: 40 , fontFamily: 'DMSans_500Medium'}}>
               <View style={{
                 width: 88, height: 88, borderRadius: 44, marginBottom: 24,
                 backgroundColor: isDark ? '#1E293B' : '#F1F5F9',
@@ -160,8 +163,8 @@ export default function Transactions() {
               }}>
                 <ReceiptText size={40} color={muted} strokeWidth={1.5} />
               </View>
-              <Text style={{ fontSize: 20, fontWeight: '800', color: ink, marginBottom: 8 }}>Ghost town 👻</Text>
-              <Text style={{ fontSize: 15, color: muted, textAlign: 'center', lineHeight: 22, fontWeight: '500' }}>
+              <Text style={{ fontSize: 20, fontWeight: '800', color: ink, marginBottom: 8 , fontFamily: 'CormorantGaramond_700Bold'}}>Ghost town 👻</Text>
+              <Text style={{ fontSize: 15, color: muted, textAlign: 'center', lineHeight: 22, fontWeight: '500' , fontFamily: 'DMSans_500Medium'}}>
                 Every rupee you spend or earn will show up here. Add one now!
               </Text>
             </View>

@@ -1,14 +1,22 @@
 import { Tabs } from 'expo-router';
+import { View } from 'react-native';
 import { Home, List, Repeat, Menu, Users } from 'lucide-react-native';
 import { useThemeStore } from '../../store/useThemeStore';
 
 export default function TabLayout() {
   const { isDark } = useThemeStore();
 
-  const activeColor = '#8B5CF6'; // Primary Purple
-  const inactiveColor = isDark ? '#64748B' : '#94A3B8';
-  const bg = isDark ? '#1E293B' : '#FFFFFF';
-  const border = isDark ? '#334155' : '#E2E8F0';
+  const activeColor = isDark ? '#BB8A52' : '#0C3B2E'; // Gold in dark mode, Green in light
+  const inactiveColor = isDark ? '#6D9773' : '#60716A';
+  const bg = isDark ? '#173229' : '#FFFFFF';
+  const indicatorColor = '#FFBA00';
+
+  const renderIcon = (IconComponent: any, color: string, focused: boolean) => (
+    <View style={{ alignItems: 'center', justifyContent: 'center', height: 30 }}>
+      <IconComponent size={24} color={color} strokeWidth={2.5} />
+      {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: indicatorColor, position: 'absolute', bottom: -8 }} />}
+    </View>
+  );
 
   return (
     <Tabs
@@ -17,28 +25,29 @@ export default function TabLayout() {
         tabBarActiveTintColor: activeColor,
         tabBarInactiveTintColor: inactiveColor,
         tabBarStyle: {
+          position: 'absolute',
+          bottom: 24,
+          left: 20,
+          right: 20,
           backgroundColor: bg,
-          borderTopColor: border,
-          borderTopWidth: 1,
-          elevation: 20,
+          borderRadius: 24,
+          borderTopWidth: 0,
+          elevation: 10,
           shadowOpacity: 0.1,
-          shadowRadius: 20,
-          height: 84,
-          paddingBottom: 24,
-          paddingTop: 12,
+          shadowRadius: 15,
+          shadowOffset: { width: 0, height: 10 },
+          height: 72,
+          paddingBottom: 0,
+          paddingTop: 0,
         },
-        tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '800',
-          marginTop: 4,
-        },
+        tabBarShowLabel: false, // Minimalist style usually removes labels
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: ({ color }) => <Home size={24} color={color} strokeWidth={2.5} /> }} />
-      <Tabs.Screen name="transactions" options={{ title: 'History', tabBarIcon: ({ color }) => <List size={24} color={color} strokeWidth={2.5} /> }} />
-      <Tabs.Screen name="borrow-lend" options={{ title: 'Debt', tabBarIcon: ({ color }) => <Repeat size={24} color={color} strokeWidth={2.5} /> }} />
-      <Tabs.Screen name="split-groups" options={{ title: 'Split', tabBarIcon: ({ color }) => <Users size={24} color={color} strokeWidth={2.5} /> }} />
-      <Tabs.Screen name="menu" options={{ title: 'Menu', tabBarIcon: ({ color }) => <Menu size={24} color={color} strokeWidth={2.5} /> }} />
+      <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: ({ color, focused }) => renderIcon(Home, color, focused) }} />
+      <Tabs.Screen name="transactions" options={{ title: 'History', tabBarIcon: ({ color, focused }) => renderIcon(List, color, focused) }} />
+      <Tabs.Screen name="borrow-lend" options={{ title: 'Debt', tabBarIcon: ({ color, focused }) => renderIcon(Repeat, color, focused) }} />
+      <Tabs.Screen name="split-groups" options={{ title: 'Split', tabBarIcon: ({ color, focused }) => renderIcon(Users, color, focused) }} />
+      <Tabs.Screen name="menu" options={{ title: 'Menu', tabBarIcon: ({ color, focused }) => renderIcon(Menu, color, focused) }} />
       
       {/* Hidden Tabs - Accessed via Menu */}
       <Tabs.Screen name="settings" options={{ href: null }} />

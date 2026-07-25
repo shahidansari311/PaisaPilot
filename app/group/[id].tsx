@@ -206,93 +206,93 @@ export default function GroupDetails() {
   const ink   = isDark ? '#E6EDF3' : '#1A1A2E';
   const muted = '#6E7681';
 
-  if (!group) return <View style={{ flex: 1, backgroundColor: bg }} />;
+  if (!group) return <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}} />;
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
+    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' , fontFamily: 'DMSans_500Medium'}}>
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 , fontFamily: 'DMSans_500Medium'}}>
             <ArrowLeft size={22} color={ink} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 18, fontWeight: '800', color: ink }}>{group.name}</Text>
+          <Text style={{ fontSize: 18, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>{group.name}</Text>
         </View>
-        <TouchableOpacity onPress={handleExportPDF} activeOpacity={0.7} style={{ padding: 8, backgroundColor: accentColor + '15', borderRadius: 20 }}>
+        <TouchableOpacity onPress={handleExportPDF} activeOpacity={0.7} style={{ padding: 8, backgroundColor: accentColor + '15', borderRadius: 20 , fontFamily: 'DMSans_500Medium'}}>
           <Share size={18} color={accentColor} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
         
         {/* Settlements Summary */}
         {settlements.length > 0 && (
-          <View style={{ backgroundColor: accentColor + '10', borderRadius: 16, padding: 20, borderWidth: 1, borderColor: accentColor + '40', marginBottom: 24 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <View style={{ backgroundColor: accentColor + '10', borderRadius: 24, padding: 20, borderWidth: 1, borderColor: accentColor + '40', marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 , fontFamily: 'DMSans_500Medium'}}>
               <Users size={18} color={accentColor} />
-              <Text style={{ fontSize: 13, fontWeight: '800', color: accentColor, textTransform: 'uppercase', letterSpacing: 1 }}>Who owes who?</Text>
+              <Text style={{ fontSize: 13, fontWeight: '800', color: accentColor, textTransform: 'uppercase', letterSpacing: 1 , fontFamily: 'CormorantGaramond_700Bold'}}>Who owes who?</Text>
             </View>
             {settlements.map((s, i) => (
-              <View key={i} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: i < settlements.length -1 ? 1 : 0, borderBottomColor: accentColor + '20' }}>
-                <Text style={{ fontSize: 15, fontWeight: '600', color: ink }}>{s.from} <Text style={{ color: muted, fontWeight: '400' }}>owes</Text> {s.to}</Text>
-                <Text style={{ fontSize: 15, fontWeight: '800', color: '#F43F5E' }}>₹{s.amount.toFixed(2)}</Text>
+              <View key={i} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: i < settlements.length -1 ? 1 : 0, borderBottomColor: accentColor + '20' , fontFamily: 'DMSans_500Medium'}}>
+                <Text style={{ fontSize: 15, fontWeight: '600', color: ink , fontFamily: 'DMSans_500Medium'}}>{s.from} <Text style={{ color: muted, fontWeight: '400' , fontFamily: 'DMSans_400Regular'}}>owes</Text> {s.to}</Text>
+                <Text style={{ fontSize: 15, fontWeight: '800', color: '#F43F5E' , fontFamily: 'CormorantGaramond_700Bold'}}>₹{s.amount.toFixed(2)}</Text>
               </View>
             ))}
           </View>
         )}
 
         {/* Participants */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <Text style={{ fontSize: 10, fontWeight: '600', color: muted, letterSpacing: 1.5, textTransform: 'uppercase' }}>Participants</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 10, fontWeight: '600', color: muted, letterSpacing: 1.5, textTransform: 'uppercase' , fontFamily: 'DMSans_500Medium'}}>Participants</Text>
           <TouchableOpacity onPress={() => setIsAddingUser(!isAddingUser)} activeOpacity={0.7}>
             <UserPlus size={20} color={accentColor} />
           </TouchableOpacity>
         </View>
 
         {isAddingUser && (
-          <View style={{ flexDirection: 'row', gap: 10, marginBottom: 14 }}>
+          <View style={{ flexDirection: 'row', gap: 10, marginBottom: 14 , fontFamily: 'DMSans_500Medium'}}>
             <TextInput
-              style={{ flex: 1, backgroundColor: card, borderRadius: 12, padding: 12, color: ink, fontSize: 14, borderWidth: 1, borderColor: border }}
+              style={{ flex: 1, backgroundColor: card, borderRadius: 18, padding: 12, color: ink, fontSize: 14, borderWidth: 1, borderColor: border , fontFamily: 'DMSans_500Medium'}}
               placeholder="Name (e.g. Rahul)"
               placeholderTextColor={muted}
               value={newUserName}
               onChangeText={setNewUserName}
             />
             <TouchableOpacity onPress={addParticipant} activeOpacity={0.8}
-              style={{ paddingHorizontal: 16, justifyContent: 'center', borderRadius: 12, backgroundColor: accentColor }}>
-              <Text style={{ color: '#fff', fontWeight: '700' }}>{editingUserId ? 'Save' : 'Add'}</Text>
+              style={{ paddingHorizontal: 16, justifyContent: 'center', borderRadius: 18, backgroundColor: accentColor , fontFamily: 'DMSans_500Medium'}}>
+              <Text style={{ color: '#fff', fontWeight: '700' , fontFamily: 'DMSans_700Bold'}}>{editingUserId ? 'Save' : 'Add'}</Text>
             </TouchableOpacity>
           </View>
         )}
 
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 28 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 28 , fontFamily: 'DMSans_500Medium'}}>
           {participants.length === 0 ? (
-            <Text style={{ color: muted, fontStyle: 'italic', fontSize: 13 }}>No participants added yet.</Text>
+            <Text style={{ color: muted, fontStyle: 'italic', fontSize: 13 , fontFamily: 'DMSans_500Medium'}}>No participants added yet.</Text>
           ) : (
             participants.map(p => (
               <TouchableOpacity key={p.id} onLongPress={() => handleParticipantAction(p)} delayLongPress={300} activeOpacity={0.7}
-                style={{ backgroundColor: accentColor + '18', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: accentColor + '40' }}>
-                <Text style={{ fontWeight: '600', color: ink, fontSize: 13 }}>{p.name}</Text>
+                style={{ backgroundColor: accentColor + '18', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: accentColor + '40' , fontFamily: 'DMSans_500Medium'}}>
+                <Text style={{ fontWeight: '600', color: ink, fontSize: 13 , fontFamily: 'DMSans_500Medium'}}>{p.name}</Text>
               </TouchableOpacity>
             ))
           )}
         </View>
 
         {/* Expenses */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <Text style={{ fontSize: 10, fontWeight: '600', color: muted, letterSpacing: 1.5, textTransform: 'uppercase' }}>Expenses</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 10, fontWeight: '600', color: muted, letterSpacing: 1.5, textTransform: 'uppercase' , fontFamily: 'DMSans_500Medium'}}>Expenses</Text>
           <TouchableOpacity onPress={() => { setEditingExpenseId(null); setExpAmount(''); setExpDesc(''); setExpPayerId(''); setIncludedMembers(participants.map(p => p.id)); setShowExpenseModal(true); }} activeOpacity={0.7}>
             <Receipt size={20} color={accentColor} />
           </TouchableOpacity>
         </View>
 
-        <View style={{ backgroundColor: card, borderRadius: 16, borderWidth: 1, borderColor: border, overflow: 'hidden' }}>
+        <View style={{ backgroundColor: card, borderRadius: 24, borderWidth: 1, borderColor: border, overflow: 'hidden' , fontFamily: 'DMSans_500Medium'}}>
           {expenses.length === 0 ? (
-            <View style={{ padding: 40, alignItems: 'center' }}>
-              <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: raised, alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+            <View style={{ padding: 40, alignItems: 'center' , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: raised, alignItems: 'center', justifyContent: 'center', marginBottom: 14 , fontFamily: 'DMSans_500Medium'}}>
                 <Receipt size={26} color={muted} />
               </View>
-              <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 6 }}>No expenses yet</Text>
-              <Text style={{ color: muted, textAlign: 'center', fontSize: 13, lineHeight: 20 }}>
+              <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 6 , fontFamily: 'DMSans_700Bold'}}>No expenses yet</Text>
+              <Text style={{ color: muted, textAlign: 'center', fontSize: 13, lineHeight: 20 , fontFamily: 'DMSans_500Medium'}}>
                 Tap the receipt icon to add an expense.
               </Text>
             </View>
@@ -301,24 +301,24 @@ export default function GroupDetails() {
               const payer = participants.find(p => p.id === exp.paidBy)?.name || 'Unknown';
               return (
                 <TouchableOpacity key={exp.id} onPress={() => setExpandedExpenseId(expandedExpenseId === exp.id ? null : exp.id)} onLongPress={() => handleExpenseAction(exp)} delayLongPress={300} activeOpacity={0.7}
-                  style={{ padding: 16, borderBottomWidth: i < expenses.length -1 ? 1 : 0, borderBottomColor: border }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 2 }}>{exp.description}</Text>
-                      <Text style={{ fontSize: 12, color: muted }}>Paid by {payer}</Text>
+                  style={{ padding: 16, borderBottomWidth: i < expenses.length -1 ? 1 : 0, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' , fontFamily: 'DMSans_500Medium'}}>
+                    <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+                      <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 2 , fontFamily: 'DMSans_700Bold'}}>{exp.description}</Text>
+                      <Text style={{ fontSize: 12, color: muted , fontFamily: 'DMSans_500Medium'}}>Paid by {payer}</Text>
                     </View>
-                    <Text style={{ fontSize: 16, fontWeight: '800', color: ink }}>₹{exp.totalAmount}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>₹{exp.totalAmount}</Text>
                   </View>
                   
                   {expandedExpenseId === exp.id && (
-                    <View style={{ marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: border + '50' }}>
-                      <Text style={{ fontSize: 11, fontWeight: '800', color: muted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Split between</Text>
+                    <View style={{ marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: border + '50' , fontFamily: 'DMSans_500Medium'}}>
+                      <Text style={{ fontSize: 11, fontWeight: '800', color: muted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 , fontFamily: 'CormorantGaramond_700Bold'}}>Split between</Text>
                       {shares[exp.id]?.map(share => {
                         const pName = participants.find(p => p.id === share.participantId)?.name || 'Unknown';
                         return (
-                          <View key={share.participantId} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                            <Text style={{ fontSize: 14, color: ink, fontWeight: '500' }}>{pName}</Text>
-                            <Text style={{ fontSize: 14, fontWeight: '700', color: muted }}>₹{share.owedAmount.toFixed(2)}</Text>
+                          <View key={share.participantId} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 , fontFamily: 'DMSans_500Medium'}}>
+                            <Text style={{ fontSize: 14, color: ink, fontWeight: '500' , fontFamily: 'DMSans_500Medium'}}>{pName}</Text>
+                            <Text style={{ fontSize: 14, fontWeight: '700', color: muted , fontFamily: 'DMSans_700Bold'}}>₹{share.owedAmount.toFixed(2)}</Text>
                           </View>
                         );
                       })}
@@ -330,44 +330,44 @@ export default function GroupDetails() {
           )}
         </View>
 
-        <View style={{ height: 24 }} />
+        <View style={{ height: 24 , fontFamily: 'DMSans_500Medium'}} />
       </ScrollView>
 
       {/* Add Expense Modal */}
       <Modal visible={showExpenseModal} animationType="slide" transparent>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
-          <View style={{ backgroundColor: bg, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 400 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-              <Text style={{ fontSize: 20, fontWeight: '900', color: ink }}>{editingExpenseId ? 'Edit Expense' : 'Add Expense'}</Text>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ backgroundColor: bg, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 400 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+              <Text style={{ fontSize: 20, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>{editingExpenseId ? 'Edit Expense' : 'Add Expense'}</Text>
               <TouchableOpacity onPress={() => setShowExpenseModal(false)}>
                 <X size={24} color={muted} />
               </TouchableOpacity>
             </View>
             
-            <Text style={{ color: muted, fontWeight: '600', marginBottom: 8, fontSize: 13 }}>What was it for?</Text>
-            <TextInput style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 12, padding: 14, color: ink, fontSize: 16, marginBottom: 16 }}
+            <Text style={{ color: muted, fontWeight: '600', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_500Medium'}}>What was it for?</Text>
+            <TextInput style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 18, padding: 14, color: ink, fontSize: 16, marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}
               placeholder="e.g. Dinner, Taxi" placeholderTextColor={muted} value={expDesc} onChangeText={setExpDesc} />
               
-            <Text style={{ color: muted, fontWeight: '600', marginBottom: 8, fontSize: 13 }}>Amount (₹)</Text>
-            <TextInput style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 12, padding: 14, color: ink, fontSize: 16, marginBottom: 16 }}
+            <Text style={{ color: muted, fontWeight: '600', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_500Medium'}}>Amount (₹)</Text>
+            <TextInput style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 18, padding: 14, color: ink, fontSize: 16, marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}
               placeholder="0" placeholderTextColor={muted} keyboardType="numeric" value={expAmount} onChangeText={setExpAmount} />
 
-            <Text style={{ color: muted, fontWeight: '600', marginBottom: 8, fontSize: 13 }}>Who paid?</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
+            <Text style={{ color: muted, fontWeight: '600', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_500Medium'}}>Who paid?</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 , fontFamily: 'DMSans_500Medium'}}>
               {participants.map(p => {
                 const sel = expPayerId === p.id;
                 return (
                   <TouchableOpacity key={p.id} onPress={() => setExpPayerId(p.id)} activeOpacity={0.8}
-                    style={{ backgroundColor: sel ? accentColor : card, borderWidth: 1, borderColor: sel ? accentColor : border, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12, marginRight: 8, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    style={{ backgroundColor: sel ? accentColor : card, borderWidth: 1, borderColor: sel ? accentColor : border, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 18, marginRight: 8, flexDirection: 'row', alignItems: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
                     {sel && <Check size={14} color="#fff" />}
-                    <Text style={{ color: sel ? '#fff' : ink, fontWeight: '600' }}>{p.name}</Text>
+                    <Text style={{ color: sel ? '#fff' : ink, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}>{p.name}</Text>
                   </TouchableOpacity>
                 );
               })}
             </ScrollView>
 
-            <Text style={{ color: muted, fontWeight: '600', marginBottom: 8, fontSize: 13 }}>Split between (tap to exempt)</Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 24 }}>
+            <Text style={{ color: muted, fontWeight: '600', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_500Medium'}}>Split between (tap to exempt)</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
               {participants.map(p => {
                 const included = includedMembers.includes(p.id);
                 return (
@@ -375,16 +375,16 @@ export default function GroupDetails() {
                       if (included) setIncludedMembers(prev => prev.filter(id => id !== p.id));
                       else setIncludedMembers(prev => [...prev, p.id]);
                     }} activeOpacity={0.8}
-                    style={{ backgroundColor: included ? accentColor + '15' : card, borderWidth: 1, borderColor: included ? accentColor : border, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                    <Text style={{ color: included ? accentColor : muted, fontWeight: '700', fontSize: 13, textDecorationLine: included ? 'none' : 'line-through' }}>{p.name}</Text>
+                    style={{ backgroundColor: included ? accentColor + '15' : card, borderWidth: 1, borderColor: included ? accentColor : border, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, flexDirection: 'row', alignItems: 'center', gap: 6 , fontFamily: 'DMSans_500Medium'}}>
+                    <Text style={{ color: included ? accentColor : muted, fontWeight: '700', fontSize: 13, textDecorationLine: included ? 'none' : 'line-through' , fontFamily: 'DMSans_700Bold'}}>{p.name}</Text>
                   </TouchableOpacity>
                 );
               })}
             </View>
 
             <TouchableOpacity onPress={addExpense} activeOpacity={0.8}
-              style={{ backgroundColor: accentColor, padding: 18, borderRadius: 16, alignItems: 'center', marginBottom: 20 }}>
-              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' }}>{editingExpenseId ? 'Save Changes 💾' : 'Split Equally 💸'}</Text>
+              style={{ backgroundColor: accentColor, padding: 18, borderRadius: 24, alignItems: 'center', marginBottom: 20 , fontFamily: 'DMSans_500Medium'}}>
+              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' , fontFamily: 'CormorantGaramond_700Bold'}}>{editingExpenseId ? 'Save Changes 💾' : 'Split Equally 💸'}</Text>
             </TouchableOpacity>
           </View>
         </View>

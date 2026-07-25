@@ -96,17 +96,19 @@ export default function AddTransaction() {
       router.back();
     } catch (e) { console.error(e); Alert.alert('Oops!', 'We could not save your transaction. Please try again.'); }
   };
-
-  const bg = isDark ? '#0F172A' : '#F8FAFC';
-  const card = isDark ? '#1E293B' : '#FFFFFF';
-  const raised = isDark ? '#334155' : '#F1F5F9';
-  const border = isDark ? '#334155' : '#E2E8F0';
-  const ink = isDark ? '#F8FAFC' : '#0F172A';
-  const muted = isDark ? '#94A3B8' : '#64748B';
-  const primary = '#8B5CF6';
-  const success = '#10B981';
-  const danger = '#F43F5E';
-
+  const bg = isDark ? '#0D1B16' : '#F7F6F1';
+  const card = isDark ? '#173229' : '#FFFFFF';
+  const raised = isDark ? '#254A3D' : '#F7F6F1';
+  const border = isDark ? '#254A3D' : '#E7E4DD';
+  const ink = isDark ? '#F5F5F2' : '#173229';
+  const muted = isDark ? '#6D9773' : '#60716A';
+  const primary = isDark ? '#6D9773' : '#0C3B2E';
+  const secondary = isDark ? '#0C3B2E' : '#6D9773';
+  const accent = '#BB8A52';
+  const highlight = '#FFBA00';
+  const success = '#3A8F5A';
+  const danger = '#C44D4D';
+  const warning = '#D89B00';
   const isExpense = selectedType === 'expense';
   const primaryColor = isExpense ? danger : success;
   const typeCategories = categories.filter(c => c.type === selectedType);
@@ -119,32 +121,32 @@ export default function AddTransaction() {
   })();
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg }}>
+    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border, zIndex: 10 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border, zIndex: 10 , fontFamily: 'DMSans_500Medium'}}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}
-          style={{ marginRight: 14, backgroundColor: raised, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+          style={{ marginRight: 14, backgroundColor: raised, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' , fontFamily: 'DMSans_500Medium'}}>
           <ArrowLeft size={22} color={ink} />
         </TouchableOpacity>
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 22, fontWeight: '900', color: ink, letterSpacing: -0.5 }}>
+        <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 22, fontWeight: '900', color: ink, letterSpacing: -0.5 , fontFamily: 'CormorantGaramond_700Bold'}}>
             {isEditing ? 'Edit Record 📝' : (isExpense ? 'Add Expense 💸' : 'Add Income 💰')}
           </Text>
-          <Text style={{ fontSize: 12, fontWeight: '600', color: muted, marginTop: 2 }}>{dateDisplay}</Text>
+          <Text style={{ fontSize: 12, fontWeight: '600', color: muted, marginTop: 2 , fontFamily: 'DMSans_500Medium'}}>{dateDisplay}</Text>
         </View>
       </View>
 
-      <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 20 }}>
+      <ScrollView style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 20 }}>
 
         {/* Type Toggle */}
-        <View style={{ marginHorizontal: 20, backgroundColor: raised, borderRadius: 18, padding: 5, flexDirection: 'row', borderWidth: 1, borderColor: border, marginBottom: 20 }}>
+        <View style={{ marginHorizontal: 20, backgroundColor: raised, borderRadius: 18, padding: 5, flexDirection: 'row', borderWidth: 1, borderColor: border, marginBottom: 20 , fontFamily: 'DMSans_500Medium'}}>
           {(['expense', 'income'] as const).map(type => {
             const c = type === 'expense' ? danger : success;
             const isActive = selectedType === type;
             return (
               <TouchableOpacity key={type} onPress={() => { setValue('type', type); setValue('categoryId', undefined); }} activeOpacity={0.8}
-                style={{ flex: 1, paddingVertical: 13, borderRadius: 14, alignItems: 'center', backgroundColor: isActive ? c : 'transparent' }}>
-                <Text style={{ fontSize: 14, fontWeight: '800', color: isActive ? '#fff' : muted, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+                style={{ flex: 1, paddingVertical: 13, borderRadius: 14, alignItems: 'center', backgroundColor: isActive ? c : 'transparent' , fontFamily: 'DMSans_500Medium'}}>
+                <Text style={{ fontSize: 14, fontWeight: '800', color: isActive ? '#fff' : muted, textTransform: 'uppercase', letterSpacing: 0.8 , fontFamily: 'CormorantGaramond_700Bold'}}>
                   {type === 'expense' ? 'Outflow 💸' : 'Inflow 💰'}
                 </Text>
               </TouchableOpacity>
@@ -153,46 +155,46 @@ export default function AddTransaction() {
         </View>
 
         {/* Amount */}
-        <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 22, padding: 20, borderWidth: 1, borderColor: border, marginBottom: 18 }}>
-          <Text style={{ fontSize: 11, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 }}>How much?</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 40, fontWeight: '900', color: primaryColor, marginRight: 6 }}>₹</Text>
+        <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 22, padding: 20, borderWidth: 1, borderColor: border, marginBottom: 18 , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 11, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 , fontFamily: 'CormorantGaramond_700Bold'}}>How much?</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' , fontFamily: 'DMSans_500Medium'}}>
+            <Text style={{ fontSize: 40, fontWeight: '900', color: primaryColor, marginRight: 6 , fontFamily: 'CormorantGaramond_700Bold'}}>₹</Text>
             <Controller control={control} name="amount" render={({ field: { onChange, value } }) => (
-              <TextInput style={{ flex: 1, fontSize: 48, fontWeight: '900', color: primaryColor, padding: 0, fontVariant: ['tabular-nums'] }}
+              <TextInput style={{ flex: 1, fontSize: 48, fontWeight: '900', color: primaryColor, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}
                 keyboardType="numeric" placeholder="0" placeholderTextColor={isDark ? '#334155' : '#CBD5E1'}
                 value={value ? value.toString() : ''} onChangeText={onChange} />
             )} />
           </View>
-          {errors.amount && <Text style={{ color: danger, fontSize: 12, fontWeight: '600', marginTop: 6 }}>{errors.amount.message}</Text>}
+          {errors.amount && <Text style={{ color: danger, fontSize: 12, fontWeight: '600', marginTop: 6 , fontFamily: 'DMSans_500Medium'}}>{errors.amount.message}</Text>}
         </View>
 
         {/* Note */}
-        <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 22, padding: 18, borderWidth: 1, borderColor: border, marginBottom: 18 }}>
-          <Text style={{ fontSize: 11, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 }}>What was it for?</Text>
+        <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 22, padding: 18, borderWidth: 1, borderColor: border, marginBottom: 18 , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 11, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 , fontFamily: 'CormorantGaramond_700Bold'}}>What was it for?</Text>
           <Controller control={control} name="note" render={({ field: { onChange, value } }) => (
-            <TextInput style={{ fontSize: 17, fontWeight: '600', color: ink, padding: 0 }}
+            <TextInput style={{ fontSize: 17, fontWeight: '600', color: ink, padding: 0 , fontFamily: 'DMSans_500Medium'}}
               placeholder={isExpense ? 'e.g. Late night pizza 🍕' : 'e.g. Pocket money 💵'}
               placeholderTextColor={muted} value={value} onChangeText={onChange} />
           )} />
         </View>
 
         {/* Date */}
-        <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 22, padding: 18, borderWidth: 1, borderColor: border, marginBottom: 18 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 22, padding: 18, borderWidth: 1, borderColor: border, marginBottom: 18 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 , fontFamily: 'DMSans_500Medium'}}>
             <Calendar size={16} color={primary} />
-            <Text style={{ fontSize: 11, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase' }}>Date</Text>
+            <Text style={{ fontSize: 11, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>Date</Text>
             {!isDateToday && (
-              <View style={{ paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, backgroundColor: primary + '20' }}>
-                <Text style={{ fontSize: 10, fontWeight: '800', color: primary }}>Past Entry</Text>
+              <View style={{ paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, backgroundColor: primary + '20' , fontFamily: 'DMSans_500Medium'}}>
+                <Text style={{ fontSize: 10, fontWeight: '800', color: primary , fontFamily: 'CormorantGaramond_700Bold'}}>Past Entry</Text>
               </View>
             )}
           </View>
           <Controller control={control} name="date" render={({ field: { onChange, value } }) => (
-            <TextInput style={{ fontSize: 18, fontWeight: '800', color: ink, padding: 0, fontVariant: ['tabular-nums'] }}
+            <TextInput style={{ fontSize: 18, fontWeight: '800', color: ink, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}
               placeholder="YYYY-MM-DD" placeholderTextColor={muted} value={value} onChangeText={onChange} keyboardType="numeric" />
           )} />
           {/* Quick shortcuts */}
-          <View style={{ flexDirection: 'row', gap: 8, marginTop: 14, flexWrap: 'wrap' }}>
+          <View style={{ flexDirection: 'row', gap: 8, marginTop: 14, flexWrap: 'wrap' , fontFamily: 'DMSans_500Medium'}}>
             {[
               { label: 'Today', val: todayStr() },
               { label: 'Yesterday', val: (() => { const d = new Date(); d.setDate(d.getDate() - 1); return getLocalDateString(d); })() },
@@ -200,23 +202,23 @@ export default function AddTransaction() {
               { label: 'Last week', val: (() => { const d = new Date(); d.setDate(d.getDate() - 7); return getLocalDateString(d); })() },
             ].map(({ label, val }) => (
               <TouchableOpacity key={label} onPress={() => setValue('date', val)} activeOpacity={0.75}
-                style={{ paddingHorizontal: 12, paddingVertical: 7, borderRadius: 18, borderWidth: 1.5, backgroundColor: selectedDate === val ? primary : 'transparent', borderColor: selectedDate === val ? primary : border }}>
-                <Text style={{ fontSize: 12, fontWeight: '700', color: selectedDate === val ? '#fff' : muted }}>{label}</Text>
+                style={{ paddingHorizontal: 12, paddingVertical: 7, borderRadius: 18, borderWidth: 1.5, backgroundColor: selectedDate === val ? primary : 'transparent', borderColor: selectedDate === val ? primary : border , fontFamily: 'DMSans_500Medium'}}>
+                <Text style={{ fontSize: 12, fontWeight: '700', color: selectedDate === val ? '#fff' : muted , fontFamily: 'DMSans_700Bold'}}>{label}</Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
 
         {/* Category */}
-        <View style={{ marginHorizontal: 20, marginBottom: 32 }}>
-          <Text style={{ fontSize: 11, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 }}>Category (optional)</Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+        <View style={{ marginHorizontal: 20, marginBottom: 32 , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 11, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 , fontFamily: 'CormorantGaramond_700Bold'}}>Category (optional)</Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 , fontFamily: 'DMSans_500Medium'}}>
             {typeCategories.map(cat => {
               const sel = selectedCategoryId === cat.id;
               return (
                 <TouchableOpacity key={cat.id} onPress={() => setValue('categoryId', sel ? undefined : cat.id)} activeOpacity={0.7}
-                  style={{ paddingHorizontal: 16, paddingVertical: 10, borderRadius: 22, borderWidth: 2, backgroundColor: sel ? primaryColor : 'transparent', borderColor: sel ? primaryColor : border }}>
-                  <Text style={{ fontSize: 14, fontWeight: '700', color: sel ? '#fff' : ink }}>{cat.name}</Text>
+                  style={{ paddingHorizontal: 16, paddingVertical: 10, borderRadius: 22, borderWidth: 2, backgroundColor: sel ? primaryColor : 'transparent', borderColor: sel ? primaryColor : border , fontFamily: 'DMSans_500Medium'}}>
+                  <Text style={{ fontSize: 14, fontWeight: '700', color: sel ? '#fff' : ink , fontFamily: 'DMSans_700Bold'}}>{cat.name}</Text>
                 </TouchableOpacity>
               );
             })}
@@ -225,11 +227,11 @@ export default function AddTransaction() {
       </ScrollView>
 
       {/* Submit */}
-      <View style={{ paddingHorizontal: 20, paddingVertical: 16, paddingBottom: 36, borderTopWidth: 1, borderTopColor: border, backgroundColor: card }}>
+      <View style={{ paddingHorizontal: 20, paddingVertical: 16, paddingBottom: 36, borderTopWidth: 1, borderTopColor: border, backgroundColor: card , fontFamily: 'DMSans_500Medium'}}>
         <TouchableOpacity onPress={handleSubmit(onSubmit as any)} activeOpacity={0.85}
-          style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 18, borderRadius: 22, backgroundColor: primaryColor, shadowColor: primaryColor, shadowOpacity: 0.4, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 10 }}>
+          style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 18, borderRadius: 22, backgroundColor: primaryColor, shadowColor: primaryColor, shadowOpacity: 0.4, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 10 , fontFamily: 'DMSans_500Medium'}}>
           <Check size={22} color="#fff" strokeWidth={3} />
-          <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 }}>{isEditing ? 'Save Changes 💾' : 'Lock it in 🔒'}</Text>
+          <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 , fontFamily: 'CormorantGaramond_700Bold'}}>{isEditing ? 'Save Changes 💾' : 'Lock it in 🔒'}</Text>
         </TouchableOpacity>
       </View>
     </View>

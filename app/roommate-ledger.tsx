@@ -159,44 +159,45 @@ export default function RoommateLedgerDetail() {
       else Alert.alert('WhatsApp Missing', 'We could not find WhatsApp on your phone.');
     }).catch(console.error);
   };
-
-  const bg = isDark ? '#0F172A' : '#F8FAFC';
-  const card = isDark ? '#1E293B' : '#FFFFFF';
-  const raised = isDark ? '#334155' : '#F1F5F9';
-  const border = isDark ? '#334155' : '#E2E8F0';
-  const ink = isDark ? '#F8FAFC' : '#0F172A';
-  const muted = isDark ? '#94A3B8' : '#64748B';
-  const primary = '#8B5CF6';
-  const success = '#10B981';
-  const danger = '#F43F5E';
-  const warning = '#F59E0B';
-
+  const bg = isDark ? '#0D1B16' : '#F7F6F1';
+  const card = isDark ? '#173229' : '#FFFFFF';
+  const raised = isDark ? '#254A3D' : '#F7F6F1';
+  const border = isDark ? '#254A3D' : '#E7E4DD';
+  const ink = isDark ? '#F5F5F2' : '#173229';
+  const muted = isDark ? '#6D9773' : '#60716A';
+  const primary = isDark ? '#6D9773' : '#0C3B2E';
+  const secondary = isDark ? '#0C3B2E' : '#6D9773';
+  const accent = '#BB8A52';
+  const highlight = '#FFBA00';
+  const success = '#3A8F5A';
+  const danger = '#C44D4D';
+  const warning = '#D89B00';
   const roommateName = ledger?.name || 'Roommate';
   const absBalance = Math.abs(netBalance);
 
-  if (!ledger) return <View style={{ flex: 1, backgroundColor: bg }} />;
+  if (!ledger) return <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}} />;
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg }}>
+    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 , fontFamily: 'DMSans_500Medium'}}>
             <ArrowLeft size={22} color={ink} />
           </TouchableOpacity>
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 20, fontWeight: '900', color: ink, letterSpacing: -0.5 }}>{roommateName} 🏠</Text>
-            <Text style={{ fontSize: 12, fontWeight: '600', color: muted, marginTop: 2 }}>Roommate Ledger</Text>
+          <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+            <Text style={{ fontSize: 20, fontWeight: '900', color: ink, letterSpacing: -0.5 , fontFamily: 'CormorantGaramond_700Bold'}}>{roommateName} 🏠</Text>
+            <Text style={{ fontSize: 12, fontWeight: '600', color: muted, marginTop: 2 , fontFamily: 'DMSans_500Medium'}}>Roommate Ledger</Text>
           </View>
         </View>
         <TouchableOpacity onPress={shareViaWhatsApp} activeOpacity={0.75}
-          style={{ backgroundColor: '#25D366' + '15', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 16, flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderColor: '#25D366' + '30' }}>
+          style={{ backgroundColor: '#25D366' + '15', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 24, flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderColor: '#25D366' + '30' , fontFamily: 'DMSans_500Medium'}}>
           <MessageCircle size={16} color="#25D366" />
-          <Text style={{ color: '#25D366', fontWeight: '800', fontSize: 13 }}>Share</Text>
+          <Text style={{ color: '#25D366', fontWeight: '800', fontSize: 13 , fontFamily: 'CormorantGaramond_700Bold'}}>Share</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}} contentContainerStyle={{ padding: 20, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
 
         {/* Net Balance Hero Card */}
         <View style={{
@@ -205,29 +206,29 @@ export default function RoommateLedgerDetail() {
           borderWidth: 1.5,
           borderColor: netBalance === 0 ? success + '30' : netBalance > 0 ? success + '30' : danger + '30',
         }}>
-          <Text style={{ fontSize: 12, fontWeight: '800', color: muted, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>
+          <Text style={{ fontSize: 12, fontWeight: '800', color: muted, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 , fontFamily: 'CormorantGaramond_700Bold'}}>
             Net Balance
           </Text>
           {netBalance === 0 ? (
             <View>
-              <Text style={{ fontSize: 28, fontWeight: '900', color: success }}>All Settled! 🎉</Text>
-              <Text style={{ fontSize: 14, color: muted, fontWeight: '600', marginTop: 4 }}>No pending dues between you two</Text>
+              <Text style={{ fontSize: 28, fontWeight: '900', color: success , fontFamily: 'CormorantGaramond_700Bold'}}>All Settled! 🎉</Text>
+              <Text style={{ fontSize: 14, color: muted, fontWeight: '600', marginTop: 4 , fontFamily: 'DMSans_500Medium'}}>No pending dues between you two</Text>
             </View>
           ) : netBalance > 0 ? (
             <View>
-              <Text style={{ fontSize: 28, fontWeight: '900', color: success, fontVariant: ['tabular-nums'] }}>
+              <Text style={{ fontSize: 28, fontWeight: '900', color: success, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
                 ₹{absBalance.toLocaleString('en-IN')}
               </Text>
-              <Text style={{ fontSize: 14, color: success, fontWeight: '700', marginTop: 4 }}>
+              <Text style={{ fontSize: 14, color: success, fontWeight: '700', marginTop: 4 , fontFamily: 'DMSans_700Bold'}}>
                 {roommateName} owes you 💰
               </Text>
             </View>
           ) : (
             <View>
-              <Text style={{ fontSize: 28, fontWeight: '900', color: danger, fontVariant: ['tabular-nums'] }}>
+              <Text style={{ fontSize: 28, fontWeight: '900', color: danger, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
                 ₹{absBalance.toLocaleString('en-IN')}
               </Text>
-              <Text style={{ fontSize: 14, color: danger, fontWeight: '700', marginTop: 4 }}>
+              <Text style={{ fontSize: 14, color: danger, fontWeight: '700', marginTop: 4 , fontFamily: 'DMSans_700Bold'}}>
                 You owe {roommateName} 😅
               </Text>
             </View>
@@ -235,44 +236,44 @@ export default function RoommateLedgerDetail() {
         </View>
 
         {/* Quick Stats */}
-        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 24 }}>
-          <View style={{ flex: 1, backgroundColor: card, borderRadius: 18, padding: 16, borderWidth: 1, borderColor: border }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flex: 1, backgroundColor: card, borderRadius: 18, padding: 16, borderWidth: 1, borderColor: border , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 , fontFamily: 'DMSans_500Medium'}}>
               <ArrowUpRight size={14} color={success} strokeWidth={2.5} />
-              <Text style={{ fontSize: 10, fontWeight: '800', color: muted, textTransform: 'uppercase' }}>You Paid</Text>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: muted, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>You Paid</Text>
             </View>
-            <Text style={{ fontSize: 18, fontWeight: '900', color: success, fontVariant: ['tabular-nums'] }} adjustsFontSizeToFit numberOfLines={1}>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: success, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}} adjustsFontSizeToFit numberOfLines={1}>
               ₹{entries.filter(e => e.paidBy === 'me' && !e.isPaid).reduce((s, e) => s + e.amount, 0).toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ flex: 1, backgroundColor: card, borderRadius: 18, padding: 16, borderWidth: 1, borderColor: border }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+          <View style={{ flex: 1, backgroundColor: card, borderRadius: 18, padding: 16, borderWidth: 1, borderColor: border , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 , fontFamily: 'DMSans_500Medium'}}>
               <ArrowDownLeft size={14} color={danger} strokeWidth={2.5} />
-              <Text style={{ fontSize: 10, fontWeight: '800', color: muted, textTransform: 'uppercase' }}>{roommateName} Paid</Text>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: muted, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>{roommateName} Paid</Text>
             </View>
-            <Text style={{ fontSize: 18, fontWeight: '900', color: danger, fontVariant: ['tabular-nums'] }} adjustsFontSizeToFit numberOfLines={1}>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: danger, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}} adjustsFontSizeToFit numberOfLines={1}>
               ₹{entries.filter(e => e.paidBy === 'roommate' && !e.isPaid).reduce((s, e) => s + e.amount, 0).toLocaleString('en-IN')}
             </Text>
           </View>
         </View>
 
         {/* Entries Header */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-          <Text style={{ fontSize: 16, fontWeight: '900', color: ink }}>Entries 📒</Text>
-          <Text style={{ fontSize: 12, fontWeight: '700', color: muted }}>Long press to manage</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 , fontFamily: 'DMSans_500Medium'}}>
+          <Text style={{ fontSize: 16, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Entries 📒</Text>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: muted , fontFamily: 'DMSans_700Bold'}}>Long press to manage</Text>
         </View>
 
         {/* Entry List */}
         {entries.length === 0 ? (
-          <View style={{ backgroundColor: card, borderRadius: 22, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: border, borderStyle: 'dashed' }}>
-            <Text style={{ fontSize: 36, marginBottom: 12 }}>📝</Text>
-            <Text style={{ fontSize: 16, fontWeight: '800', color: ink, marginBottom: 6 }}>No entries yet</Text>
-            <Text style={{ fontSize: 13, color: muted, textAlign: 'center', lineHeight: 20 }}>
+          <View style={{ backgroundColor: card, borderRadius: 22, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: border, borderStyle: 'dashed' , fontFamily: 'DMSans_500Medium'}}>
+            <Text style={{ fontSize: 36, marginBottom: 12 , fontFamily: 'DMSans_500Medium'}}>📝</Text>
+            <Text style={{ fontSize: 16, fontWeight: '800', color: ink, marginBottom: 6 , fontFamily: 'CormorantGaramond_700Bold'}}>No entries yet</Text>
+            <Text style={{ fontSize: 13, color: muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'DMSans_500Medium'}}>
               Tap + to add who paid for what
             </Text>
           </View>
         ) : (
-          <View style={{ backgroundColor: card, borderRadius: 22, borderWidth: 1, borderColor: border, overflow: 'hidden' }}>
+          <View style={{ backgroundColor: card, borderRadius: 22, borderWidth: 1, borderColor: border, overflow: 'hidden' , fontFamily: 'DMSans_500Medium'}}>
             {entries.map((entry, i) => {
               const isMe = entry.paidBy === 'me';
               const isPaid = !!entry.isPaid;
@@ -292,7 +293,7 @@ export default function RoommateLedgerDetail() {
                   }}
                 >
                   {/* Paid/Pending icon */}
-                  <View style={{ marginRight: 12 }}>
+                  <View style={{ marginRight: 12 , fontFamily: 'DMSans_500Medium'}}>
                     {isPaid ? (
                       <CheckCircle size={22} color={success} />
                     ) : (
@@ -313,24 +314,24 @@ export default function RoommateLedgerDetail() {
                   </View>
 
                   {/* Description + meta */}
-                  <View style={{ flex: 1, marginRight: 10 }}>
-                    <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 3, textDecorationLine: isPaid ? 'line-through' : 'none' }} numberOfLines={1}>
+                  <View style={{ flex: 1, marginRight: 10 , fontFamily: 'DMSans_500Medium'}}>
+                    <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 3, textDecorationLine: isPaid ? 'line-through' : 'none' , fontFamily: 'DMSans_700Bold'}} numberOfLines={1}>
                       {entry.description}
                     </Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                      <View style={{ backgroundColor: entryColor + '15', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 }}>
-                        <Text style={{ fontSize: 10, fontWeight: '800', color: entryColor, textTransform: 'uppercase' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
+                      <View style={{ backgroundColor: entryColor + '15', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 , fontFamily: 'DMSans_500Medium'}}>
+                        <Text style={{ fontSize: 10, fontWeight: '800', color: entryColor, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>
                           {isMe ? 'You paid' : `${roommateName} paid`}
                         </Text>
                       </View>
-                      <Text style={{ fontSize: 11, fontWeight: '600', color: muted }}>
+                      <Text style={{ fontSize: 11, fontWeight: '600', color: muted , fontFamily: 'DMSans_500Medium'}}>
                         {new Date(entry.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                       </Text>
                     </View>
                   </View>
 
                   {/* Amount */}
-                  <Text style={{ fontSize: 16, fontWeight: '900', color: entryColor, fontVariant: ['tabular-nums'] }}>
+                  <Text style={{ fontSize: 16, fontWeight: '900', color: entryColor, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
                     ₹{entry.amount.toLocaleString('en-IN')}
                   </Text>
                 </TouchableOpacity>
@@ -339,7 +340,7 @@ export default function RoommateLedgerDetail() {
           </View>
         )}
 
-        <View style={{ height: 24 }} />
+        <View style={{ height: 24 , fontFamily: 'DMSans_500Medium'}} />
       </ScrollView>
 
       {/* FAB */}
@@ -354,25 +355,25 @@ export default function RoommateLedgerDetail() {
 
       {/* Add/Edit Entry Modal */}
       <Modal visible={showModal} animationType="slide" transparent>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
-          <View style={{ backgroundColor: bg, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 420 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-              <Text style={{ fontSize: 20, fontWeight: '900', color: ink }}>{editingId ? 'Edit Entry ✏️' : 'Add Entry 📝'}</Text>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ backgroundColor: bg, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 420 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+              <Text style={{ fontSize: 20, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>{editingId ? 'Edit Entry ✏️' : 'Add Entry 📝'}</Text>
               <TouchableOpacity onPress={() => setShowModal(false)}>
                 <X size={24} color={muted} />
               </TouchableOpacity>
             </View>
 
             {/* Who Paid Toggle */}
-            <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 }}>Who paid?</Text>
-            <View style={{ backgroundColor: raised, borderRadius: 18, padding: 5, flexDirection: 'row', borderWidth: 1, borderColor: border, marginBottom: 20 }}>
+            <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Who paid?</Text>
+            <View style={{ backgroundColor: raised, borderRadius: 18, padding: 5, flexDirection: 'row', borderWidth: 1, borderColor: border, marginBottom: 20 , fontFamily: 'DMSans_500Medium'}}>
               {(['me', 'roommate'] as const).map(opt => {
                 const active = formPaidBy === opt;
                 const c = opt === 'me' ? success : danger;
                 return (
                   <TouchableOpacity key={opt} onPress={() => setFormPaidBy(opt)} activeOpacity={0.8}
-                    style={{ flex: 1, paddingVertical: 13, borderRadius: 14, alignItems: 'center', backgroundColor: active ? c : 'transparent' }}>
-                    <Text style={{ fontSize: 14, fontWeight: '900', color: active ? '#fff' : muted }}>
+                    style={{ flex: 1, paddingVertical: 13, borderRadius: 14, alignItems: 'center', backgroundColor: active ? c : 'transparent' , fontFamily: 'DMSans_500Medium'}}>
+                    <Text style={{ fontSize: 14, fontWeight: '900', color: active ? '#fff' : muted , fontFamily: 'CormorantGaramond_700Bold'}}>
                       {opt === 'me' ? 'I Paid 💸' : `${roommateName} Paid 🤝`}
                     </Text>
                   </TouchableOpacity>
@@ -381,9 +382,9 @@ export default function RoommateLedgerDetail() {
             </View>
 
             {/* Description */}
-            <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 }}>What was it for?</Text>
+            <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>What was it for?</Text>
             <TextInput
-              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 16, fontWeight: '600' }}
+              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 16, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}
               placeholder="e.g. Groceries, Electricity, Food"
               placeholderTextColor={muted}
               value={formDesc}
@@ -391,9 +392,9 @@ export default function RoommateLedgerDetail() {
             />
 
             {/* Amount */}
-            <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 }}>Amount (₹)</Text>
+            <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Amount (₹)</Text>
             <TextInput
-              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: formPaidBy === 'me' ? success : danger, fontSize: 28, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] }}
+              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: formPaidBy === 'me' ? success : danger, fontSize: 28, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}
               placeholder="0"
               placeholderTextColor={isDark ? '#334155' : '#CBD5E1'}
               keyboardType="numeric"
@@ -402,16 +403,16 @@ export default function RoommateLedgerDetail() {
             />
 
             {/* Date */}
-            <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 }}>Date (YYYY-MM-DD)</Text>
+            <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Date (YYYY-MM-DD)</Text>
             <TextInput
-              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 10, fontWeight: '600' }}
+              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 10, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}
               placeholder="2026-07-21"
               placeholderTextColor={muted}
               value={formDate}
               onChangeText={setFormDate}
             />
             {/* Quick date shortcuts */}
-            <View style={{ flexDirection: 'row', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
+            <View style={{ flexDirection: 'row', gap: 8, marginBottom: 24, flexWrap: 'wrap' , fontFamily: 'DMSans_500Medium'}}>
               {[
                 { label: 'Today', offset: 0 },
                 { label: 'Yesterday', offset: -1 },
@@ -423,8 +424,8 @@ export default function RoommateLedgerDetail() {
                 const val = d.toISOString().split('T')[0];
                 return (
                   <TouchableOpacity key={label} onPress={() => setFormDate(val)} activeOpacity={0.7}
-                    style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 18, borderWidth: 1.5, borderColor: formDate === val ? primary : border, backgroundColor: formDate === val ? primary + '15' : raised }}>
-                    <Text style={{ fontSize: 12, fontWeight: '700', color: formDate === val ? primary : muted }}>{label}</Text>
+                    style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 18, borderWidth: 1.5, borderColor: formDate === val ? primary : border, backgroundColor: formDate === val ? primary + '15' : raised , fontFamily: 'DMSans_500Medium'}}>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: formDate === val ? primary : muted , fontFamily: 'DMSans_700Bold'}}>{label}</Text>
                   </TouchableOpacity>
                 );
               })}
@@ -432,9 +433,9 @@ export default function RoommateLedgerDetail() {
 
             {/* Save */}
             <TouchableOpacity onPress={saveEntry} activeOpacity={0.85}
-              style={{ backgroundColor: primary, padding: 18, borderRadius: 18, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, shadowColor: primary, shadowOpacity: 0.4, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 8 }}>
+              style={{ backgroundColor: primary, padding: 18, borderRadius: 18, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, shadowColor: primary, shadowOpacity: 0.4, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 8 , fontFamily: 'DMSans_500Medium'}}>
               <Check size={22} color="#fff" strokeWidth={3} />
-              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' }}>{editingId ? 'Save Changes' : 'Add Entry'}</Text>
+              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'CormorantGaramond_700Bold'}}>{editingId ? 'Save Changes' : 'Add Entry'}</Text>
             </TouchableOpacity>
           </View>
         </View>
