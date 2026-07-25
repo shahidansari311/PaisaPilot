@@ -153,15 +153,15 @@
     // ── Success Screen after creating ──
     if (createdCode) {
       return (
-        <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
-            <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flex: 1, backgroundColor: bg }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
+            <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
               <ArrowLeft size={22} color={ink} />
             </TouchableOpacity>
             <Text style={{ fontSize: 20, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Room Created! 🎉</Text>
           </View>
           <ScrollView contentContainerStyle={{ padding: 24, alignItems: 'center', paddingTop: 48 }}>
-            <View style={{ backgroundColor: primary + '15', width: 80, height: 80, borderRadius: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ backgroundColor: primary + '15', width: 80, height: 80, borderRadius: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
               <Sparkles size={40} color={primary} />
             </View>
             <Text style={{ fontSize: 22, fontWeight: '900', color: ink, textAlign: 'center', marginBottom: 8 , fontFamily: 'CormorantGaramond_700Bold'}}>
@@ -172,7 +172,7 @@
             </Text>
 
             {/* Code Display */}
-            <View style={{ backgroundColor: card, borderRadius: 24, padding: 28, borderWidth: 2, borderColor: primary + '40', marginBottom: 24, width: '100%', alignItems: 'center' , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ backgroundColor: card, borderRadius: 24, padding: 28, borderWidth: 2, borderColor: primary + '40', marginBottom: 24, width: '100%', alignItems: 'center' }}>
               <Text style={{ fontSize: 11, fontWeight: '800', color: muted, textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 , fontFamily: 'CormorantGaramond_700Bold'}}>Room Code</Text>
               <Text style={{ fontSize: 42, fontWeight: '900', color: primary, letterSpacing: 8, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
                 {createdCode}
@@ -181,7 +181,7 @@
             </View>
 
             {/* Actions */}
-            <View style={{ width: '100%', marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ width: '100%', marginBottom: 16 }}>
               <TouchableOpacity
                 onPress={shareCode}
                 activeOpacity={0.8}
@@ -204,7 +204,7 @@
             </View>
 
             <TouchableOpacity onPress={goToRoom} activeOpacity={0.85}
-              style={{ width: '100%', padding: 18, borderRadius: 18, alignItems: 'center', backgroundColor: primary, shadowColor: primary, shadowOpacity: 0.4, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 8 , fontFamily: 'DMSans_500Medium'}}>
+              style={{ width: '100%', padding: 18, borderRadius: 18, alignItems: 'center', backgroundColor: primary, shadowColor: primary, shadowOpacity: 0.4, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 8 }}>
               <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'CormorantGaramond_700Bold'}}>Open Room →</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -215,9 +215,9 @@
     // ── Choose Mode Screen ──
     if (mode === 'choose') {
       return (
-        <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
-            <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flex: 1, backgroundColor: bg }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
+            <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
               <ArrowLeft size={22} color={ink} />
             </TouchableOpacity>
             <View>
@@ -227,8 +227,8 @@
           </View>
           <ScrollView contentContainerStyle={{ padding: 24, paddingTop: 40 }}>
             {/* Hero */}
-            <View style={{ alignItems: 'center', marginBottom: 40 , fontFamily: 'DMSans_500Medium'}}>
-              <View style={{ backgroundColor: primary + '12', width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ alignItems: 'center', marginBottom: 40 }}>
+              <View style={{ backgroundColor: primary + '12', width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
                 <Cloud size={36} color={primary} />
               </View>
               <Text style={{ fontSize: 20, fontWeight: '900', color: ink, textAlign: 'center', marginBottom: 8 , fontFamily: 'CormorantGaramond_700Bold'}}>
@@ -241,11 +241,11 @@
 
             {/* Create Card */}
             <TouchableOpacity onPress={() => setMode('create')} activeOpacity={0.8}
-              style={{ backgroundColor: card, borderRadius: 22, padding: 24, marginBottom: 16, borderWidth: 1.5, borderColor: primary + '30', flexDirection: 'row', alignItems: 'center', gap: 16 , fontFamily: 'DMSans_500Medium'}}>
-              <View style={{ backgroundColor: primary + '15', width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' , fontFamily: 'DMSans_500Medium'}}>
+              style={{ backgroundColor: card, borderRadius: 22, padding: 24, marginBottom: 16, borderWidth: 1.5, borderColor: primary + '30', flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+              <View style={{ backgroundColor: primary + '15', width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' }}>
                 <Plus size={26} color={primary} strokeWidth={2.5} />
               </View>
-              <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 17, fontWeight: '900', color: ink, marginBottom: 4 , fontFamily: 'CormorantGaramond_700Bold'}}>Create a Room</Text>
                 <Text style={{ fontSize: 13, fontWeight: '600', color: muted, lineHeight: 19 , fontFamily: 'DMSans_500Medium'}}>
                   Start a new shared room and get a code to share with your roommate
@@ -255,11 +255,11 @@
 
             {/* Join Card */}
             <TouchableOpacity onPress={() => setMode('join')} activeOpacity={0.8}
-              style={{ backgroundColor: card, borderRadius: 22, padding: 24, borderWidth: 1.5, borderColor: success + '30', flexDirection: 'row', alignItems: 'center', gap: 16 , fontFamily: 'DMSans_500Medium'}}>
-              <View style={{ backgroundColor: success + '15', width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' , fontFamily: 'DMSans_500Medium'}}>
+              style={{ backgroundColor: card, borderRadius: 22, padding: 24, borderWidth: 1.5, borderColor: success + '30', flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+              <View style={{ backgroundColor: success + '15', width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' }}>
                 <LogIn size={26} color={success} strokeWidth={2.5} />
               </View>
-              <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 17, fontWeight: '900', color: ink, marginBottom: 4 , fontFamily: 'CormorantGaramond_700Bold'}}>Join a Room</Text>
                 <Text style={{ fontSize: 13, fontWeight: '600', color: muted, lineHeight: 19 , fontFamily: 'DMSans_500Medium'}}>
                   Enter a code shared by your roommate to join their expense room
@@ -275,9 +275,9 @@
     const isCreate = mode === 'create';
 
     return (
-      <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
-          <TouchableOpacity onPress={() => setMode('choose')} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ flex: 1, backgroundColor: bg }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
+          <TouchableOpacity onPress={() => setMode('choose')} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
             <ArrowLeft size={22} color={ink} />
           </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>
@@ -289,7 +289,7 @@
           {/* Display Name */}
           <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Your Display Name</Text>
           <TextInput
-            style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 20, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}
+            style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
             placeholder="e.g. Shahid, Arjun"
             placeholderTextColor={muted}
             value={displayName}
@@ -302,7 +302,7 @@
               {/* Room Name */}
               <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Room Name</Text>
               <TextInput
-                style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 20, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}
+                style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
                 placeholder="e.g. Flat 302, PG Room"
                 placeholderTextColor={muted}
                 value={roomName}
@@ -311,9 +311,9 @@
 
               {/* Custom Code (optional) */}
               <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Room Code (optional — leave blank for random)</Text>
-              <View style={{ flexDirection: 'row', gap: 10, marginBottom: 8 , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ flexDirection: 'row', gap: 10, marginBottom: 8 }}>
                 <TextInput
-                  style={{ flex: 1, backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: primary, fontSize: 20, fontWeight: '900', letterSpacing: 4, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}
+                  style={{ flex: 1, backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: primary, fontSize: 20, fontWeight: '900', letterSpacing: 4, textTransform: 'uppercase' }}
                   placeholder="AUTO"
                   placeholderTextColor={isDark ? '#334155' : '#CBD5E1'}
                   value={roomCode}
@@ -322,7 +322,7 @@
                   maxLength={8}
                 />
                 <TouchableOpacity onPress={() => setRoomCode(generateCode())} activeOpacity={0.7}
-                  style={{ width: 52, borderRadius: 14, backgroundColor: primary + '15', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: primary + '30' , fontFamily: 'DMSans_500Medium'}}>
+                  style={{ width: 52, borderRadius: 14, backgroundColor: primary + '15', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: primary + '30' }}>
                   <Shuffle size={22} color={primary} />
                 </TouchableOpacity>
               </View>
@@ -337,7 +337,7 @@
               {/* Enter Room Code */}
               <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Room Code</Text>
               <TextInput
-                style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: success, fontSize: 24, fontWeight: '900', letterSpacing: 6, marginBottom: 24, textAlign: 'center', textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}
+                style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: success, fontSize: 24, fontWeight: '900', letterSpacing: 6, marginBottom: 24, textAlign: 'center', textTransform: 'uppercase' }}
                 placeholder="ENTER CODE"
                 placeholderTextColor={isDark ? '#334155' : '#CBD5E1'}
                 value={roomCode}

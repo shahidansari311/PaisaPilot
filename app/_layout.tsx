@@ -25,13 +25,13 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <SQLiteProvider databaseName="paisapilot.db" onInit={initializeDatabase}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
         <CustomAlert />
-        <StatusBar style={{ isDark ? 'light' : 'dark'} />
+        <StatusBar style={isDark ? 'light' : 'dark'} />
       </SQLiteProvider>
     </GestureHandlerRootView>
   );

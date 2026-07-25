@@ -31,9 +31,9 @@ export default function MenuScreen() {
   ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
+    <View style={{ flex: 1, backgroundColor: bg }}>
       {/* Header */}
-      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, backgroundColor: bg, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, backgroundColor: bg, borderBottomWidth: 1, borderBottomColor: border }}>
         <Text style={{ fontSize: 32, fontWeight: '900', color: ink, letterSpacing: -1 , fontFamily: 'CormorantGaramond_700Bold'}}>Menu 🍔</Text>
         <Text style={{ fontSize: 14, fontWeight: '600', color: muted, marginTop: 4 , fontFamily: 'DMSans_500Medium'}}>All your other stuff</Text>
       </View>
@@ -44,13 +44,13 @@ export default function MenuScreen() {
         <TouchableOpacity 
           onPress={() => router.navigate('/profile')}
           activeOpacity={0.8}
-          style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: card, padding: 20, borderRadius: 24, borderWidth: 1, borderColor: border, marginBottom: 32, shadowColor: ink, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12 , fontFamily: 'DMSans_500Medium'}}>
-          <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: primary + '20', alignItems: 'center', justifyContent: 'center', marginRight: 16 , fontFamily: 'DMSans_500Medium'}}>
+          style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: card, padding: 20, borderRadius: 24, borderWidth: 1, borderColor: border, marginBottom: 32, shadowColor: ink, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12 }}>
+          <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: primary + '20', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
             <Text style={{ fontSize: 24, fontWeight: '900', color: primary , fontFamily: 'CormorantGaramond_700Bold'}}>
               {userName ? userName.charAt(0).toUpperCase() : <User size={32} color={primary} />}
             </Text>
           </View>
-          <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>{userName || 'Set Profile'}</Text>
             <Text style={{ fontSize: 14, fontWeight: '600', color: muted , fontFamily: 'DMSans_500Medium'}}>Tap to set WhatsApp details</Text>
           </View>
@@ -59,18 +59,18 @@ export default function MenuScreen() {
 
         <Text style={{ fontSize: 14, fontWeight: '800', color: muted, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 , fontFamily: 'CormorantGaramond_700Bold'}}>Features</Text>
 
-        <View style={{ backgroundColor: card, borderRadius: 24, borderWidth: 1, borderColor: border, overflow: 'hidden', shadowColor: ink, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ backgroundColor: card, borderRadius: 24, borderWidth: 1, borderColor: border, overflow: 'hidden', shadowColor: ink, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10 }}>
           {menuItems.map((item, index) => (
             <TouchableOpacity 
               key={item.title} 
               onPress={() => router.navigate(item.route as any)}
               activeOpacity={0.7}
-              style={{ flexDirection: 'row', alignItems: 'center', padding: 20, borderBottomWidth: index === menuItems.length - 1 ? 0 : 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}
+              style={{ flexDirection: 'row', alignItems: 'center', padding: 20, borderBottomWidth: index === menuItems.length - 1 ? 0 : 1, borderBottomColor: border }}
             >
-              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: primary + '15', alignItems: 'center', justifyContent: 'center', marginRight: 16 , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: primary + '15', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
                 {item.icon}
               </View>
-              <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 18, fontWeight: '800', color: ink, marginBottom: 4 , fontFamily: 'CormorantGaramond_700Bold'}}>{item.title}</Text>
                 <Text style={{ fontSize: 13, fontWeight: '500', color: muted , fontFamily: 'DMSans_500Medium'}}>{item.subtitle}</Text>
               </View>

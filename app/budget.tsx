@@ -108,20 +108,20 @@ export default function BudgetScreen() {
   const progressColor = pct >= 0.9 ? danger : pct >= 0.7 ? warning : success;
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
+    <View style={{ flex: 1, backgroundColor: bg }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}
-          style={{ backgroundColor: raised, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', marginRight: 14 , fontFamily: 'DMSans_500Medium'}}>
+          style={{ backgroundColor: raised, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
           <ArrowLeft size={22} color={ink} />
         </TouchableOpacity>
-        <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 22, fontWeight: '900', color: ink, letterSpacing: -0.5 , fontFamily: 'CormorantGaramond_700Bold'}}>Monthly Budget 🎯</Text>
           <Text style={{ fontSize: 13, fontWeight: '600', color: muted, marginTop: 2 , fontFamily: 'DMSans_500Medium'}}>{monthLabel(currentMonthKey())}</Text>
         </View>
         {budget && !editing && (
           <TouchableOpacity onPress={() => { setInputAmount(String(budget.amount)); setEditing(true); }}
-            style={{ backgroundColor: primary + '15', width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' , fontFamily: 'DMSans_500Medium'}}>
+            style={{ backgroundColor: primary + '15', width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
             <Edit3 size={18} color={primary} />
           </TouchableOpacity>
         )}
@@ -131,28 +131,28 @@ export default function BudgetScreen() {
 
         {/* Set / Edit Budget */}
         {(!budget || editing) && (
-          <View style={{ backgroundColor: card, borderRadius: 22, padding: 22, marginBottom: 20, borderWidth: 2, borderColor: primary + '40' , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ backgroundColor: card, borderRadius: 22, padding: 22, marginBottom: 20, borderWidth: 2, borderColor: primary + '40' }}>
             <Text style={{ fontSize: 16, fontWeight: '900', color: ink, marginBottom: 16 , fontFamily: 'CormorantGaramond_700Bold'}}>
               {editing ? 'Edit Budget' : 'Set Monthly Budget'} 📝
             </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: raised, borderRadius: 24, padding: 16, borderWidth: 1, borderColor: border, marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: raised, borderRadius: 24, padding: 16, borderWidth: 1, borderColor: border, marginBottom: 16 }}>
               <Text style={{ fontSize: 28, fontWeight: '900', color: primary, marginRight: 8 , fontFamily: 'CormorantGaramond_700Bold'}}>₹</Text>
               <TextInput
-                style={{ flex: 1, fontSize: 32, fontWeight: '900', color: ink, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}
+                style={{ flex: 1, fontSize: 32, fontWeight: '900', color: ink, padding: 0, fontVariant: ['tabular-nums'] }}
                 placeholder="0" placeholderTextColor={muted}
                 keyboardType="numeric" value={inputAmount} onChangeText={setInputAmount}
                 autoFocus
               />
             </View>
-            <View style={{ flexDirection: 'row', gap: 12 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', gap: 12 }}>
               {editing && (
                 <TouchableOpacity onPress={() => { setEditing(false); setInputAmount(''); }} activeOpacity={0.7}
-                  style={{ flex: 1, padding: 15, borderRadius: 24, borderWidth: 1, borderColor: border, alignItems: 'center' , fontFamily: 'DMSans_500Medium'}}>
+                  style={{ flex: 1, padding: 15, borderRadius: 24, borderWidth: 1, borderColor: border, alignItems: 'center' }}>
                   <Text style={{ color: muted, fontWeight: '700', fontSize: 15 , fontFamily: 'DMSans_700Bold'}}>Cancel</Text>
                 </TouchableOpacity>
               )}
               <TouchableOpacity onPress={saveBudget} activeOpacity={0.85}
-                style={{ flex: 2, padding: 15, borderRadius: 24, backgroundColor: primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
+                style={{ flex: 2, padding: 15, borderRadius: 24, backgroundColor: primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 <Check size={20} color="#fff" strokeWidth={3} />
                 <Text style={{ color: '#fff', fontWeight: '900', fontSize: 15 , fontFamily: 'CormorantGaramond_700Bold'}}>Save Budget</Text>
               </TouchableOpacity>
@@ -164,15 +164,15 @@ export default function BudgetScreen() {
         {budget && !editing && (
           <>
             {/* Main Budget Card */}
-            <View style={{ backgroundColor: card, borderRadius: 22, padding: 22, marginBottom: 16, borderWidth: 1, borderColor: border , fontFamily: 'DMSans_500Medium'}}>
-              <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ backgroundColor: card, borderRadius: 22, padding: 22, marginBottom: 16, borderWidth: 1, borderColor: border }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
                 <View>
                   <Text style={{ fontSize: 12, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 6 , fontFamily: 'CormorantGaramond_700Bold'}}>Monthly Budget</Text>
                   <Text style={{ fontSize: 36, fontWeight: '900', color: ink, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
                     ₹{budgetAmount.toLocaleString('en-IN')}
                   </Text>
                 </View>
-                <View style={{ backgroundColor: primary + '15', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 , fontFamily: 'DMSans_500Medium'}}>
+                <View style={{ backgroundColor: primary + '15', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 }}>
                   <Text style={{ fontSize: 13, fontWeight: '800', color: primary , fontFamily: 'CormorantGaramond_700Bold'}}>
                     {Math.round(pct * 100)}% used
                   </Text>
@@ -180,14 +180,14 @@ export default function BudgetScreen() {
               </View>
 
               {/* Progress Bar */}
-              <View style={{ height: 12, backgroundColor: raised, borderRadius: 6, overflow: 'hidden', marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>
-                <View style={{ height: 12, borderRadius: 6, backgroundColor: progressColor, width: `${Math.min(100, pct * 100)}%` , fontFamily: 'DMSans_500Medium'}} />
+              <View style={{ height: 12, backgroundColor: raised, borderRadius: 6, overflow: 'hidden', marginBottom: 16 }}>
+                <View style={{ height: 12, borderRadius: 6, backgroundColor: progressColor, width: `${Math.min(100, pct * 100)}%` }} />
               </View>
 
               {/* Stats Row */}
-              <View style={{ flexDirection: 'row', gap: 12 , fontFamily: 'DMSans_500Medium'}}>
-                <View style={{ flex: 1, backgroundColor: danger + '12', borderRadius: 14, padding: 14 , fontFamily: 'DMSans_500Medium'}}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                <View style={{ flex: 1, backgroundColor: danger + '12', borderRadius: 14, padding: 14 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
                     <TrendingDown size={15} color={danger} />
                     <Text style={{ fontSize: 11, fontWeight: '800', color: danger, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>Spent</Text>
                   </View>
@@ -195,8 +195,8 @@ export default function BudgetScreen() {
                     ₹{spent.toLocaleString('en-IN')}
                   </Text>
                 </View>
-                <View style={{ flex: 1, backgroundColor: (isOverBudget ? danger : success) + '12', borderRadius: 14, padding: 14 , fontFamily: 'DMSans_500Medium'}}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 , fontFamily: 'DMSans_500Medium'}}>
+                <View style={{ flex: 1, backgroundColor: (isOverBudget ? danger : success) + '12', borderRadius: 14, padding: 14 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
                     <Target size={15} color={isOverBudget ? danger : success} />
                     <Text style={{ fontSize: 11, fontWeight: '800', color: isOverBudget ? danger : success, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>
                       {isOverBudget ? 'Over' : 'Left'}
@@ -206,8 +206,8 @@ export default function BudgetScreen() {
                     ₹{Math.abs(remaining).toLocaleString('en-IN')}
                   </Text>
                 </View>
-                <View style={{ flex: 1, backgroundColor: success + '12', borderRadius: 14, padding: 14 , fontFamily: 'DMSans_500Medium'}}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 , fontFamily: 'DMSans_500Medium'}}>
+                <View style={{ flex: 1, backgroundColor: success + '12', borderRadius: 14, padding: 14 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
                     <TrendingUp size={15} color={success} />
                     <Text style={{ fontSize: 11, fontWeight: '800', color: success, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>Income</Text>
                   </View>
@@ -218,7 +218,7 @@ export default function BudgetScreen() {
               </View>
 
               {isOverBudget && (
-                <View style={{ backgroundColor: danger + '15', borderRadius: 14, padding: 14, marginTop: 14, flexDirection: 'row', alignItems: 'center', gap: 10 , fontFamily: 'DMSans_500Medium'}}>
+                <View style={{ backgroundColor: danger + '15', borderRadius: 14, padding: 14, marginTop: 14, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                   <Text style={{ fontSize: 18 , fontFamily: 'DMSans_500Medium'}}>⚠️</Text>
                   <Text style={{ flex: 1, fontSize: 14, fontWeight: '700', color: danger, lineHeight: 20 , fontFamily: 'DMSans_700Bold'}}>
                     You've exceeded your budget by ₹{Math.abs(remaining).toLocaleString('en-IN')} this month!
@@ -233,7 +233,7 @@ export default function BudgetScreen() {
               const daysLeft = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() - today.getDate() + 1;
               const daily = Math.floor(remaining / daysLeft);
               return (
-                <View style={{ backgroundColor: isDark ? 'rgba(16,185,129,0.12)' : '#ECFDF5', borderRadius: 18, padding: 18, marginBottom: 16, borderWidth: 1, borderColor: isDark ? 'rgba(16,185,129,0.25)' : '#A7F3D0' , fontFamily: 'DMSans_500Medium'}}>
+                <View style={{ backgroundColor: isDark ? 'rgba(16,185,129,0.12)' : '#ECFDF5', borderRadius: 18, padding: 18, marginBottom: 16, borderWidth: 1, borderColor: isDark ? 'rgba(16,185,129,0.25)' : '#A7F3D0' }}>
                   <Text style={{ fontSize: 12, fontWeight: '800', color: success, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 , fontFamily: 'CormorantGaramond_700Bold'}}>Daily Safe Spend</Text>
                   <Text style={{ fontSize: 28, fontWeight: '900', color: success, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
                     ₹{daily.toLocaleString('en-IN')}<Text style={{ fontSize: 15, fontWeight: '700', opacity: 0.8 , fontFamily: 'DMSans_700Bold'}}>/day</Text>
@@ -245,7 +245,7 @@ export default function BudgetScreen() {
 
             {/* Remove budget */}
             <TouchableOpacity onPress={deleteBudget} activeOpacity={0.7}
-              style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 24, borderWidth: 1, borderColor: danger + '40', backgroundColor: danger + '08' , fontFamily: 'DMSans_500Medium'}}>
+              style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14, borderRadius: 24, borderWidth: 1, borderColor: danger + '40', backgroundColor: danger + '08' }}>
               <Trash2 size={16} color={danger} />
               <Text style={{ color: danger, fontWeight: '700', fontSize: 14 , fontFamily: 'DMSans_700Bold'}}>Remove this month's budget</Text>
             </TouchableOpacity>
@@ -254,7 +254,7 @@ export default function BudgetScreen() {
 
         {/* No budget placeholder */}
         {!budget && !editing && (
-          <View style={{ backgroundColor: card, borderRadius: 22, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: border, borderStyle: 'dashed' , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ backgroundColor: card, borderRadius: 22, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: border, borderStyle: 'dashed' }}>
             <Text style={{ fontSize: 48, marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>🎯</Text>
             <Text style={{ fontSize: 18, fontWeight: '800', color: ink, marginBottom: 8, textAlign: 'center' , fontFamily: 'CormorantGaramond_700Bold'}}>No budget set yet</Text>
             <Text style={{ fontSize: 14, color: muted, textAlign: 'center', lineHeight: 22 , fontFamily: 'DMSans_500Medium'}}>

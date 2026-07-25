@@ -109,13 +109,13 @@ export default function Transactions() {
           {IconComp ? <IconComp size={22} color={catColor} strokeWidth={2.5} /> : <Text style={{ fontSize: 20, fontWeight: '900', color: catColor , fontFamily: 'CormorantGaramond_700Bold'}}>{initial}</Text>}
         </View>
         
-        <View style={{ flex: 1, marginRight: 10 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flex: 1, marginRight: 10 }}>
           <Text style={{ fontSize: 16, fontWeight: '800', color: ink, marginBottom: 4 , fontFamily: 'CormorantGaramond_700Bold'}} numberOfLines={1}>
             {item.note || 'Transaction'}
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             {item.categoryName && (
-              <View style={{ backgroundColor: raised, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ backgroundColor: raised, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 }}>
                 <Text style={{ fontSize: 10, fontWeight: '700', color: muted, textTransform: 'uppercase' , fontFamily: 'DMSans_700Bold'}}>{item.categoryName}</Text>
               </View>
             )}
@@ -125,7 +125,7 @@ export default function Transactions() {
           </View>
         </View>
         
-        <View style={{ alignItems: 'flex-end' , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ alignItems: 'flex-end' }}>
           <Text style={{ fontSize: 17, fontWeight: '900', color: amountColor, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
             {isExp ? '−' : '+'}₹{item.amount.toLocaleString('en-IN')}
           </Text>
@@ -135,9 +135,9 @@ export default function Transactions() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
+    <View style={{ flex: 1, backgroundColor: bg }}>
       {/* Header */}
-      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: border, backgroundColor: bg, zIndex: 10 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: border, backgroundColor: bg, zIndex: 10 }}>
         <Text style={{ fontSize: 32, fontWeight: '900', color: ink, letterSpacing: -1 , fontFamily: 'CormorantGaramond_700Bold'}}>History 📜</Text>
         <Text style={{ fontSize: 14, fontWeight: '600', color: muted, marginTop: 4 , fontFamily: 'DMSans_500Medium'}}>
           {transactions.length} total move{transactions.length !== 1 ? 's' : ''} • Long press to edit/delete
@@ -145,7 +145,7 @@ export default function Transactions() {
       </View>
 
       {/* List Card */}
-      <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
         <FlashList
           data={transactions}
           renderItem={renderItem}
@@ -154,7 +154,7 @@ export default function Transactions() {
           estimatedItemSize={90}
           contentContainerStyle={{ paddingBottom: 120, paddingTop: 10 }}
           ListEmptyComponent={
-            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 100, paddingHorizontal: 40 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 100, paddingHorizontal: 40 }}>
               <View style={{
                 width: 88, height: 88, borderRadius: 44, marginBottom: 24,
                 backgroundColor: isDark ? '#1E293B' : '#F1F5F9',

@@ -93,21 +93,21 @@ export default function SmsParser() {
   const txColor = parsed?.type === 'expense' ? danger : success;
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
+    <View style={{ flex: 1, backgroundColor: bg }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}
-          style={{ marginRight: 14, backgroundColor: raised, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' , fontFamily: 'DMSans_500Medium'}}>
+          style={{ marginRight: 14, backgroundColor: raised, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
           <ArrowLeft size={22} color={ink} />
         </TouchableOpacity>
         <Text style={{ fontSize: 22, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>SMS Parser 📱</Text>
       </View>
 
-      <ScrollView style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
 
         {/* Info banner */}
-        <View style={{ backgroundColor: primary + '15', borderRadius: 18, padding: 16, marginBottom: 20, flexDirection: 'row', gap: 12 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ backgroundColor: primary + '15', borderRadius: 18, padding: 16, marginBottom: 20, flexDirection: 'row', gap: 12 }}>
           <MessageSquare size={20} color={primary} />
-          <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 14, fontWeight: '800', color: primary, marginBottom: 4 , fontFamily: 'CormorantGaramond_700Bold'}}>Paste your bank SMS</Text>
             <Text style={{ fontSize: 13, color: primary, opacity: 0.8, lineHeight: 19 , fontFamily: 'DMSans_500Medium'}}>
               Copy the SMS from your Messages app and paste it below. We'll extract the amount and type automatically.
@@ -116,9 +116,9 @@ export default function SmsParser() {
         </View>
 
         {/* SMS Input */}
-        <View style={{ backgroundColor: card, borderRadius: 20, borderWidth: 1, borderColor: border, marginBottom: 16, overflow: 'hidden' , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ backgroundColor: card, borderRadius: 20, borderWidth: 1, borderColor: border, marginBottom: 16, overflow: 'hidden' }}>
           <TextInput
-            style={{ padding: 18, color: ink, fontSize: 14, minHeight: 140, textAlignVertical: 'top', lineHeight: 22, fontWeight: '500' , fontFamily: 'DMSans_500Medium'}}
+            style={{ padding: 18, color: ink, fontSize: 14, minHeight: 140, textAlignVertical: 'top', lineHeight: 22, fontWeight: '500' }}
             placeholder={'e.g. Your A/c XX1234 is debited by INR 450.00 on 19-07-2026 at ZOMATO UPI Ref:123456789'}
             placeholderTextColor={muted}
             multiline
@@ -128,13 +128,13 @@ export default function SmsParser() {
         </View>
 
         {/* Parse button */}
-        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 24 }}>
           <TouchableOpacity onPress={handleReset} activeOpacity={0.7}
-            style={{ backgroundColor: raised, paddingVertical: 14, paddingHorizontal: 20, borderRadius: 18, flexDirection: 'row', alignItems: 'center', gap: 6 , fontFamily: 'DMSans_500Medium'}}>
+            style={{ backgroundColor: raised, paddingVertical: 14, paddingHorizontal: 20, borderRadius: 18, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <RefreshCw size={16} color={muted} />
             <Text style={{ color: muted, fontWeight: '700' , fontFamily: 'DMSans_700Bold'}}>Clear</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleParse} activeOpacity={0.85} style={{ flex: 1, backgroundColor: primary, paddingVertical: 14, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
+          <TouchableOpacity onPress={handleParse} activeOpacity={0.85} style={{ flex: 1, backgroundColor: primary, paddingVertical: 14, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <MessageSquare size={18} color="#fff" />
             <Text style={{ color: '#fff', fontWeight: '900', fontSize: 15 , fontFamily: 'CormorantGaramond_700Bold'}}>Extract Data</Text>
           </TouchableOpacity>
@@ -142,16 +142,16 @@ export default function SmsParser() {
 
         {/* Parsed result card */}
         {parsed && (
-          <View style={{ backgroundColor: card, borderRadius: 22, borderWidth: 2, borderColor: txColor + '50', overflow: 'hidden', marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>
-            <View style={{ height: 5, backgroundColor: txColor , fontFamily: 'DMSans_500Medium'}} />
-            <View style={{ padding: 20 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ backgroundColor: card, borderRadius: 22, borderWidth: 2, borderColor: txColor + '50', overflow: 'hidden', marginBottom: 16 }}>
+            <View style={{ height: 5, backgroundColor: txColor }} />
+            <View style={{ padding: 20 }}>
               <Text style={{ fontSize: 12, fontWeight: '800', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 16 , fontFamily: 'CormorantGaramond_700Bold'}}>
                 {saved ? '✅ Saved!' : 'Detected Transaction'}
               </Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>
-                <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                <View style={{ flex: 1 }}>
                   <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 6 , fontFamily: 'DMSans_700Bold'}}>{parsed.note}</Text>
-                  <View style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, backgroundColor: txColor + '20', alignSelf: 'flex-start' , fontFamily: 'DMSans_500Medium'}}>
+                  <View style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, backgroundColor: txColor + '20', alignSelf: 'flex-start' }}>
                     <Text style={{ fontSize: 12, fontWeight: '800', color: txColor, textTransform: 'capitalize' , fontFamily: 'CormorantGaramond_700Bold'}}>{parsed.type}</Text>
                   </View>
                 </View>
@@ -162,7 +162,7 @@ export default function SmsParser() {
 
               {!saved && (
                 <TouchableOpacity onPress={handleSave} activeOpacity={0.85}
-                  style={{ backgroundColor: txColor, padding: 16, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
+                  style={{ backgroundColor: txColor, padding: 16, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                   <Check size={20} color="#fff" strokeWidth={3} />
                   <Text style={{ color: '#fff', fontWeight: '900', fontSize: 16 , fontFamily: 'CormorantGaramond_700Bold'}}>Save Transaction</Text>
                 </TouchableOpacity>
@@ -170,7 +170,7 @@ export default function SmsParser() {
 
               {saved && (
                 <TouchableOpacity onPress={() => router.back()} activeOpacity={0.85}
-                  style={{ backgroundColor: success, padding: 16, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
+                  style={{ backgroundColor: success, padding: 16, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                   <Check size={20} color="#fff" strokeWidth={3} />
                   <Text style={{ color: '#fff', fontWeight: '900', fontSize: 16 , fontFamily: 'CormorantGaramond_700Bold'}}>Done! Go Back</Text>
                 </TouchableOpacity>

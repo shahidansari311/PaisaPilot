@@ -72,41 +72,41 @@ export default function Achievements() {
   const muted = '#6E7681';
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
+    <View style={{ flex: 1, backgroundColor: bg }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
-        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
+        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
           <ArrowLeft size={22} color={ink} />
         </TouchableOpacity>
         <Text style={{ fontSize: 18, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Achievements</Text>
       </View>
 
-      <ScrollView style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
         {/* Level card */}
-        <View style={{ backgroundColor: card, borderRadius: 24, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: border, marginBottom: 20 , fontFamily: 'DMSans_500Medium'}}>
-          <View style={{ backgroundColor: '#FEF3C7', width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 14 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ backgroundColor: card, borderRadius: 24, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: border, marginBottom: 20 }}>
+          <View style={{ backgroundColor: '#FEF3C7', width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
             <Trophy size={36} color="#F59E0B" />
           </View>
           <Text style={{ fontSize: 24, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Level {level}</Text>
           <Text style={{ fontSize: 13, color: muted, marginTop: 4, marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>{rank}</Text>
 
           {/* XP Bar */}
-          <View style={{ width: '100%', height: 8, backgroundColor: raised, borderRadius: 4, overflow: 'hidden' , fontFamily: 'DMSans_500Medium'}}>
-            <View style={{ width: `${xpPercent}%`, height: '100%', backgroundColor: '#F59E0B', borderRadius: 4 , fontFamily: 'DMSans_500Medium'}} />
+          <View style={{ width: '100%', height: 8, backgroundColor: raised, borderRadius: 4, overflow: 'hidden' }}>
+            <View style={{ width: `${xpPercent}%`, height: '100%', backgroundColor: '#F59E0B', borderRadius: 4 }} />
           </View>
           <Text style={{ fontSize: 11, color: muted, marginTop: 6, alignSelf: 'flex-end' , fontFamily: 'DMSans_500Medium'}}>{xp} / {maxXP} XP</Text>
         </View>
 
         <Text style={{ fontSize: 10, fontWeight: '600', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'DMSans_500Medium'}}>Your Badges</Text>
 
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           {badges.map(badge => (
             <View key={badge.id} style={{
               width: '47%', backgroundColor: card, padding: 16, borderRadius: 14,
               borderWidth: 1, borderColor: badge.unlocked ? badge.color + '40' : border,
               alignItems: 'center', opacity: badge.unlocked ? 1 : 0.45,
             }}>
-              <View style={{ width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: badge.unlocked ? badge.color + '20' : raised , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: badge.unlocked ? badge.color + '20' : raised }}>
                 <badge.icon size={26} color={badge.unlocked ? badge.color : muted} />
               </View>
               <Text style={{ fontSize: 13, fontWeight: '700', color: ink, textAlign: 'center' , fontFamily: 'DMSans_700Bold'}}>{badge.title}</Text>
@@ -115,7 +115,7 @@ export default function Achievements() {
           ))}
         </View>
 
-        <View style={{ height: 24 , fontFamily: 'DMSans_500Medium'}} />
+        <View style={{ height: 24 }} />
       </ScrollView>
     </View>
   );

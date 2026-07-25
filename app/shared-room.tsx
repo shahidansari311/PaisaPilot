@@ -207,10 +207,10 @@ export default function SharedRoom() {
 
   if (!localRoom) {
     return (
-      <View style={{ flex: 1, backgroundColor: bg, alignItems: 'center', justifyContent: 'center', padding: 40 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ flex: 1, backgroundColor: bg, alignItems: 'center', justifyContent: 'center', padding: 40 }}>
         <Text style={{ fontSize: 18, fontWeight: '800', color: ink, marginBottom: 8 , fontFamily: 'CormorantGaramond_700Bold'}}>Room not found</Text>
         <Text style={{ fontSize: 14, color: muted, textAlign: 'center' , fontFamily: 'DMSans_500Medium'}}>This room is no longer in your local storage.</Text>
-        <TouchableOpacity onPress={() => router.back()} style={{ marginTop: 20, padding: 14, borderRadius: 14, backgroundColor: primary , fontFamily: 'DMSans_500Medium'}}>
+        <TouchableOpacity onPress={() => router.back()} style={{ marginTop: 20, padding: 14, borderRadius: 14, backgroundColor: primary }}>
           <Text style={{ color: '#fff', fontWeight: '800' , fontFamily: 'CormorantGaramond_700Bold'}}>Go Back</Text>
         </TouchableOpacity>
       </View>
@@ -218,16 +218,16 @@ export default function SharedRoom() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
+    <View style={{ flex: 1, backgroundColor: bg }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 , fontFamily: 'DMSans_500Medium'}}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
             <ArrowLeft size={22} color={ink} />
           </TouchableOpacity>
-          <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20, fontWeight: '900', color: ink, letterSpacing: -0.5 , fontFamily: 'CormorantGaramond_700Bold'}} numberOfLines={1}>{roomName} ☁️</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 2 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 2 }}>
               <Cloud size={11} color={primary} />
               <Text style={{ fontSize: 11, fontWeight: '700', color: primary , fontFamily: 'DMSans_700Bold'}}>Live Synced</Text>
               <Text style={{ fontSize: 11, color: muted , fontFamily: 'DMSans_500Medium'}}>•</Text>
@@ -236,18 +236,18 @@ export default function SharedRoom() {
           </View>
         </View>
         <TouchableOpacity onPress={leaveRoom} activeOpacity={0.7}
-          style={{ padding: 10, borderRadius: 14, backgroundColor: danger + '12', borderWidth: 1, borderColor: danger + '25' , fontFamily: 'DMSans_500Medium'}}>
+          style={{ padding: 10, borderRadius: 14, backgroundColor: danger + '12', borderWidth: 1, borderColor: danger + '25' }}>
           <LogOut size={18} color={danger} />
         </TouchableOpacity>
       </View>
 
       {loading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator size="large" color={primary} />
           <Text style={{ color: muted, marginTop: 12, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}>Syncing...</Text>
         </View>
       ) : (
-        <ScrollView style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}} contentContainerStyle={{ padding: 20, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
 
           {/* Net Balance Card */}
           <View style={{
@@ -278,22 +278,22 @@ export default function SharedRoom() {
           </View>
 
           {/* Members */}
-          <View style={{ backgroundColor: card, borderRadius: 18, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: border , fontFamily: 'DMSans_500Medium'}}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ backgroundColor: card, borderRadius: 18, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: border }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
               <Users size={16} color={primary} />
               <Text style={{ fontSize: 14, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Members ({memberList.length})</Text>
-              <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}} />
-              <TouchableOpacity onPress={copyCode} activeOpacity={0.7} style={{ flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, backgroundColor: primary + '12' , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ flex: 1 }} />
+              <TouchableOpacity onPress={copyCode} activeOpacity={0.7} style={{ flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, backgroundColor: primary + '12' }}>
                 <Copy size={12} color={primary} />
                 <Text style={{ fontSize: 11, fontWeight: '800', color: primary , fontFamily: 'CormorantGaramond_700Bold'}}>{roomCode}</Text>
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
               {memberList.map(([id, m]) => {
                 const isMe = id === myMemberId;
                 return (
-                  <View key={id} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: isMe ? primary + '15' : raised, paddingHorizontal: 12, paddingVertical: 7, borderRadius: 20, borderWidth: 1, borderColor: isMe ? primary + '30' : border , fontFamily: 'DMSans_500Medium'}}>
-                    <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: isMe ? primary : success, alignItems: 'center', justifyContent: 'center' , fontFamily: 'DMSans_500Medium'}}>
+                  <View key={id} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: isMe ? primary + '15' : raised, paddingHorizontal: 12, paddingVertical: 7, borderRadius: 20, borderWidth: 1, borderColor: isMe ? primary + '30' : border }}>
+                    <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: isMe ? primary : success, alignItems: 'center', justifyContent: 'center' }}>
                       <Text style={{ fontSize: 10, fontWeight: '900', color: '#fff' , fontFamily: 'CormorantGaramond_700Bold'}}>{m.name.charAt(0).toUpperCase()}</Text>
                     </View>
                     <Text style={{ fontSize: 13, fontWeight: '700', color: isMe ? primary : ink , fontFamily: 'DMSans_700Bold'}}>{m.name}{isMe ? ' (You)' : ''}</Text>
@@ -304,20 +304,20 @@ export default function SharedRoom() {
           </View>
 
           {/* Entries Header */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
             <Text style={{ fontSize: 16, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Entries 📒</Text>
             <Text style={{ fontSize: 12, fontWeight: '700', color: muted , fontFamily: 'DMSans_700Bold'}}>Long press to manage</Text>
           </View>
 
           {/* Entry List */}
           {entries.length === 0 ? (
-            <View style={{ backgroundColor: card, borderRadius: 22, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: border, borderStyle: 'dashed' , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ backgroundColor: card, borderRadius: 22, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: border, borderStyle: 'dashed' }}>
               <Text style={{ fontSize: 36, marginBottom: 12 , fontFamily: 'DMSans_500Medium'}}>📝</Text>
               <Text style={{ fontSize: 16, fontWeight: '800', color: ink, marginBottom: 6 , fontFamily: 'CormorantGaramond_700Bold'}}>No entries yet</Text>
               <Text style={{ fontSize: 13, color: muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'DMSans_500Medium'}}>Tap + to add who paid for what</Text>
             </View>
           ) : (
-            <View style={{ backgroundColor: card, borderRadius: 22, borderWidth: 1, borderColor: border, overflow: 'hidden' , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ backgroundColor: card, borderRadius: 22, borderWidth: 1, borderColor: border, overflow: 'hidden' }}>
               {entries.map((entry, i) => {
                 const isMe = entry.paidByMemberId === myMemberId;
                 const isPaid = !!entry.isPaid;
@@ -334,16 +334,16 @@ export default function SharedRoom() {
                       borderBottomWidth: i < entries.length - 1 ? 1 : 0, borderBottomColor: border,
                       opacity: isPaid ? 0.45 : 1,
                     }}>
-                    <View style={{ marginRight: 12 , fontFamily: 'DMSans_500Medium'}}>
+                    <View style={{ marginRight: 12 }}>
                       {isPaid ? <CheckCircle size={22} color={success} /> : <Circle size={22} color={border} />}
                     </View>
-                    <View style={{ width: 40, height: 40, borderRadius: 20, marginRight: 12, backgroundColor: entryColor + '15', alignItems: 'center', justifyContent: 'center' , fontFamily: 'DMSans_500Medium'}}>
+                    <View style={{ width: 40, height: 40, borderRadius: 20, marginRight: 12, backgroundColor: entryColor + '15', alignItems: 'center', justifyContent: 'center' }}>
                       {isMe ? <ArrowUpRight size={18} color={entryColor} strokeWidth={2.5} /> : <ArrowDownLeft size={18} color={entryColor} strokeWidth={2.5} />}
                     </View>
-                    <View style={{ flex: 1, marginRight: 10 , fontFamily: 'DMSans_500Medium'}}>
+                    <View style={{ flex: 1, marginRight: 10 }}>
                       <Text style={{ fontSize: 15, fontWeight: '700', color: ink, marginBottom: 3, textDecorationLine: isPaid ? 'line-through' : 'none' , fontFamily: 'DMSans_700Bold'}} numberOfLines={1}>{entry.description}</Text>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
-                        <View style={{ backgroundColor: entryColor + '15', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 , fontFamily: 'DMSans_500Medium'}}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <View style={{ backgroundColor: entryColor + '15', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 }}>
                           <Text style={{ fontSize: 10, fontWeight: '800', color: entryColor, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>
                             {entry.paidByName} paid
                           </Text>
@@ -359,7 +359,7 @@ export default function SharedRoom() {
               })}
             </View>
           )}
-          <View style={{ height: 24 , fontFamily: 'DMSans_500Medium'}} />
+          <View style={{ height: 24 }} />
         </ScrollView>
       )}
 
@@ -375,16 +375,16 @@ export default function SharedRoom() {
 
       {/* Add/Edit Modal */}
       <Modal visible={showModal} animationType="slide" transparent>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' , fontFamily: 'DMSans_500Medium'}}>
-          <View style={{ backgroundColor: bg, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 380 , fontFamily: 'DMSans_500Medium'}}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+          <View style={{ backgroundColor: bg, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 380 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
               <Text style={{ fontSize: 20, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>{editingId ? 'Edit Entry ✏️' : 'Add Entry 📝'}</Text>
               <TouchableOpacity onPress={() => setShowModal(false)}><X size={24} color={muted} /></TouchableOpacity>
             </View>
 
             <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>What was it for?</Text>
             <TextInput
-              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 16, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}
+              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 16, fontWeight: '600' }}
               placeholder="e.g. Groceries, Electricity"
               placeholderTextColor={muted}
               value={formDesc}
@@ -393,7 +393,7 @@ export default function SharedRoom() {
 
             <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Amount (₹)</Text>
             <TextInput
-              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: success, fontSize: 28, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}
+              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: success, fontSize: 28, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] }}
               placeholder="0"
               placeholderTextColor={isDark ? '#334155' : '#CBD5E1'}
               keyboardType="numeric"
@@ -403,19 +403,19 @@ export default function SharedRoom() {
 
             <Text style={{ color: muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'DMSans_700Bold'}}>Date (YYYY-MM-DD)</Text>
             <TextInput
-              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 10, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}
+              style={{ backgroundColor: card, borderWidth: 1, borderColor: border, borderRadius: 14, padding: 14, color: ink, fontSize: 16, marginBottom: 10, fontWeight: '600' }}
               placeholder="2026-07-21"
               placeholderTextColor={muted}
               value={formDate}
               onChangeText={setFormDate}
             />
-            <View style={{ flexDirection: 'row', gap: 8, marginBottom: 24, flexWrap: 'wrap' , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
               {[{ label: 'Today', offset: 0 }, { label: 'Yesterday', offset: -1 }, { label: '2 days ago', offset: -2 }].map(({ label, offset }) => {
                 const d = new Date(); d.setDate(d.getDate() + offset);
                 const val = d.toISOString().split('T')[0];
                 return (
                   <TouchableOpacity key={label} onPress={() => setFormDate(val)} activeOpacity={0.7}
-                    style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 18, borderWidth: 1.5, borderColor: formDate === val ? primary : border, backgroundColor: formDate === val ? primary + '15' : raised , fontFamily: 'DMSans_500Medium'}}>
+                    style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 18, borderWidth: 1.5, borderColor: formDate === val ? primary : border, backgroundColor: formDate === val ? primary + '15' : raised }}>
                     <Text style={{ fontSize: 12, fontWeight: '700', color: formDate === val ? primary : muted , fontFamily: 'DMSans_700Bold'}}>{label}</Text>
                   </TouchableOpacity>
                 );
@@ -423,7 +423,7 @@ export default function SharedRoom() {
             </View>
 
             <TouchableOpacity onPress={saveEntry} activeOpacity={0.85}
-              style={{ backgroundColor: primary, padding: 18, borderRadius: 18, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, shadowColor: primary, shadowOpacity: 0.4, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 8 , fontFamily: 'DMSans_500Medium'}}>
+              style={{ backgroundColor: primary, padding: 18, borderRadius: 18, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, shadowColor: primary, shadowOpacity: 0.4, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, elevation: 8 }}>
               <Check size={22} color="#fff" strokeWidth={3} />
               <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'CormorantGaramond_700Bold'}}>{editingId ? 'Save Changes' : 'Add Entry'}</Text>
             </TouchableOpacity>

@@ -168,15 +168,15 @@ export default function CalendarScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}}>
+    <View style={{ flex: 1, backgroundColor: bg }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 64, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 64, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: border }}>
         <View>
           <Text style={{ fontSize: 32, fontWeight: '900', color: ink, letterSpacing: -1 , fontFamily: 'CormorantGaramond_700Bold'}}>Calendar 📅</Text>
           <Text style={{ fontSize: 14, fontWeight: '600', color: muted, marginTop: 4 , fontFamily: 'DMSans_500Medium'}}>Tap a day to see spending</Text>
         </View>
         <TouchableOpacity onPress={handleExportMonth} activeOpacity={0.7}
-          style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: primary + '15', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: primary + '30' , fontFamily: 'DMSans_500Medium'}}>
+          style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: primary + '15', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: primary + '30' }}>
           <Download size={20} color={primary} />
         </TouchableOpacity>
       </View>
@@ -184,25 +184,25 @@ export default function CalendarScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
 
         {/* Month Navigator */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 20 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 20 }}>
           <TouchableOpacity onPress={() => goMonth(-1)} activeOpacity={0.7}
-            style={{ backgroundColor: card, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: border , fontFamily: 'DMSans_500Medium'}}>
+            style={{ backgroundColor: card, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: border }}>
             <ChevronLeft size={22} color={ink} />
           </TouchableOpacity>
-          <View style={{ alignItems: 'center' , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ alignItems: 'center' }}>
             <Text style={{ fontSize: 22, fontWeight: '900', color: ink, letterSpacing: -0.5 , fontFamily: 'CormorantGaramond_700Bold'}}>{MONTHS[viewMonth]}</Text>
             <Text style={{ fontSize: 14, fontWeight: '700', color: muted , fontFamily: 'DMSans_700Bold'}}>{viewYear}</Text>
           </View>
           <TouchableOpacity onPress={() => goMonth(1)} activeOpacity={0.7}
-            style={{ backgroundColor: card, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: border , fontFamily: 'DMSans_500Medium'}}>
+            style={{ backgroundColor: card, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: border }}>
             <ChevronRight size={22} color={ink} />
           </TouchableOpacity>
         </View>
 
         {/* Month Summary */}
-        <View style={{ flexDirection: 'row', marginHorizontal: 24, gap: 16, marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
-          <View style={{ flex: 1, backgroundColor: success + '15', borderRadius: 20, padding: 16, borderWidth: 1, borderColor: success + '30' , fontFamily: 'DMSans_500Medium'}}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ flexDirection: 'row', marginHorizontal: 24, gap: 16, marginBottom: 24 }}>
+          <View style={{ flex: 1, backgroundColor: success + '15', borderRadius: 20, padding: 16, borderWidth: 1, borderColor: success + '30' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
               <TrendingUp size={16} color={success} />
               <Text style={{ fontSize: 12, fontWeight: '800', color: success, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>In</Text>
             </View>
@@ -210,8 +210,8 @@ export default function CalendarScreen() {
               ₹{monthIncome.toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ flex: 1, backgroundColor: danger + '15', borderRadius: 20, padding: 16, borderWidth: 1, borderColor: danger + '30' , fontFamily: 'DMSans_500Medium'}}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flex: 1, backgroundColor: danger + '15', borderRadius: 20, padding: 16, borderWidth: 1, borderColor: danger + '30' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
               <TrendingDown size={16} color={danger} />
               <Text style={{ fontSize: 12, fontWeight: '800', color: danger, textTransform: 'uppercase' , fontFamily: 'CormorantGaramond_700Bold'}}>Out</Text>
             </View>
@@ -222,11 +222,11 @@ export default function CalendarScreen() {
         </View>
 
         {/* Calendar Grid */}
-        <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, padding: 16, marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, padding: 16, marginBottom: 24 }}>
           {/* Day Labels */}
-          <View style={{ flexDirection: 'row', marginBottom: 8 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ flexDirection: 'row', marginBottom: 8 }}>
             {DAYS.map(d => (
-              <View key={d} style={{ flex: 1, alignItems: 'center', paddingVertical: 8 , fontFamily: 'DMSans_500Medium'}}>
+              <View key={d} style={{ flex: 1, alignItems: 'center', paddingVertical: 8 }}>
                 <Text style={{ fontSize: 12, fontWeight: '800', color: muted , fontFamily: 'CormorantGaramond_700Bold'}}>{d}</Text>
               </View>
             ))}
@@ -234,9 +234,9 @@ export default function CalendarScreen() {
 
           {/* Grid Rows */}
           {Array.from({ length: calCells.length / 7 }, (_, rowIdx) => (
-            <View key={rowIdx} style={{ flexDirection: 'row' , fontFamily: 'DMSans_500Medium'}}>
+            <View key={rowIdx} style={{ flexDirection: 'row' }}>
               {calCells.slice(rowIdx * 7, rowIdx * 7 + 7).map((day, colIdx) => {
-                if (!day) return <View key={colIdx} style={{ flex: 1, aspectRatio: 1 , fontFamily: 'DMSans_500Medium'}} />;
+                if (!day) return <View key={colIdx} style={{ flex: 1, aspectRatio: 1 }} />;
                 const dateStr = formatDateStr(day);
                 const data = monthData[dateStr];
                 const isToday = dateStr === todayStr;
@@ -249,7 +249,7 @@ export default function CalendarScreen() {
                 return (
                   <TouchableOpacity key={colIdx} onPress={() => !isFuture && handleDayPress(dateStr)}
                     activeOpacity={isFuture ? 1 : 0.75}
-                    style={{ flex: 1, aspectRatio: 1, alignItems: 'center', justifyContent: 'center', padding: 2 , fontFamily: 'DMSans_500Medium'}}>
+                    style={{ flex: 1, aspectRatio: 1, alignItems: 'center', justifyContent: 'center', padding: 2 }}>
                     <View style={{
                       width: '90%', aspectRatio: 1, borderRadius: 100, alignItems: 'center', justifyContent: 'center',
                       backgroundColor: isSelected ? primary : isToday ? primary + '20' : 'transparent',
@@ -261,9 +261,9 @@ export default function CalendarScreen() {
                     </View>
                     {/* Spending dots */}
                     {hasData && !isSelected && (
-                      <View style={{ flexDirection: 'row', gap: 2, marginTop: 2 , fontFamily: 'DMSans_500Medium'}}>
-                        {isExpenseDay && <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: danger , fontFamily: 'DMSans_500Medium'}} />}
-                        {isIncomeDay && <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: success , fontFamily: 'DMSans_500Medium'}} />}
+                      <View style={{ flexDirection: 'row', gap: 2, marginTop: 2 }}>
+                        {isExpenseDay && <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: danger }} />}
+                        {isIncomeDay && <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: success }} />}
                       </View>
                     )}
                     {/* Selected: mini spend label */}
@@ -281,15 +281,15 @@ export default function CalendarScreen() {
 
         {/* Day Detail Panel */}
         {selectedDate && (
-          <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, overflow: 'hidden', marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+          <View style={{ marginHorizontal: 20, backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, overflow: 'hidden', marginBottom: 24 }}>
             {/* Panel Header */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, borderBottomWidth: 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, borderBottomWidth: 1, borderBottomColor: border }}>
               <View>
                 <Text style={{ fontSize: 18, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>
                   {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </Text>
                 {monthData[selectedDate] && (
-                  <View style={{ flexDirection: 'row', gap: 12, marginTop: 6 , fontFamily: 'DMSans_500Medium'}}>
+                  <View style={{ flexDirection: 'row', gap: 12, marginTop: 6 }}>
                     {monthData[selectedDate].totalExpense > 0 && (
                       <Text style={{ fontSize: 13, fontWeight: '700', color: danger , fontFamily: 'DMSans_700Bold'}}>
                         −₹{monthData[selectedDate].totalExpense.toLocaleString('en-IN')}
@@ -304,14 +304,14 @@ export default function CalendarScreen() {
                 )}
               </View>
               <TouchableOpacity onPress={addForDate} activeOpacity={0.85}
-                style={{ backgroundColor: primary, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', shadowColor: primary, shadowOpacity: 0.4, shadowRadius: 8, shadowOffset: { width: 0, height: 4 } , fontFamily: 'DMSans_500Medium'}}>
+                style={{ backgroundColor: primary, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', shadowColor: primary, shadowOpacity: 0.4, shadowRadius: 8, shadowOffset: { width: 0, height: 4 } }}>
                 <Plus size={24} color="#fff" strokeWidth={3} />
               </TouchableOpacity>
             </View>
 
             {/* Transactions for the day */}
             {dayTransactions.length === 0 ? (
-              <View style={{ padding: 32, alignItems: 'center' , fontFamily: 'DMSans_500Medium'}}>
+              <View style={{ padding: 32, alignItems: 'center' }}>
                 <Text style={{ fontSize: 32, marginBottom: 12 , fontFamily: 'CormorantGaramond_700Bold'}}>🌵</Text>
                 <Text style={{ fontSize: 16, fontWeight: '700', color: ink, marginBottom: 6 , fontFamily: 'DMSans_700Bold'}}>Nothing here</Text>
                 <Text style={{ fontSize: 14, color: muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'DMSans_500Medium'}}>
@@ -325,11 +325,11 @@ export default function CalendarScreen() {
                 return (
                   <TouchableOpacity key={tx.id} 
                     onLongPress={() => handleAction(tx.id)} delayLongPress={350} activeOpacity={0.7}
-                    style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 16, borderBottomWidth: i < dayTransactions.length - 1 ? 1 : 0, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
-                    <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: color + '15', alignItems: 'center', justifyContent: 'center', marginRight: 14 , fontFamily: 'DMSans_500Medium'}}>
+                    style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 16, borderBottomWidth: i < dayTransactions.length - 1 ? 1 : 0, borderBottomColor: border }}>
+                    <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: color + '15', alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
                       <Text style={{ fontSize: 18, fontWeight: '900', color , fontFamily: 'CormorantGaramond_700Bold'}}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
                     </View>
-                    <View style={{ flex: 1 , fontFamily: 'DMSans_500Medium'}}>
+                    <View style={{ flex: 1 }}>
                       <Text style={{ fontSize: 16, fontWeight: '700', color: ink, marginBottom: 2 , fontFamily: 'DMSans_700Bold'}} numberOfLines={1}>
                         {tx.note || 'Transaction'}
                       </Text>
@@ -348,13 +348,13 @@ export default function CalendarScreen() {
         )}
 
         {/* Legend */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 24, marginBottom: 8 , fontFamily: 'DMSans_500Medium'}}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
-            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: danger , fontFamily: 'DMSans_500Medium'}} />
+        <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 24, marginBottom: 8 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: danger }} />
             <Text style={{ fontSize: 13, fontWeight: '600', color: muted , fontFamily: 'DMSans_500Medium'}}>Expense day</Text>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 , fontFamily: 'DMSans_500Medium'}}>
-            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: success , fontFamily: 'DMSans_500Medium'}} />
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: success }} />
             <Text style={{ fontSize: 13, fontWeight: '600', color: muted , fontFamily: 'DMSans_500Medium'}}>Income day</Text>
           </View>
         </View>

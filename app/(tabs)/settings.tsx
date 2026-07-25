@@ -72,7 +72,7 @@ export default function Settings() {
   const danger = '#C44D4D';
   const warning = '#D89B00';
   const SectionLabel = ({ emoji, title }: { emoji: string; title: string }) => (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16, marginTop: 8 , fontFamily: 'DMSans_500Medium'}}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16, marginTop: 8 }}>
       <Text style={{ fontSize: 18 , fontFamily: 'DMSans_500Medium'}}>{emoji}</Text>
       <Text style={{ fontSize: 14, fontWeight: '800', color: muted, textTransform: 'uppercase', letterSpacing: 1.5 , fontFamily: 'CormorantGaramond_700Bold'}}>{title}</Text>
     </View>
@@ -80,8 +80,8 @@ export default function Settings() {
 
   const SettingRow = ({ icon, label, onPress, right, isDanger = false, noBorder = false }: { icon: React.ReactNode; label: string; onPress?: () => void; right?: React.ReactNode; isDanger?: boolean; noBorder?: boolean }) => (
     <TouchableOpacity onPress={onPress} activeOpacity={onPress ? 0.7 : 1}
-      style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 18, gap: 16, borderBottomWidth: noBorder ? 0 : 1, borderBottomColor: border , fontFamily: 'DMSans_500Medium'}}>
-      <View style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: isDanger ? danger + '15' : raised , fontFamily: 'DMSans_500Medium'}}>
+      style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 18, gap: 16, borderBottomWidth: noBorder ? 0 : 1, borderBottomColor: border }}>
+      <View style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: isDanger ? danger + '15' : raised }}>
         {icon}
       </View>
       <Text style={{ flex: 1, fontSize: 16, fontWeight: '700', color: isDanger ? danger : ink , fontFamily: 'DMSans_700Bold'}}>{label}</Text>
@@ -90,18 +90,18 @@ export default function Settings() {
   );
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: bg , fontFamily: 'DMSans_500Medium'}} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: bg }} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
 
-      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24 }}>
         <Text style={{ fontSize: 32, fontWeight: '900', color: ink, letterSpacing: -1 , fontFamily: 'CormorantGaramond_700Bold'}}>Settings ⚙️</Text>
         <Text style={{ fontSize: 14, fontWeight: '600', color: muted, marginTop: 4 , fontFamily: 'DMSans_500Medium'}}>Customize your experience</Text>
       </View>
 
-      <View style={{ paddingHorizontal: 24 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ paddingHorizontal: 24 }}>
 
         {/* Appearance */}
         <SectionLabel emoji="🎨" title="Appearance" />
-        <View style={{ backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, overflow: 'hidden', marginBottom: 32 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, overflow: 'hidden', marginBottom: 32 }}>
           <SettingRow
             icon={isDark ? <Moon size={20} color={primary} /> : <Sun size={20} color='#F59E0B' />}
             label={isDark ? 'Dark Mode' : 'Light Mode'}
@@ -114,7 +114,7 @@ export default function Settings() {
 
         {/* Data & Export */}
         <SectionLabel emoji="📤" title="Data & Export" />
-        <View style={{ backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, overflow: 'hidden', marginBottom: 32 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, overflow: 'hidden', marginBottom: 32 }}>
           <SettingRow icon={<UploadCloud size={20} color={primary} />} label="Import CSV Statement" onPress={() => router.push('/csv-import')} />
           <SettingRow icon={<FileSpreadsheet size={20} color='#10B981' />} label="Export as Excel / CSV" onPress={() => handleExport('csv')} />
           <SettingRow icon={<FileText size={20} color='#3B82F6' />} label="Generate PDF Report" onPress={() => handleExport('pdf')} noBorder />
@@ -122,7 +122,7 @@ export default function Settings() {
 
         {/* Danger Zone */}
         <SectionLabel emoji="⚠️" title="Danger Zone" />
-        <View style={{ backgroundColor: card, borderRadius: 28, borderWidth: 1.5, borderColor: danger + '40', overflow: 'hidden', marginBottom: 24 , fontFamily: 'DMSans_500Medium'}}>
+        <View style={{ backgroundColor: card, borderRadius: 28, borderWidth: 1.5, borderColor: danger + '40', overflow: 'hidden', marginBottom: 24 }}>
           <SettingRow
             icon={<Trash2 size={20} color={danger} />}
             label="Delete All Data"
