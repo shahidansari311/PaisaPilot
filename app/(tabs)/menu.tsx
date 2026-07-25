@@ -16,12 +16,12 @@ export default function MenuScreen() {
       .catch(console.error);
   }, []));
 
-  const bg = isDark ? '#0F172A' : '#F8FAFC';
-  const card = isDark ? '#1E293B' : '#FFFFFF';
-  const border = isDark ? '#334155' : '#E2E8F0';
-  const ink = isDark ? '#F8FAFC' : '#0F172A';
-  const muted = isDark ? '#94A3B8' : '#64748B';
-  const primary = '#8B5CF6';
+  const bg = isDark ? '#121212' : '#EBF1ED';
+  const card = isDark ? '#2D2E2B' : '#FFFFFF';
+  const border = isDark ? '#50605A' : '#B9CABE';
+  const ink = isDark ? '#EBF1ED' : '#121212';
+  const muted = isDark ? '#B9CABE' : '#81938A';
+  const primary = isDark ? '#81938A' : '#50605A';
 
   const menuItems = [
     { title: 'Monthly Budget', subtitle: 'Set budget & track spending', icon: <Target size={24} color={primary} />, route: '/budget' },

@@ -28,14 +28,14 @@
     const [loading, setLoading] = useState(false);
     const [createdCode, setCreatedCode] = useState<string | null>(null);
 
-    const bg = isDark ? '#0F172A' : '#F8FAFC';
-    const card = isDark ? '#1E293B' : '#FFFFFF';
-    const raised = isDark ? '#334155' : '#F1F5F9';
-    const border = isDark ? '#334155' : '#E2E8F0';
-    const ink = isDark ? '#F8FAFC' : '#0F172A';
-    const muted = isDark ? '#94A3B8' : '#64748B';
-    const primary = '#8B5CF6';
-    const success = '#10B981';
+  const bg = isDark ? '#121212' : '#EBF1ED';
+  const card = isDark ? '#2D2E2B' : '#FFFFFF';
+  const raised = isDark ? '#50605A' : '#EBF1ED';
+  const border = isDark ? '#50605A' : '#B9CABE';
+  const ink = isDark ? '#EBF1ED' : '#121212';
+  const muted = isDark ? '#B9CABE' : '#81938A';
+  const primary = isDark ? '#81938A' : '#50605A';
+  const success = '#3A8F5A';
     const accent2 = '#3B82F6';
 
     const handleCreate = async () => {

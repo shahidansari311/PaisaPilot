@@ -66,10 +66,10 @@ export default function Achievements() {
 
   const bg    = isDark ? '#0D1117' : '#F4F3F0';
   const card  = isDark ? '#161B22' : '#FFFFFF';
-  const raised = isDark ? '#1C2333' : '#F0EFEB';
-  const border = isDark ? '#21262D' : '#E2E0DA';
+  const raised = isDark ? '#50605A' : '#EBF1ED';
+  const border = isDark ? '#50605A' : '#B9CABE';
   const ink   = isDark ? '#E6EDF3' : '#1A1A2E';
-  const muted = '#6E7681';
+  const muted = isDark ? '#B9CABE' : '#81938A';
 
   return (
     <View style={{ flex: 1, backgroundColor: bg }}>

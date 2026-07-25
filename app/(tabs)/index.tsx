@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useEffect, useState } from 'react';
-import { TrendingUp, TrendingDown, Repeat, ChevronRight, Plus, Minus, Moon, Sun, Home, Cloud } from 'lucide-react-native';
+import { TrendingUp, TrendingDown, Repeat, ChevronRight, Plus, Minus, Moon, Sun, Home, Cloud, Trophy } from 'lucide-react-native';
 import { Transaction } from '../../types/database';
 import { router, useFocusEffect } from 'expo-router';
 import { useSharedRoomStore } from '../../store/useSharedRoomStore';
@@ -29,6 +29,7 @@ export default function Dashboard() {
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
   const [budgetAmount, setBudgetAmount] = useState(0);
+  const [levelData, setLevelData] = useState({ level: 1, rank: 'Financial Noob' });
   const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([]);
   const [totalBorrowed, setTotalBorrowed] = useState(0);
   const [totalLent, setTotalLent] = useState(0);
@@ -82,17 +83,42 @@ export default function Dashboard() {
         rmNet += e.paidBy === 'me' ? e.amount : -e.amount;
       }
       setRoommateNet(rmNet);
+
+      // Achievements calculation
+      let unlockedCount = 0;
+      const txCountObj = await db.getFirstAsync<{c:number}>('SELECT COUNT(*) as c FROM transactions');
+      const txCount = txCountObj?.c || 0;
+      if (txCount > 0) unlockedCount++;
+      if (txCount >= 7) unlockedCount++;
+
+      if (incRow?.total && expRow?.total && incRow.total > 0 && expRow.total < incRow.total) unlockedCount++;
+
+      const groupCountObj = await db.getFirstAsync<{c:number}>('SELECT COUNT(*) as c FROM split_groups');
+      if ((groupCountObj?.c || 0) >= 3) unlockedCount++;
+
+      const csvObj = await db.getFirstAsync<{value:string}>("SELECT value FROM app_settings WHERE key = 'has_imported_csv'");
+      if (csvObj?.value === 'true') unlockedCount++;
+
+      const totalIncObj = await db.getFirstAsync<{t:number}>("SELECT SUM(amount) as t FROM transactions WHERE type='income'");
+      const totalExpObj = await db.getFirstAsync<{t:number}>("SELECT SUM(amount) as t FROM transactions WHERE type='expense'");
+      const bal = (totalIncObj?.t || 0) - (totalExpObj?.t || 0);
+      if (bal >= 1000000) unlockedCount++;
+
+      const level = Math.floor(unlockedCount / 2) + 1;
+      const rank = level === 1 ? 'Financial Noob' : level === 2 ? 'Budget Apprentice' : level === 3 ? 'Money Master' : 'Wealth Wizard';
+      setLevelData({ level, rank });
+
     } catch (e) { console.error('Dashboard load failed', e); }
   };
-  const bg = isDark ? '#0D1B16' : '#F7F6F1';
-  const card = isDark ? '#173229' : '#FFFFFF';
-  const raised = isDark ? '#254A3D' : '#F7F6F1';
-  const border = isDark ? '#254A3D' : '#E7E4DD';
-  const ink = isDark ? '#F5F5F2' : '#173229';
-  const muted = isDark ? '#6D9773' : '#60716A';
-  const primary = isDark ? '#6D9773' : '#0C3B2E';
-  const secondary = isDark ? '#0C3B2E' : '#6D9773';
-  const accent = '#BB8A52';
+  const bg = isDark ? '#121212' : '#EBF1ED';
+  const card = isDark ? '#2D2E2B' : '#FFFFFF';
+  const raised = isDark ? '#50605A' : '#EBF1ED';
+  const border = isDark ? '#50605A' : '#B9CABE';
+  const ink = isDark ? '#EBF1ED' : '#121212';
+  const muted = isDark ? '#B9CABE' : '#81938A';
+  const primary = isDark ? '#81938A' : '#50605A';
+  const secondary = isDark ? '#50605A' : '#81938A';
+  const accent = '#50605A';
   const highlight = '#FFBA00';
   const success = '#3A8F5A';
   const danger = '#C44D4D';
@@ -123,6 +149,19 @@ export default function Dashboard() {
             {isDark ? <Sun size={22} color="#F59E0B" /> : <Moon size={22} color="#8B5CF6" />}
           </TouchableOpacity>
         </View>
+
+        {/* Achievements Header */}
+        <TouchableOpacity onPress={() => router.push('/achievements')} activeOpacity={0.8}
+          style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: card, borderRadius: 24, padding: 16, marginHorizontal: 20, marginBottom: 24, borderWidth: 1, borderColor: '#F59E0B' + '40', shadowColor: '#F59E0B', shadowOpacity: 0.1, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } }}>
+          <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#F59E0B' + '20', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
+            <Trophy size={24} color="#F59E0B" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 17, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Level {levelData.level}: {levelData.rank}</Text>
+            <Text style={{ fontSize: 13, color: muted, marginTop: 2, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}>Tap to view all badges</Text>
+          </View>
+          <ChevronRight size={20} color={muted} />
+        </TouchableOpacity>
 
         {/* QUICK ADD BUTTONS */}
         <View style={{ flexDirection: 'row', marginHorizontal: 20, gap: 16, marginBottom: 24 }}>

@@ -12,16 +12,15 @@ export default function ProfileScreen() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [saved, setSaved] = useState(false);
-  const [levelData, setLevelData] = useState({ level: 1, rank: 'Financial Noob' });
 
-  const bg = isDark ? '#0F172A' : '#F8FAFC';
-  const card = isDark ? '#1E293B' : '#FFFFFF';
-  const raised = isDark ? '#334155' : '#F1F5F9';
-  const border = isDark ? '#334155' : '#E2E8F0';
-  const ink = isDark ? '#F8FAFC' : '#0F172A';
-  const muted = isDark ? '#94A3B8' : '#64748B';
-  const primary = '#8B5CF6';
-  const success = '#10B981';
+  const bg = isDark ? '#121212' : '#EBF1ED';
+  const card = isDark ? '#2D2E2B' : '#FFFFFF';
+  const raised = isDark ? '#50605A' : '#EBF1ED';
+  const border = isDark ? '#50605A' : '#B9CABE';
+  const ink = isDark ? '#EBF1ED' : '#121212';
+  const muted = isDark ? '#B9CABE' : '#81938A';
+  const primary = isDark ? '#81938A' : '#50605A';
+  const success = '#3A8F5A';
 
   useFocusEffect(useCallback(() => {
     loadProfile();
@@ -33,35 +32,6 @@ export default function ProfileScreen() {
       const phoneRow = await db.getFirstAsync<{ value: string }>(`SELECT value FROM app_settings WHERE key = 'user_phone'`);
       if (nameRow?.value) setName(nameRow.value);
       if (phoneRow?.value) setPhone(phoneRow.value);
-
-      // Achievements calculation
-      let unlockedCount = 0;
-      const txCountObj = await db.getFirstAsync<{c:number}>('SELECT COUNT(*) as c FROM transactions');
-      const txCount = txCountObj?.c || 0;
-      if (txCount > 0) unlockedCount++;
-      if (txCount >= 7) unlockedCount++;
-
-      const month = new Date().toISOString().substring(0, 7);
-      const incObj = await db.getFirstAsync<{t:number}>("SELECT SUM(amount) as t FROM transactions WHERE type='income' AND strftime('%Y-%m', date) = ?", [month]);
-      const expObj = await db.getFirstAsync<{t:number}>("SELECT SUM(amount) as t FROM transactions WHERE type='expense' AND strftime('%Y-%m', date) = ?", [month]);
-      const inc = incObj?.t || 0;
-      const exp = expObj?.t || 0;
-      if (inc > 0 && exp < inc) unlockedCount++;
-
-      const groupCountObj = await db.getFirstAsync<{c:number}>('SELECT COUNT(*) as c FROM split_groups');
-      if ((groupCountObj?.c || 0) >= 3) unlockedCount++;
-
-      const csvObj = await db.getFirstAsync<{value:string}>("SELECT value FROM app_settings WHERE key = 'has_imported_csv'");
-      if (csvObj?.value === 'true') unlockedCount++;
-
-      const totalIncObj = await db.getFirstAsync<{t:number}>("SELECT SUM(amount) as t FROM transactions WHERE type='income'");
-      const totalExpObj = await db.getFirstAsync<{t:number}>("SELECT SUM(amount) as t FROM transactions WHERE type='expense'");
-      const bal = (totalIncObj?.t || 0) - (totalExpObj?.t || 0);
-      if (bal >= 1000000) unlockedCount++;
-
-      const level = Math.floor(unlockedCount / 2) + 1;
-      const rank = level === 1 ? 'Financial Noob' : level === 2 ? 'Budget Apprentice' : level === 3 ? 'Money Master' : 'Wealth Wizard';
-      setLevelData({ level, rank });
     } catch (e) { console.error(e); }
   };
 
@@ -112,19 +82,6 @@ export default function ProfileScreen() {
             💡 Your name appears on WhatsApp reminders sent to people who owe you money. Your phone number is used to identify your WhatsApp account.
           </Text>
         </View>
-
-        {/* Achievements */}
-        <TouchableOpacity onPress={() => router.push('/achievements')} activeOpacity={0.8}
-          style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: card, borderRadius: 18, padding: 18, marginBottom: 24, borderWidth: 1, borderColor: '#F59E0B' + '40', shadowColor: '#F59E0B', shadowOpacity: 0.1, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } }}>
-          <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#F59E0B' + '20', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
-            <Trophy size={24} color="#F59E0B" />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 17, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Level {levelData.level}: {levelData.rank}</Text>
-            <Text style={{ fontSize: 13, color: muted, marginTop: 2, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}>Tap to view all badges</Text>
-          </View>
-          <ChevronRight size={20} color={muted} />
-        </TouchableOpacity>
 
         {/* Name Input */}
         <View style={{ marginBottom: 18 }}>

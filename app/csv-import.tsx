@@ -87,11 +87,11 @@ export default function CSVImport() {
     } catch (e) { console.error(e); setIsProcessing(false); Alert.alert('Error', 'Failed to pick or process document.'); }
   };
 
-  const bg = isDark ? '#0D1117' : '#F4F3F0';
-  const card = isDark ? '#161B22' : '#FFFFFF';
-  const border = isDark ? '#21262D' : '#E2E0DA';
-  const ink = isDark ? '#E6EDF3' : '#1A1A2E';
-  const muted = '#6E7681';
+  const bg = isDark ? '#121212' : '#EBF1ED';
+  const card = isDark ? '#2D2E2B' : '#FFFFFF';
+  const border = isDark ? '#50605A' : '#B9CABE';
+  const ink = isDark ? '#EBF1ED' : '#121212';
+  const muted = isDark ? '#B9CABE' : '#81938A';
   const jade = '#10B981';
   const rose = '#F87171';
 

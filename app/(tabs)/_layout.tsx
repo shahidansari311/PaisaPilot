@@ -6,15 +6,27 @@ import { useThemeStore } from '../../store/useThemeStore';
 export default function TabLayout() {
   const { isDark } = useThemeStore();
 
-  const activeColor = isDark ? '#BB8A52' : '#0C3B2E'; // Gold in dark mode, Green in light
-  const inactiveColor = isDark ? '#6D9773' : '#60716A';
-  const bg = isDark ? '#173229' : '#FFFFFF';
-  const indicatorColor = '#FFBA00';
+  const bg = isDark ? '#121212' : '#EBF1ED';
+  const card = isDark ? '#2D2E2B' : '#FFFFFF';
+  const raised = isDark ? '#50605A' : '#EBF1ED';
+  const border = isDark ? '#50605A' : '#B9CABE';
+  const ink = isDark ? '#EBF1ED' : '#121212';
+  const muted = isDark ? '#B9CABE' : '#81938A';
+  const primary = isDark ? '#81938A' : '#50605A';
+  const secondary = isDark ? '#50605A' : '#81938A';
+  const accent = '#50605A';
+  const highlight = '#FFBA00';
+  const success = '#3A8F5A';
+  const danger = '#C44D4D';
+  const warning = '#D89B00';
+
+  const activeColor = primary;
+  const inactiveColor = muted;
 
   const renderIcon = (IconComponent: any, color: string, focused: boolean) => (
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       <IconComponent size={24} color={color} strokeWidth={2.5} />
-      {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: indicatorColor, position: 'absolute', top: -6 }} />}
+      {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: highlight, position: 'absolute', top: -6 }} />}
     </View>
   );
 
@@ -25,20 +37,15 @@ export default function TabLayout() {
         tabBarActiveTintColor: activeColor,
         tabBarInactiveTintColor: inactiveColor,
         tabBarStyle: {
-          position: 'absolute',
-          bottom: 16,
-          left: 20,
-          right: 20,
-          backgroundColor: bg,
-          borderRadius: 24,
-          borderTopWidth: 0,
-          elevation: 10,
+          backgroundColor: card,
+          borderTopColor: border,
+          borderTopWidth: 1,
+          elevation: 20,
           shadowOpacity: 0.1,
-          shadowRadius: 15,
-          shadowOffset: { width: 0, height: 10 },
-          height: 76,
-          paddingBottom: 8,
-          paddingTop: 8,
+          shadowRadius: 20,
+          height: 84,
+          paddingBottom: 24,
+          paddingTop: 12,
         },
         tabBarLabelStyle: {
           fontSize: 11,
