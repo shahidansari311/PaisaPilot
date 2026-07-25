@@ -12,9 +12,9 @@ export default function TabLayout() {
   const indicatorColor = '#FFBA00';
 
   const renderIcon = (IconComponent: any, color: string, focused: boolean) => (
-    <View style={{ alignItems: 'center', justifyContent: 'center', height: 30 }}>
+    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
       <IconComponent size={24} color={color} strokeWidth={2.5} />
-      {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: indicatorColor, position: 'absolute', bottom: -8 }} />}
+      {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: indicatorColor, position: 'absolute', top: -6 }} />}
     </View>
   );
 
@@ -26,7 +26,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: inactiveColor,
         tabBarStyle: {
           position: 'absolute',
-          bottom: 24,
+          bottom: 16,
           left: 20,
           right: 20,
           backgroundColor: bg,
@@ -36,11 +36,14 @@ export default function TabLayout() {
           shadowOpacity: 0.1,
           shadowRadius: 15,
           shadowOffset: { width: 0, height: 10 },
-          height: 72,
-          paddingBottom: 0,
-          paddingTop: 0,
+          height: 76,
+          paddingBottom: 8,
+          paddingTop: 8,
         },
-        tabBarShowLabel: false, // Minimalist style usually removes labels
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '700',
+        },
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: ({ color, focused }) => renderIcon(Home, color, focused) }} />
