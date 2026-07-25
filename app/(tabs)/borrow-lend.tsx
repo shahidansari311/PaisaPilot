@@ -5,7 +5,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useState } from 'react';
 import { BorrowRecord, LendRecord } from '../../types/database';
 import { Plus, HandCoins, Handshake, Clock, AlertTriangle, MessageCircle, Bell, BellOff } from 'lucide-react-native';
-import { Link, useFocusEffect } from 'expo-router';
+import { Link, useFocusEffect, router } from 'expo-router';
 
 const WA_GREEN = '#25D366';
 
@@ -157,6 +157,7 @@ export default function BorrowLend() {
 
             return (
               <TouchableOpacity key={record.id}
+                onPress={() => router.push({ pathname: '/edit-borrow-lend', params: { id: record.id, type: activeTab } } as any)}
                 onLongPress={() => confirmDelete(record.id, record.person)}
                 delayLongPress={350}
                 activeOpacity={0.85}

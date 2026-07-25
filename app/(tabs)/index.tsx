@@ -33,7 +33,6 @@ export default function Dashboard() {
   const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([]);
   const [totalBorrowed, setTotalBorrowed] = useState(0);
   const [totalLent, setTotalLent] = useState(0);
-  const [roommateNet, setRoommateNet] = useState(0);
   const { rooms, loadRooms, loaded: sharedLoaded } = useSharedRoomStore();
 
   useEffect(() => { if (!sharedLoaded) loadRooms(); }, []);
@@ -73,16 +72,6 @@ export default function Dashboard() {
       const lRec = await db.getAllAsync<{ amount: number }>("SELECT amount FROM lend_records WHERE status = 'pending'");
       setTotalBorrowed(bRec.reduce((a, c) => a + c.amount, 0));
       setTotalLent(lRec.reduce((a, c) => a + c.amount, 0));
-
-      // Roommate ledger net balance
-      const rmEntries = await db.getAllAsync<{ paidBy: string; amount: number }>(
-        "SELECT paidBy, amount FROM roommate_entries WHERE isPaid = 0"
-      );
-      let rmNet = 0;
-      for (const e of rmEntries) {
-        rmNet += e.paidBy === 'me' ? e.amount : -e.amount;
-      }
-      setRoommateNet(rmNet);
 
       // Achievements calculation
       let unlockedCount = 0;
@@ -272,24 +261,7 @@ export default function Dashboard() {
           <ChevronRight size={20} color={muted} />
         </TouchableOpacity>
 
-        {/* ROOMMATE BALANCE */}
-        <TouchableOpacity onPress={() => router.navigate('/(tabs)/split-groups')} activeOpacity={0.8}
-          style={{ marginHorizontal: 20, marginBottom: 32, backgroundColor: card, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: border, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-          <View style={{ backgroundColor: primary + '20', width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' }}>
-            <Home size={20} color={primary} strokeWidth={2.5} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 15, fontWeight: '800', color: ink, marginBottom: 6 , fontFamily: 'CormorantGaramond_700Bold'}}>Roommate Balance 🏠</Text>
-            {roommateNet === 0 ? (
-              <Text style={{ fontSize: 13, fontWeight: '700', color: muted , fontFamily: 'DMSans_700Bold'}}>All settled 🎉</Text>
-            ) : roommateNet > 0 ? (
-              <Text style={{ fontSize: 13, fontWeight: '700', color: success, fontVariant: ['tabular-nums'] , fontFamily: 'SpaceGrotesk_600SemiBold'}}>Roommates owe ₹{Math.abs(roommateNet).toLocaleString('en-IN')}</Text>
-            ) : (
-              <Text style={{ fontSize: 13, fontWeight: '700', color: danger, fontVariant: ['tabular-nums'] , fontFamily: 'SpaceGrotesk_600SemiBold'}}>You owe ₹{Math.abs(roommateNet).toLocaleString('en-IN')}</Text>
-            )}
-          </View>
-          <ChevronRight size={20} color={muted} />
-        </TouchableOpacity>
+
 
         {/* SHARED ROOMS (CLOUD) */}
         {rooms.length > 0 && (
