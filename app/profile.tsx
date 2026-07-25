@@ -4,7 +4,7 @@ import { useThemeStore } from '../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, router } from 'expo-router';
-import { ArrowLeft, User, Phone, Check, Save } from 'lucide-react-native';
+import { ArrowLeft, User, Phone, Check, Save, Trophy, ChevronRight } from 'lucide-react-native';
 
 export default function ProfileScreen() {
   const isDark = useThemeStore((s) => s.isDark);
@@ -82,6 +82,19 @@ export default function ProfileScreen() {
             💡 Your name appears on WhatsApp reminders sent to people who owe you money. Your phone number is used to identify your WhatsApp account.
           </Text>
         </View>
+
+        {/* Achievements */}
+        <TouchableOpacity onPress={() => router.push('/achievements')} activeOpacity={0.8}
+          style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: card, borderRadius: 18, padding: 18, marginBottom: 24, borderWidth: 1, borderColor: '#F59E0B' + '40', shadowColor: '#F59E0B', shadowOpacity: 0.1, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } }}>
+          <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#F59E0B' + '20', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
+            <Trophy size={24} color="#F59E0B" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 17, fontWeight: '800', color: ink }}>Achievements & Badges</Text>
+            <Text style={{ fontSize: 13, color: muted, marginTop: 2, fontWeight: '600' }}>View your progress and levels</Text>
+          </View>
+          <ChevronRight size={20} color={muted} />
+        </TouchableOpacity>
 
         {/* Name Input */}
         <View style={{ marginBottom: 18 }}>

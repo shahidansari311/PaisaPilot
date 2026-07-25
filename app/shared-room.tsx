@@ -80,16 +80,14 @@ export default function SharedRoom() {
     const bals: Record<string, number> = {};
     const pending = entries.filter(e => !e.isPaid);
     const memberIds = Object.keys(members);
-    const memberCount = memberIds.length || 2;
 
     for (const e of pending) {
-      const share = e.amount / memberCount;
       if (!bals[e.paidByMemberId]) bals[e.paidByMemberId] = 0;
-      bals[e.paidByMemberId] += e.amount - share; // They are owed this much
+      bals[e.paidByMemberId] += e.amount; // They are owed this full amount
       for (const mid of memberIds) {
         if (mid !== e.paidByMemberId) {
           if (!bals[mid]) bals[mid] = 0;
-          bals[mid] -= share; // They owe this much
+          bals[mid] -= e.amount; // Deducted from others in full
         }
       }
     }
@@ -179,11 +177,25 @@ export default function SharedRoom() {
   };
 
   const leaveRoom = () => {
-    Alert.alert('Leave Room? 👋', 'You will lose access to this shared room. The room and its data will remain for other members.', [
+    Alert.alert('Room Options ⚙️', 'You can leave this room (removes it locally) or delete it permanently from the cloud database for everyone.', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Leave', style: 'destructive', onPress: async () => {
+      { text: 'Leave Room', onPress: async () => {
         await removeRoom(roomCode);
         router.back();
+      }},
+      { text: 'Delete from Database', style: 'destructive', onPress: async () => {
+        Alert.alert('Delete Permanently? 🗑️', 'This will delete the room and all entries for all members. This cannot be undone.', [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Delete', style: 'destructive', onPress: async () => {
+            try {
+              await remove(ref(firebaseDB, `shared_rooms/${roomCode}`));
+              await removeRoom(roomCode);
+              router.back();
+            } catch {
+              Alert.alert('Error', 'Failed to delete room from database');
+            }
+          }}
+        ]);
       }},
     ]);
   };

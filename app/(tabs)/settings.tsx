@@ -2,9 +2,10 @@ import { View, Text, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import { CustomAlert as Alert } from '../../utils/alert';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Moon, Sun, Trash2, FileText, FileSpreadsheet, Users, Trophy, UploadCloud, ChevronRight, Download, AlertTriangle } from 'lucide-react-native';
+import { Moon, Sun, Trash2, FileText, FileSpreadsheet, UploadCloud, ChevronRight, AlertTriangle } from 'lucide-react-native';
 import { exportTransactionsCSV, exportTransactionsPDF } from '../../utils/export';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Settings() {
   const { isDark, toggleTheme } = useThemeStore();
@@ -30,8 +31,6 @@ export default function Settings() {
             try {
               await db.execAsync(`
                 DELETE FROM transactions;
-                DELETE FROM accounts;
-                DELETE FROM categories;
                 DELETE FROM budgets;
                 DELETE FROM borrow_records;
                 DELETE FROM lend_records;
@@ -42,7 +41,13 @@ export default function Settings() {
                 DELETE FROM split_participants;
                 DELETE FROM split_expenses;
                 DELETE FROM split_shares;
+                DELETE FROM roommate_ledgers;
+                DELETE FROM roommate_entries;
+                DELETE FROM app_settings;
+                DELETE FROM accounts WHERE id != 'default-wallet';
+                UPDATE accounts SET balance = 0 WHERE id = 'default-wallet';
               `);
+              await AsyncStorage.removeItem('shared_rooms');
               Alert.alert('Done 🗑️', 'All data has been deleted. Fresh start!');
             } catch (e) {
               console.error(e);
@@ -102,11 +107,7 @@ export default function Settings() {
           />
         </View>
 
-        {/* Tools */}
-        <SectionLabel emoji="🛠️" title="Tools" />
-        <View style={{ backgroundColor: card, borderRadius: 28, borderWidth: 1, borderColor: border, overflow: 'hidden', marginBottom: 32 }}>
-          <SettingRow icon={<Trophy size={20} color='#F59E0B' />} label="Achievements" onPress={() => router.push('/achievements')} noBorder />
-        </View>
+
 
         {/* Data & Export */}
         <SectionLabel emoji="📤" title="Data & Export" />
