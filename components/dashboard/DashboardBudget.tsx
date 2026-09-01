@@ -16,7 +16,7 @@ interface Props {
     border: string;
     muted: string;
     ink: string;
-    raised: string;
+    surface: string;
     danger: string;
   };
 }
@@ -60,7 +60,7 @@ export function DashboardBudget({ budgetAmount, expense, remaining, isOverBudget
 
         {budgetAmount > 0 && (
           <>
-            <View style={{ height: 12, backgroundColor: colors.raised, borderRadius: 6, overflow: 'hidden', marginBottom: 16 }}>
+            <View style={{ height: 12, backgroundColor: colors.surface, borderRadius: 6, overflow: 'hidden', marginBottom: 16 }}>
               <LinearGradient 
                 colors={progressGradient} 
                 start={Gradients.horizontal.start} 

@@ -124,7 +124,9 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
             ? options.title
             : route.name;
 
-        if (options.href === null) {
+        // Explicitly hide these routes from the custom tab bar
+        const hiddenRoutes = ['settings', 'calendar'];
+        if (hiddenRoutes.includes(route.name) || options.href === null) {
           return null;
         }
 

@@ -6,7 +6,7 @@ import { useCallback, useState } from 'react';
 import { Transaction } from '../../types/database';
 import { FlashList } from '@shopify/flash-list';
 import { Link, router, useFocusEffect } from 'expo-router';
-import { Plus, ReceiptText, Coffee, Car, ShoppingBag, Book, Heart, FileText, Smile, MoreHorizontal, Briefcase, Laptop, Gift, CircleDashed } from 'lucide-react-native';
+import { Plus, ReceiptText, Coffee, Car, ShoppingBag, Book, Heart, FileText, Smile, MoreHorizontal, Briefcase, Laptop, Gift, CircleDashed, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { Colors, Gradients } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -22,33 +22,51 @@ export default function Transactions() {
   const isDark = useThemeStore((state) => state.isDark);
   const db = useSQLiteContext();
   const [transactions, setTransactions] = useState<TxWithCategory[]>([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useFocusEffect(
     useCallback(() => {
-      loadTransactions();
-    }, [])
+      loadTransactions(currentDate);
+    }, [currentDate])
   );
 
-  const loadTransactions = async () => {
+  const loadTransactions = async (date: Date) => {
     try {
+      const monthStr = date.toISOString().substring(0, 7); // YYYY-MM
       const allTx = await db.getAllAsync<TxWithCategory>(`
         SELECT t.*, c.name as categoryName, c.icon as categoryIcon, c.color as categoryColor 
         FROM transactions t 
         LEFT JOIN categories c ON t.categoryId = c.id 
+        WHERE strftime('%Y-%m', t.date) = ?
         ORDER BY date DESC
-      `);
+      `, [monthStr]);
       setTransactions(allTx);
     } catch (e) { console.error(e); }
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(newDate.getMonth() + 1);
+      return newDate;
+    });
+  };
+
+  const prevMonth = () => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(newDate.getMonth() - 1);
+      return newDate;
+    });
   };
 
   const deleteTransaction = async (id: string) => {
     try {
       await db.runAsync('DELETE FROM transactions WHERE id = ?', [id]);
-      loadTransactions();
+      loadTransactions(currentDate);
     } catch (e) {
       console.error('Delete failed', e);
       Alert.alert('Oops!', 'We could not delete the transaction. Please try again.');
-      Alert.alert('Oops!', 'We could not delete this transaction. Please try again.');
     }
   };
 
@@ -65,6 +83,9 @@ export default function Transactions() {
   };
 
   const theme = isDark ? Colors.dark : Colors.light;
+  
+  const now = new Date();
+  const isCurrentMonth = currentDate.getMonth() === now.getMonth() && currentDate.getFullYear() === now.getFullYear();
 
   const renderItem = ({ item }: { item: TxWithCategory }) => {
     const isExp = item.type === 'expense';
@@ -128,9 +149,26 @@ export default function Transactions() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Header */}
       <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.background, zIndex: 10 }}>
-        <Text style={{ fontSize: 32, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>History 📜</Text>
-        <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>
-          {transactions.length} total move{transactions.length !== 1 ? 's' : ''} • Long press to edit/delete
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={{ fontSize: 32, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>History 📜</Text>
+          
+          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 20, padding: 4, borderWidth: 1, borderColor: theme.border }}>
+            <TouchableOpacity onPress={prevMonth} style={{ padding: 6, backgroundColor: theme.surface, borderRadius: 16 }}>
+              <ChevronLeft size={20} color={theme.ink} />
+            </TouchableOpacity>
+            
+            <Text style={{ marginHorizontal: 12, fontSize: 14, fontWeight: '800', color: theme.ink, fontFamily: 'Outfit_700Bold', minWidth: 80, textAlign: 'center' }}>
+              {currentDate.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}
+            </Text>
+            
+            <TouchableOpacity onPress={nextMonth} disabled={isCurrentMonth} style={{ padding: 6, backgroundColor: theme.surface, borderRadius: 16, opacity: isCurrentMonth ? 0.3 : 1 }}>
+              <ChevronRight size={20} color={theme.ink} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 16 , fontFamily: 'Inter_500Medium'}}>
+          {transactions.length} total move{transactions.length !== 1 ? 's' : ''} this month • Long press to edit/delete
         </Text>
       </View>
 
