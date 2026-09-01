@@ -7,6 +7,8 @@ import { Transaction } from '../../types/database';
 import { FlashList } from '@shopify/flash-list';
 import { Link, router, useFocusEffect } from 'expo-router';
 import { Plus, ReceiptText, Coffee, Car, ShoppingBag, Book, Heart, FileText, Smile, MoreHorizontal, Briefcase, Laptop, Gift, CircleDashed } from 'lucide-react-native';
+import { Colors, Gradients } from '../../constants/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const IconMap: Record<string, any> = {
   coffee: Coffee, car: Car, bag: ShoppingBag, book: Book, heart: Heart, 
@@ -62,23 +64,11 @@ export default function Transactions() {
     );
   };
 
-  // Modern Student Theme Tokens
-  const bg = isDark ? '#121212' : '#EBF1ED';
-  const card = isDark ? '#2D2E2B' : '#FFFFFF';
-  const raised = isDark ? '#50605A' : '#EBF1ED';
-  const border = isDark ? '#50605A' : '#B9CABE';
-  const ink = isDark ? '#EBF1ED' : '#121212';
-  const muted = isDark ? '#B9CABE' : '#81938A';
-  const primary = isDark ? '#81938A' : '#50605A';
-  const secondary = isDark ? '#50605A' : '#81938A';
-  const accent = '#50605A';
-  const highlight = '#FFBA00';
-  const success = '#3A8F5A';
-  const danger = '#C44D4D';
-  const warning = '#D89B00';
+  const theme = isDark ? Colors.dark : Colors.light;
+
   const renderItem = ({ item }: { item: TxWithCategory }) => {
     const isExp = item.type === 'expense';
-    const amountColor = isExp ? danger : success;
+    const amountColor = isExp ? theme.danger : theme.success;
     
     // Category Fallbacks
     const catColor = item.categoryColor || amountColor;
@@ -93,12 +83,12 @@ export default function Transactions() {
         style={{
           flexDirection: 'row', alignItems: 'center',
           paddingHorizontal: 16, paddingVertical: 16,
-          backgroundColor: card,
+          backgroundColor: theme.card,
           marginBottom: 12,
           borderRadius: 24,
           borderWidth: 1,
-          borderColor: border,
-          shadowColor: ink, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2
+          borderColor: theme.border,
+          shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2
         }}
       >
         <View style={{
@@ -106,27 +96,27 @@ export default function Transactions() {
           backgroundColor: catColor + '20', alignItems: 'center', justifyContent: 'center',
           borderWidth: 1, borderColor: catColor + '40'
         }}>
-          {IconComp ? <IconComp size={22} color={catColor} strokeWidth={2.5} /> : <Text style={{ fontSize: 20, fontWeight: '900', color: catColor , fontFamily: 'CormorantGaramond_700Bold'}}>{initial}</Text>}
+          {IconComp ? <IconComp size={22} color={catColor} strokeWidth={2.5} /> : <Text style={{ fontSize: 20, fontWeight: '900', color: catColor , fontFamily: 'Outfit_700Bold'}}>{initial}</Text>}
         </View>
         
         <View style={{ flex: 1, marginRight: 10 }}>
-          <Text style={{ fontSize: 16, fontWeight: '800', color: ink, marginBottom: 4 , fontFamily: 'CormorantGaramond_700Bold'}} numberOfLines={1}>
+          <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink, marginBottom: 4 , fontFamily: 'Outfit_700Bold'}} numberOfLines={1}>
             {item.note || 'Transaction'}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             {item.categoryName && (
-              <View style={{ backgroundColor: raised, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 }}>
-                <Text style={{ fontSize: 10, fontWeight: '700', color: muted, textTransform: 'uppercase' , fontFamily: 'DMSans_700Bold'}}>{item.categoryName}</Text>
+              <View style={{ backgroundColor: theme.surface, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 }}>
+                <Text style={{ fontSize: 10, fontWeight: '700', color: theme.muted, textTransform: 'uppercase' , fontFamily: 'Inter_700Bold'}}>{item.categoryName}</Text>
               </View>
             )}
-            <Text style={{ fontSize: 12, fontWeight: '600', color: muted , fontFamily: 'DMSans_500Medium'}}>
+            <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>
               {new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
             </Text>
           </View>
         </View>
         
         <View style={{ alignItems: 'flex-end' }}>
-          <Text style={{ fontSize: 17, fontWeight: '900', color: amountColor, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>
+          <Text style={{ fontSize: 17, fontWeight: '900', color: amountColor, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
             {isExp ? '−' : '+'}₹{item.amount.toLocaleString('en-IN')}
           </Text>
         </View>
@@ -135,11 +125,11 @@ export default function Transactions() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: bg }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Header */}
-      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: border, backgroundColor: bg, zIndex: 10 }}>
-        <Text style={{ fontSize: 32, fontWeight: '900', color: ink, letterSpacing: -1 , fontFamily: 'CormorantGaramond_700Bold'}}>History 📜</Text>
-        <Text style={{ fontSize: 14, fontWeight: '600', color: muted, marginTop: 4 , fontFamily: 'DMSans_500Medium'}}>
+      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.background, zIndex: 10 }}>
+        <Text style={{ fontSize: 32, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>History 📜</Text>
+        <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>
           {transactions.length} total move{transactions.length !== 1 ? 's' : ''} • Long press to edit/delete
         </Text>
       </View>
@@ -157,14 +147,14 @@ export default function Transactions() {
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 100, paddingHorizontal: 40 }}>
               <View style={{
                 width: 88, height: 88, borderRadius: 44, marginBottom: 24,
-                backgroundColor: isDark ? '#1E293B' : '#F1F5F9',
+                backgroundColor: theme.surface,
                 alignItems: 'center', justifyContent: 'center',
-                borderWidth: 2, borderColor: border, borderStyle: 'dashed'
+                borderWidth: 2, borderColor: theme.border, borderStyle: 'dashed'
               }}>
-                <ReceiptText size={40} color={muted} strokeWidth={1.5} />
+                <ReceiptText size={40} color={theme.muted} strokeWidth={1.5} />
               </View>
-              <Text style={{ fontSize: 20, fontWeight: '800', color: ink, marginBottom: 8 , fontFamily: 'CormorantGaramond_700Bold'}}>Ghost town 👻</Text>
-              <Text style={{ fontSize: 15, color: muted, textAlign: 'center', lineHeight: 22, fontWeight: '500' , fontFamily: 'DMSans_500Medium'}}>
+              <Text style={{ fontSize: 20, fontWeight: '800', color: theme.ink, marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>Ghost town 👻</Text>
+              <Text style={{ fontSize: 15, color: theme.muted, textAlign: 'center', lineHeight: 22, fontWeight: '500' , fontFamily: 'Inter_500Medium'}}>
                 Every rupee you spend or earn will show up here. Add one now!
               </Text>
             </View>
@@ -176,11 +166,16 @@ export default function Transactions() {
       <Link href="/add-transaction" asChild>
         <TouchableOpacity activeOpacity={0.85} style={{
           position: 'absolute', bottom: 32, right: 24,
-          width: 64, height: 64, borderRadius: 32,
-          backgroundColor: primary, alignItems: 'center', justifyContent: 'center',
-          shadowColor: primary, shadowOpacity: 0.5, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 12
+          shadowColor: theme.primary, shadowOpacity: 0.5, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 12
         }}>
-          <Plus size={32} color="#fff" strokeWidth={3} />
+          <LinearGradient
+            colors={theme.primaryGradient}
+            start={Gradients.diagonal.start}
+            end={Gradients.diagonal.end}
+            style={{ width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center' }}
+          >
+            <Plus size={32} color="#fff" strokeWidth={3.5} />
+          </LinearGradient>
         </TouchableOpacity>
       </Link>
     </View>

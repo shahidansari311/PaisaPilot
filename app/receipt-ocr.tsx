@@ -5,9 +5,12 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { ArrowLeft, Camera, ScanText } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { Colors, Gradients } from '../constants/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ReceiptOcr() {
   const isDark = useThemeStore((state) => state.isDark);
+  const theme = isDark ? Colors.dark : Colors.light;
   const [image, setImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -28,20 +31,13 @@ export default function ReceiptOcr() {
     }, 1500);
   };
 
-  const bg = isDark ? '#121212' : '#EBF1ED';
-  const card = isDark ? '#2D2E2B' : '#FFFFFF';
-  const border = isDark ? '#50605A' : '#B9CABE';
-  const ink = isDark ? '#EBF1ED' : '#121212';
-  const muted = isDark ? '#B9CABE' : '#81938A';
-  const jade = '#10B981';
-
   return (
-    <View style={{ flex: 1, backgroundColor: bg }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
-          <ArrowLeft size={22} color={ink} />
+          <ArrowLeft size={22} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Scan Receipt</Text>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Scan Receipt</Text>
       </View>
 
       <View style={{ flex: 1, padding: 20 }}>
@@ -49,13 +45,13 @@ export default function ReceiptOcr() {
           <TouchableOpacity
             onPress={pickImage}
             activeOpacity={0.7}
-            style={{ flex: 1, backgroundColor: card, borderRadius: 20, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderStyle: 'dashed', borderColor: border, marginBottom: 16 }}
+            style={{ flex: 1, backgroundColor: theme.card, borderRadius: 20, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderStyle: 'dashed', borderColor: theme.border, marginBottom: 16 }}
           >
-            <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: isDark ? '#1C2333' : '#F0EFEB', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-              <Camera size={32} color={muted} />
+            <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+              <Camera size={32} color={theme.muted} />
             </View>
-            <Text style={{ fontSize: 16, fontWeight: '700', color: ink , fontFamily: 'DMSans_700Bold'}}>Tap to Select Receipt</Text>
-            <Text style={{ color: muted, marginTop: 8, textAlign: 'center', paddingHorizontal: 32, fontSize: 13, lineHeight: 20 , fontFamily: 'DMSans_500Medium'}}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: theme.ink , fontFamily: 'Inter_700Bold'}}>Tap to Select Receipt</Text>
+            <Text style={{ color: theme.muted, marginTop: 8, textAlign: 'center', paddingHorizontal: 32, fontSize: 13, lineHeight: 20 , fontFamily: 'Inter_500Medium'}}>
               Take a photo or select an image of your receipt to extract the total.
             </Text>
           </TouchableOpacity>
@@ -67,7 +63,7 @@ export default function ReceiptOcr() {
               activeOpacity={0.7}
               style={{ position: 'absolute', top: 12, right: 12, backgroundColor: 'rgba(0,0,0,0.55)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 }}
             >
-              <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' , fontFamily: 'DMSans_700Bold'}}>Clear</Text>
+              <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' , fontFamily: 'Inter_700Bold'}}>Clear</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -76,12 +72,19 @@ export default function ReceiptOcr() {
           onPress={processOCR}
           disabled={!image || isProcessing}
           activeOpacity={0.85}
-          style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8, padding: 16, borderRadius: 14, backgroundColor: image ? jade : (isDark ? '#1C2333' : '#E2E0DA') }}
+          style={{ borderRadius: 14, overflow: 'hidden' }}
         >
-          <ScanText size={20} color={image ? '#fff' : muted} />
-          <Text style={{ fontWeight: '800', fontSize: 16, color: image ? '#fff' : muted , fontFamily: 'CormorantGaramond_700Bold'}}>
-            {isProcessing ? 'Processing...' : 'Extract Data'}
-          </Text>
+          <LinearGradient
+            colors={image ? theme.primaryGradient : [theme.surface, theme.surface]}
+            start={Gradients.diagonal.start}
+            end={Gradients.diagonal.end}
+            style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8, padding: 16 }}
+          >
+            <ScanText size={20} color={image ? '#fff' : theme.muted} />
+            <Text style={{ fontWeight: '800', fontSize: 16, color: image ? '#fff' : theme.muted , fontFamily: 'Outfit_700Bold'}}>
+              {isProcessing ? 'Processing...' : 'Extract Data'}
+            </Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </View>

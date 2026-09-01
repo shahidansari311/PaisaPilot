@@ -8,9 +8,11 @@ import Papa from 'papaparse';
 import { File } from 'expo-file-system';
 import { useSQLiteContext } from 'expo-sqlite';
 import { ArrowLeft, UploadCloud, CheckCircle2 } from 'lucide-react-native';
+import { Colors } from '../constants/Colors';
 
 export default function CSVImport() {
-  const { isDark, accentColor } = useThemeStore();
+  const isDark = useThemeStore((state) => state.isDark);
+  const theme = isDark ? Colors.dark : Colors.light;
   const db = useSQLiteContext();
   const [isProcessing, setIsProcessing] = useState(false);
   const [results, setResults] = useState<{ imported: number; failed: number } | null>(null);
@@ -87,21 +89,13 @@ export default function CSVImport() {
     } catch (e) { console.error(e); setIsProcessing(false); Alert.alert('Error', 'Failed to pick or process document.'); }
   };
 
-  const bg = isDark ? '#121212' : '#EBF1ED';
-  const card = isDark ? '#2D2E2B' : '#FFFFFF';
-  const border = isDark ? '#50605A' : '#B9CABE';
-  const ink = isDark ? '#EBF1ED' : '#121212';
-  const muted = isDark ? '#B9CABE' : '#81938A';
-  const jade = '#10B981';
-  const rose = '#F87171';
-
   return (
-    <View style={{ flex: 1, backgroundColor: bg }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
-          <ArrowLeft size={22} color={ink} />
+          <ArrowLeft size={22} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Import CSV</Text>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Import CSV</Text>
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
@@ -110,36 +104,36 @@ export default function CSVImport() {
             onPress={handlePickDocument}
             disabled={isProcessing}
             activeOpacity={0.7}
-            style={{ width: '100%', padding: 40, borderRadius: 20, borderWidth: 2, borderStyle: 'dashed', borderColor: isProcessing ? muted : accentColor, alignItems: 'center' }}
+            style={{ width: '100%', padding: 40, borderRadius: 20, borderWidth: 2, borderStyle: 'dashed', borderColor: isProcessing ? theme.muted : theme.primary, alignItems: 'center' }}
           >
-            <UploadCloud size={56} color={accentColor} />
-            <Text style={{ marginTop: 20, fontSize: 18, fontWeight: '800', color: ink, textAlign: 'center' , fontFamily: 'CormorantGaramond_700Bold'}}>
+            <UploadCloud size={56} color={theme.primary} />
+            <Text style={{ marginTop: 20, fontSize: 18, fontWeight: '800', color: theme.ink, textAlign: 'center' , fontFamily: 'Outfit_700Bold'}}>
               {isProcessing ? 'Processing...' : 'Upload CSV Statement'}
             </Text>
-            <Text style={{ color: muted, textAlign: 'center', marginTop: 8, lineHeight: 20, fontSize: 13 , fontFamily: 'DMSans_500Medium'}}>
+            <Text style={{ color: theme.muted, textAlign: 'center', marginTop: 8, lineHeight: 20, fontSize: 13 , fontFamily: 'Inter_500Medium'}}>
               Select a bank statement in CSV format. We'll automatically map the columns and import your transactions.
             </Text>
           </TouchableOpacity>
         ) : (
-          <View style={{ width: '100%', backgroundColor: card, padding: 32, borderRadius: 20, borderWidth: 1, borderColor: border, alignItems: 'center' }}>
-            <CheckCircle2 size={56} color={jade} />
-            <Text style={{ marginTop: 20, fontSize: 22, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Import Complete</Text>
+          <View style={{ width: '100%', backgroundColor: theme.card, padding: 32, borderRadius: 20, borderWidth: 1, borderColor: theme.border, alignItems: 'center' }}>
+            <CheckCircle2 size={56} color={theme.success} />
+            <Text style={{ marginTop: 20, fontSize: 22, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Import Complete</Text>
             <View style={{ flexDirection: 'row', gap: 48, marginTop: 20 }}>
               <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 32, fontWeight: '900', color: jade, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>{results.imported}</Text>
-                <Text style={{ color: muted, marginTop: 4, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}>Imported</Text>
+                <Text style={{ fontSize: 32, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>{results.imported}</Text>
+                <Text style={{ color: theme.muted, marginTop: 4, fontWeight: '600' , fontFamily: 'Inter_500Medium'}}>Imported</Text>
               </View>
               <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 32, fontWeight: '900', color: rose, fontVariant: ['tabular-nums'] , fontFamily: 'CormorantGaramond_700Bold'}}>{results.failed}</Text>
-                <Text style={{ color: muted, marginTop: 4, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}>Failed</Text>
+                <Text style={{ fontSize: 32, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>{results.failed}</Text>
+                <Text style={{ color: theme.muted, marginTop: 4, fontWeight: '600' , fontFamily: 'Inter_500Medium'}}>Failed</Text>
               </View>
             </View>
             <TouchableOpacity
               onPress={() => setResults(null)}
               activeOpacity={0.7}
-              style={{ marginTop: 24, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 18, backgroundColor: isDark ? '#1C2333' : '#F0EFEB' }}
+              style={{ marginTop: 24, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 18, backgroundColor: theme.surface }}
             >
-              <Text style={{ color: ink, fontWeight: '600' , fontFamily: 'DMSans_500Medium'}}>Import Another</Text>
+              <Text style={{ color: theme.ink, fontWeight: '600' , fontFamily: 'Inter_500Medium'}}>Import Another</Text>
             </TouchableOpacity>
           </View>
         )}

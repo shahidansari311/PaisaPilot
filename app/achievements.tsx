@@ -4,11 +4,13 @@ import { router, useFocusEffect } from 'expo-router';
 import { ArrowLeft, Trophy, Star, Target, Flame, Medal, Award } from 'lucide-react-native';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useState, useCallback } from 'react';
+import { Colors } from '../constants/Colors';
 
 type Badge = { id: string; title: string; description: string; icon: any; unlocked: boolean; color: string; };
 
 export default function Achievements() {
   const isDark = useThemeStore((state) => state.isDark);
+  const theme = isDark ? Colors.dark : Colors.light;
   const db = useSQLiteContext();
   const [badges, setBadges] = useState<Badge[]>([
     { id: '1', title: 'First Steps',   description: 'Logged your first transaction',       icon: Star,   unlocked: false, color: '#F59E0B' },
@@ -64,53 +66,46 @@ export default function Achievements() {
   const rank = level === 1 ? 'Financial Noob' : level === 2 ? 'Budget Apprentice' : level === 3 ? 'Money Master' : 'Wealth Wizard';
   const xpPercent = Math.round((xp / maxXP) * 100);
 
-  const bg    = isDark ? '#0D1117' : '#F4F3F0';
-  const card  = isDark ? '#161B22' : '#FFFFFF';
-  const raised = isDark ? '#50605A' : '#EBF1ED';
-  const border = isDark ? '#50605A' : '#B9CABE';
-  const ink   = isDark ? '#E6EDF3' : '#1A1A2E';
-  const muted = isDark ? '#B9CABE' : '#81938A';
-
   return (
-    <View style={{ flex: 1, backgroundColor: bg }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: card, borderBottomWidth: 1, borderBottomColor: border }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
-          <ArrowLeft size={22} color={ink} />
+          <ArrowLeft size={22} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Achievements</Text>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Achievements</Text>
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
         {/* Level card */}
-        <View style={{ backgroundColor: card, borderRadius: 24, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: border, marginBottom: 20 }}>
+        <View style={{ backgroundColor: theme.card, borderRadius: 24, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: theme.border, marginBottom: 20 }}>
           <View style={{ backgroundColor: '#FEF3C7', width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
             <Trophy size={36} color="#F59E0B" />
           </View>
-          <Text style={{ fontSize: 24, fontWeight: '900', color: ink , fontFamily: 'CormorantGaramond_700Bold'}}>Level {level}</Text>
-          <Text style={{ fontSize: 13, color: muted, marginTop: 4, marginBottom: 16 , fontFamily: 'DMSans_500Medium'}}>{rank}</Text>
+          <Text style={{ fontSize: 24, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Level {level}</Text>
+          <Text style={{ fontSize: 13, color: theme.muted, marginTop: 4, marginBottom: 16 , fontFamily: 'Inter_500Medium'}}>{rank}</Text>
 
           {/* XP Bar */}
-          <View style={{ width: '100%', height: 8, backgroundColor: raised, borderRadius: 4, overflow: 'hidden' }}>
+          <View style={{ width: '100%', height: 8, backgroundColor: theme.surface, borderRadius: 4, overflow: 'hidden' }}>
             <View style={{ width: `${xpPercent}%`, height: '100%', backgroundColor: '#F59E0B', borderRadius: 4 }} />
           </View>
-          <Text style={{ fontSize: 11, color: muted, marginTop: 6, alignSelf: 'flex-end' , fontFamily: 'DMSans_500Medium'}}>{xp} / {maxXP} XP</Text>
+          <Text style={{ fontSize: 11, color: theme.muted, marginTop: 6, alignSelf: 'flex-end' , fontFamily: 'Inter_500Medium'}}>{xp} / {maxXP} XP</Text>
         </View>
 
-        <Text style={{ fontSize: 10, fontWeight: '600', color: muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'DMSans_500Medium'}}>Your Badges</Text>
+        <Text style={{ fontSize: 10, fontWeight: '600', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'Inter_500Medium'}}>Your Badges</Text>
 
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           {badges.map(badge => (
             <View key={badge.id} style={{
-              width: '47%', backgroundColor: card, padding: 16, borderRadius: 14,
-              borderWidth: 1, borderColor: badge.unlocked ? badge.color + '40' : border,
+              width: '47%', backgroundColor: theme.card, padding: 16, borderRadius: 14,
+              borderWidth: 1, borderColor: badge.unlocked ? badge.color + '40' : theme.border,
               alignItems: 'center', opacity: badge.unlocked ? 1 : 0.45,
             }}>
-              <View style={{ width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: badge.unlocked ? badge.color + '20' : raised }}>
-                <badge.icon size={26} color={badge.unlocked ? badge.color : muted} />
+              <View style={{ width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: badge.unlocked ? badge.color + '20' : theme.surface }}>
+                <badge.icon size={26} color={badge.unlocked ? badge.color : theme.muted} />
               </View>
-              <Text style={{ fontSize: 13, fontWeight: '700', color: ink, textAlign: 'center' , fontFamily: 'DMSans_700Bold'}}>{badge.title}</Text>
-              <Text style={{ fontSize: 11, color: muted, textAlign: 'center', marginTop: 4, lineHeight: 16 , fontFamily: 'DMSans_500Medium'}}>{badge.description}</Text>
+              <Text style={{ fontSize: 13, fontWeight: '700', color: theme.ink, textAlign: 'center' , fontFamily: 'Inter_700Bold'}}>{badge.title}</Text>
+              <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', marginTop: 4, lineHeight: 16 , fontFamily: 'Inter_500Medium'}}>{badge.description}</Text>
             </View>
           ))}
         </View>

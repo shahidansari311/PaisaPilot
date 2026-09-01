@@ -1,118 +1,113 @@
-import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { Minus, Plus, TrendingDown, Wallet, Repeat, ChevronRight } from 'lucide-react-native';
-import { router } from 'expo-router';
-import { Typography } from '../ui/Typography';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { SPACING, RADIUS } from '../../constants/theme';
+import { View, Text, StyleSheet } from 'react-native';
+import { TrendingUp, TrendingDown } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Gradients } from '../../constants/Colors';
 
-interface DashboardSummaryProps {
-  totalBalance: number;
+interface Props {
+  income: number;
   expense: number;
-  budgetAmount: number;
-  remaining: number;
-  isOverBudget: boolean;
-  progressColor: string;
-  pct: number;
-  totalBorrowed: number;
-  totalLent: number;
-  theme: any;
+  safeSpend: number;
+  isDark: boolean;
+  colors: {
+    card: string;
+    border: string;
+    success: string;
+    successGradient: readonly [string, string, ...string[]];
+    muted: string;
+    danger: string;
+    dangerGradient: readonly [string, string, ...string[]];
+    primaryGradient: readonly [string, string, ...string[]];
+  };
 }
 
-export function DashboardSummary({
-  totalBalance, expense, budgetAmount, remaining, isOverBudget,
-  progressColor, pct, totalBorrowed, totalLent, theme
-}: DashboardSummaryProps) {
+export function DashboardSummary({ income, expense, safeSpend, isDark, colors }: Props) {
   return (
-    <View style={{ paddingHorizontal: SPACING.xl, marginBottom: SPACING.xxl }}>
-      <Typography variant="body" color="muted" style={{ marginBottom: SPACING.sm }}>
-        Net Flow (This Month)
-      </Typography>
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: SPACING.lg }}>
-        <Typography variant="display" mono color={totalBalance >= 0 ? 'text' : 'danger'}>
-          {totalBalance < 0 ? '−' : ''}₹{Math.abs(totalBalance).toLocaleString('en-IN')}
-        </Typography>
-      </View>
-
-      <View style={{ flexDirection: 'row', gap: SPACING.md, marginBottom: SPACING.lg }}>
-        <Button
-          variant="primary"
-          style={{ flex: 1 }}
-          icon={<Minus size={18} color={theme.colors.white} strokeWidth={2.5} />}
-          onPress={() => router.push({ pathname: '/add-transaction', params: { prefillType: 'expense' } } as any)}
-        >
-          Expense
-        </Button>
-        <Button
-          variant="secondary"
-          style={{ flex: 1 }}
-          icon={<Plus size={18} color={theme.colors.primary} strokeWidth={2.5} />}
-          onPress={() => router.push({ pathname: '/add-transaction', params: { prefillType: 'income' } } as any)}
-        >
-          Income
-        </Button>
-      </View>
-
-      <View style={{ gap: SPACING.lg }}>
-        <View style={{ flexDirection: 'row', gap: SPACING.md }}>
-          <Card variant="flat" padding="lg" style={{ flex: 1 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: SPACING.sm }}>
-              <View style={{ backgroundColor: theme.colors.dangerLight, padding: 4, borderRadius: RADIUS.sm }}>
-                <TrendingDown size={14} color={theme.colors.danger} strokeWidth={2.5} />
-              </View>
-              <Typography variant="caption" color="muted">SPENT</Typography>
-            </View>
-            <Typography variant="title" mono color="text">₹{expense.toLocaleString('en-IN')}</Typography>
-          </Card>
-
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => router.navigate('/budget' as any)}
-            style={{ flex: 1 }}
+    <View style={{ flexDirection: 'row', marginHorizontal: 20, gap: 14, marginBottom: 24 }}>
+      
+      {/* Income Card */}
+      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+          <LinearGradient
+            colors={colors.successGradient}
+            start={Gradients.diagonal.start}
+            end={Gradients.diagonal.end}
+            style={styles.iconCircle}
           >
-            <Card variant="flat" padding="lg" style={{ height: '100%' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: SPACING.sm }}>
-                <View style={{ backgroundColor: theme.colors.successLight, padding: 4, borderRadius: RADIUS.sm }}>
-                  <Wallet size={14} color={theme.colors.success} strokeWidth={2.5} />
-                </View>
-                <Typography variant="caption" color="muted">BUDGET</Typography>
-              </View>
-              {budgetAmount > 0 ? (
-                <>
-                  <Typography variant="title" mono color={isOverBudget ? 'danger' : 'text'}>
-                    {isOverBudget ? 'Over' : `₹${Math.abs(remaining).toLocaleString('en-IN')}`}
-                  </Typography>
-                  <View style={{ height: 4, backgroundColor: theme.colors.surface, borderRadius: 2, marginTop: 10, overflow: 'hidden' }}>
-                    <View style={{ height: 4, backgroundColor: progressColor, width: `${Math.min(100, pct * 100)}%` }} />
-                  </View>
-                </>
-              ) : (
-                <Typography variant="body" color="muted" style={{ marginTop: 2 }}>Not set</Typography>
-              )}
-            </Card>
-          </TouchableOpacity>
+            <TrendingUp size={16} color="#fff" strokeWidth={2.5} />
+          </LinearGradient>
+          <Text style={[styles.label, { color: colors.muted }]}>In</Text>
         </View>
-
-        <TouchableOpacity activeOpacity={0.7} onPress={() => router.navigate('/(tabs)/borrow-lend' as any)}>
-          <Card variant="flat" padding="lg" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: SPACING.md }}>
-              <View style={{ backgroundColor: theme.colors.warningLight, width: 40, height: 40, borderRadius: RADIUS.full, alignItems: 'center', justifyContent: 'center' }}>
-                <Repeat size={18} color={theme.colors.warning} strokeWidth={2.5} />
-              </View>
-              <View>
-                <Typography variant="bodyLarge" weight="bold">Debt & Loans</Typography>
-                <View style={{ flexDirection: 'row', gap: 8, marginTop: 2 }}>
-                  {totalBorrowed > 0 && <Typography variant="caption" color="danger">Owe ₹{totalBorrowed.toLocaleString('en-IN')}</Typography>}
-                  {totalLent > 0 && <Typography variant="caption" color="success">Get ₹{totalLent.toLocaleString('en-IN')}</Typography>}
-                  {totalBorrowed === 0 && totalLent === 0 && <Typography variant="caption" color="muted">All settled</Typography>}
-                </View>
-              </View>
-            </View>
-            <ChevronRight size={20} color={theme.colors.textMuted} />
-          </Card>
-        </TouchableOpacity>
+        <Text style={[styles.amount, { color: colors.success }]} adjustsFontSizeToFit numberOfLines={1}>
+          ₹{income.toLocaleString('en-IN')}
+        </Text>
       </View>
+
+      {/* Expense Card */}
+      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+          <LinearGradient
+            colors={colors.dangerGradient}
+            start={Gradients.diagonal.start}
+            end={Gradients.diagonal.end}
+            style={styles.iconCircle}
+          >
+            <TrendingDown size={16} color="#fff" strokeWidth={2.5} />
+          </LinearGradient>
+          <Text style={[styles.label, { color: colors.muted }]}>Out</Text>
+        </View>
+        <Text style={[styles.amount, { color: colors.danger }]} adjustsFontSizeToFit numberOfLines={1}>
+          ₹{expense.toLocaleString('en-IN')}
+        </Text>
+      </View>
+
+      {/* Safe to Spend Card */}
+      {safeSpend > 0 && (
+        <LinearGradient
+          colors={colors.primaryGradient}
+          start={Gradients.diagonal.start}
+          end={Gradients.diagonal.end}
+          style={[styles.card, { borderWidth: 0 }]}
+        >
+          <Text style={[styles.label, { color: 'rgba(255,255,255,0.8)', marginBottom: 12 }]}>Safe/day</Text>
+          <Text style={[styles.amount, { color: '#ffffff' }]} adjustsFontSizeToFit numberOfLines={1}>
+            ₹{safeSpend.toLocaleString('en-IN')}
+          </Text>
+        </LinearGradient>
+      )}
+      
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    flex: 1, 
+    borderRadius: 22, 
+    padding: 16, 
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  iconCircle: {
+    width: 32, 
+    height: 32, 
+    borderRadius: 16, 
+    alignItems: 'center', 
+    justifyContent: 'center',
+  },
+  label: {
+    fontSize: 12, 
+    fontWeight: '800', 
+    textTransform: 'uppercase', 
+    fontFamily: 'Outfit_700Bold',
+  },
+  amount: {
+    fontSize: 22, 
+    fontWeight: '900', 
+    fontVariant: ['tabular-nums'], 
+    fontFamily: 'Outfit_700Bold',
+  },
+});
