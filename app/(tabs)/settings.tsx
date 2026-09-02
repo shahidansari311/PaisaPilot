@@ -69,7 +69,7 @@ export default function Settings() {
 
   const SettingRow = ({ icon, label, onPress, right, isDanger = false, noBorder = false }: { icon: React.ReactNode; label: string; onPress?: () => void; right?: React.ReactNode; isDanger?: boolean; noBorder?: boolean }) => (
     <TouchableOpacity onPress={onPress} activeOpacity={onPress ? 0.7 : 1}
-      style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 18, gap: 16, borderBottomWidth: noBorder ? 0 : 1, borderBottomColor: theme.border }}>
+      style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 16, gap: 16, borderBottomWidth: noBorder ? 0 : 1, borderBottomColor: theme.border }}>
       <View style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: isDanger ? theme.danger + '15' : theme.surface }}>
         {icon}
       </View>
@@ -81,8 +81,8 @@ export default function Settings() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.background }} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
 
-      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24 }}>
-        <Text style={{ fontSize: 32, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Settings ⚙️</Text>
+      <View style={{ paddingHorizontal: 24, paddingTop: 56, paddingBottom: 20 }}>
+        <Text style={{ fontSize: 28, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Settings ⚙️</Text>
         <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>Customize your experience</Text>
       </View>
 
@@ -90,7 +90,7 @@ export default function Settings() {
 
         {/* Appearance */}
         <SectionLabel emoji="🎨" title="Appearance" />
-        <View style={{ backgroundColor: theme.card, borderRadius: 28, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 32 }}>
+        <View style={{ backgroundColor: theme.card, borderRadius: 20, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 24 }}>
           <SettingRow
             icon={isDark ? <Moon size={20} color={theme.primary} /> : <Sun size={20} color='#F59E0B' />}
             label={isDark ? 'Dark Mode' : 'Light Mode'}
@@ -103,7 +103,7 @@ export default function Settings() {
 
         {/* Data & Export */}
         <SectionLabel emoji="📤" title="Data & Export" />
-        <View style={{ backgroundColor: theme.card, borderRadius: 28, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 32 }}>
+        <View style={{ backgroundColor: theme.card, borderRadius: 20, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 24 }}>
           <SettingRow icon={<UploadCloud size={20} color={theme.primary} />} label="Import CSV Statement" onPress={() => router.push('/csv-import')} />
           <SettingRow icon={<FileSpreadsheet size={20} color='#10B981' />} label="Export as Excel / CSV" onPress={() => handleExport('csv')} />
           <SettingRow icon={<FileText size={20} color='#3B82F6' />} label="Generate PDF Report" onPress={() => handleExport('pdf')} noBorder />
@@ -111,7 +111,7 @@ export default function Settings() {
 
         {/* Danger Zone */}
         <SectionLabel emoji="⚠️" title="Danger Zone" />
-        <View style={{ backgroundColor: theme.card, borderRadius: 28, borderWidth: 1.5, borderColor: theme.danger + '40', overflow: 'hidden', marginBottom: 24 }}>
+        <View style={{ backgroundColor: theme.card, borderRadius: 20, borderWidth: 1.5, borderColor: theme.danger + '40', overflow: 'hidden', marginBottom: 24 }}>
           <SettingRow
             icon={<Trash2 size={20} color={theme.danger} />}
             label="Delete All Data"

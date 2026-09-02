@@ -9,6 +9,7 @@ import { Link, router, useFocusEffect } from 'expo-router';
 import { Plus, ReceiptText, Coffee, Car, ShoppingBag, Book, Heart, FileText, Smile, MoreHorizontal, Briefcase, Laptop, Gift, CircleDashed, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { Colors, Gradients } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ReportView } from '../../components/report/ReportView';
 
 const IconMap: Record<string, any> = {
   coffee: Coffee, car: Car, bag: ShoppingBag, book: Book, heart: Heart, 
@@ -23,6 +24,7 @@ export default function Transactions() {
   const db = useSQLiteContext();
   const [transactions, setTransactions] = useState<TxWithCategory[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [viewMode, setViewMode] = useState<'list' | 'report'>('list');
 
   useFocusEffect(
     useCallback(() => {
@@ -148,62 +150,92 @@ export default function Transactions() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Header */}
-      <View style={{ paddingHorizontal: 24, paddingTop: 64, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.background, zIndex: 10 }}>
+      <LinearGradient
+        colors={['#A855F7', '#7C3AED']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: 56,
+          paddingBottom: 20,
+          paddingHorizontal: 24,
+          borderBottomLeftRadius: 28,
+          borderBottomRightRadius: 28,
+          marginBottom: 0,
+          zIndex: 10,
+        }}
+      >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ fontSize: 32, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>History 📜</Text>
+          <Text style={{ fontSize: 32, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>History</Text>
           
-          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 20, padding: 4, borderWidth: 1, borderColor: theme.border }}>
-            <TouchableOpacity onPress={prevMonth} style={{ padding: 6, backgroundColor: theme.surface, borderRadius: 16 }}>
-              <ChevronLeft size={20} color={theme.ink} />
+          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: 4 }}>
+            <TouchableOpacity onPress={prevMonth} style={{ padding: 6, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 16 }}>
+              <ChevronLeft size={20} color="#FFFFFF" />
             </TouchableOpacity>
             
-            <Text style={{ marginHorizontal: 12, fontSize: 14, fontWeight: '800', color: theme.ink, fontFamily: 'Outfit_700Bold', minWidth: 80, textAlign: 'center' }}>
+            <Text style={{ marginHorizontal: 12, fontSize: 14, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Outfit_700Bold', minWidth: 80, textAlign: 'center' }}>
               {currentDate.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}
             </Text>
             
-            <TouchableOpacity onPress={nextMonth} disabled={isCurrentMonth} style={{ padding: 6, backgroundColor: theme.surface, borderRadius: 16, opacity: isCurrentMonth ? 0.3 : 1 }}>
-              <ChevronRight size={20} color={theme.ink} />
+            <TouchableOpacity onPress={nextMonth} disabled={isCurrentMonth} style={{ padding: 6, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 16, opacity: isCurrentMonth ? 0.3 : 1 }}>
+              <ChevronRight size={20} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
 
-        <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 16 , fontFamily: 'Inter_500Medium'}}>
-          {transactions.length} total move{transactions.length !== 1 ? 's' : ''} this month • Long press to edit/delete
-        </Text>
-      </View>
+        <View style={{ flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 24, padding: 4, marginTop: 24 }}>
+          <TouchableOpacity 
+            onPress={() => setViewMode('list')}
+            activeOpacity={0.8}
+            style={{ flex: 1, paddingVertical: 10, alignItems: 'center', backgroundColor: viewMode === 'list' ? 'rgba(255,255,255,0.25)' : 'transparent', borderRadius: 20 }}>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Outfit_700Bold' }}>List</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => setViewMode('report')}
+            activeOpacity={0.8}
+            style={{ flex: 1, paddingVertical: 10, alignItems: 'center', backgroundColor: viewMode === 'report' ? 'rgba(255,255,255,0.25)' : 'transparent', borderRadius: 20 }}>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Outfit_700Bold' }}>Report</Text>
+          </TouchableOpacity>
+        </View>
+      </LinearGradient>
 
-      {/* List Card */}
-      <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
-        <FlashList
-          data={transactions}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-          // @ts-ignore
-          estimatedItemSize={90}
-          contentContainerStyle={{ paddingBottom: 120, paddingTop: 10 }}
-          ListEmptyComponent={
-            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 100, paddingHorizontal: 40 }}>
-              <View style={{
-                width: 88, height: 88, borderRadius: 44, marginBottom: 24,
-                backgroundColor: theme.surface,
-                alignItems: 'center', justifyContent: 'center',
-                borderWidth: 2, borderColor: theme.border, borderStyle: 'dashed'
-              }}>
-                <ReceiptText size={40} color={theme.muted} strokeWidth={1.5} />
+      {/* Content Area */}
+      {viewMode === 'list' ? (
+        <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
+          <FlashList
+            data={transactions}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            // @ts-ignore
+            estimatedItemSize={90}
+            contentContainerStyle={{ paddingBottom: 24, paddingTop: 10 }}
+            ListEmptyComponent={
+              <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 100, paddingHorizontal: 40 }}>
+                <View style={{
+                  width: 88, height: 88, borderRadius: 44, marginBottom: 24,
+                  backgroundColor: theme.surface,
+                  alignItems: 'center', justifyContent: 'center',
+                  borderWidth: 2, borderColor: theme.border, borderStyle: 'dashed'
+                }}>
+                  <ReceiptText size={40} color={theme.muted} strokeWidth={1.5} />
+                </View>
+                <Text style={{ fontSize: 20, fontWeight: '800', color: theme.ink, marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>Ghost town 👻</Text>
+                <Text style={{ fontSize: 15, color: theme.muted, textAlign: 'center', lineHeight: 22, fontWeight: '500' , fontFamily: 'Inter_500Medium'}}>
+                  Every rupee you spend or earn will show up here. Add one now!
+                </Text>
               </View>
-              <Text style={{ fontSize: 20, fontWeight: '800', color: theme.ink, marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>Ghost town 👻</Text>
-              <Text style={{ fontSize: 15, color: theme.muted, textAlign: 'center', lineHeight: 22, fontWeight: '500' , fontFamily: 'Inter_500Medium'}}>
-                Every rupee you spend or earn will show up here. Add one now!
-              </Text>
-            </View>
-          }
-        />
-      </View>
+            }
+          />
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <ReportView transactions={transactions} />
+        </View>
+      )}
 
       {/* FAB */}
       <Link href="/add-transaction" asChild>
         <TouchableOpacity activeOpacity={0.85} style={{
-          position: 'absolute', bottom: 32, right: 24,
+          position: 'absolute', bottom: 24, right: 24,
           shadowColor: theme.primary, shadowOpacity: 0.5, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 12
         }}>
           <LinearGradient

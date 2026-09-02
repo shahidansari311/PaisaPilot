@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, Linking, KeyboardAvoidingView, Platform } from 'react-native';
 import { CustomAlert as Alert } from '../utils/alert';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useThemeStore } from '../store/useThemeStore';
@@ -192,7 +192,7 @@ export default function RoommateLedgerDetail() {
         {/* Net Balance Hero Card */}
         <View style={{
           backgroundColor: netBalance === 0 ? (isDark ? 'rgba(16,185,129,0.08)' : '#ECFDF5') : netBalance > 0 ? (isDark ? 'rgba(16,185,129,0.08)' : '#ECFDF5') : (isDark ? 'rgba(244,63,94,0.08)' : '#FFF1F2'),
-          borderRadius: 24, padding: 24, marginBottom: 24,
+          borderRadius: 20, padding: 20, marginBottom: 20,
           borderWidth: 1.5,
           borderColor: netBalance === 0 ? theme.success + '30' : netBalance > 0 ? theme.success + '30' : theme.danger + '30',
         }}>
@@ -201,12 +201,12 @@ export default function RoommateLedgerDetail() {
           </Text>
           {netBalance === 0 ? (
             <View>
-              <Text style={{ fontSize: 28, fontWeight: '900', color: theme.success , fontFamily: 'Outfit_700Bold'}}>All Settled! 🎉</Text>
+              <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success , fontFamily: 'Outfit_700Bold'}}>All Settled! 🎉</Text>
               <Text style={{ fontSize: 14, color: theme.muted, fontWeight: '600', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>No pending dues between you two</Text>
             </View>
           ) : netBalance > 0 ? (
             <View>
-              <Text style={{ fontSize: 28, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+              <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
                 ₹{absBalance.toLocaleString('en-IN')}
               </Text>
               <Text style={{ fontSize: 14, color: theme.success, fontWeight: '700', marginTop: 4 , fontFamily: 'Inter_700Bold'}}>
@@ -215,7 +215,7 @@ export default function RoommateLedgerDetail() {
             </View>
           ) : (
             <View>
-              <Text style={{ fontSize: 28, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+              <Text style={{ fontSize: 24, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
                 ₹{absBalance.toLocaleString('en-IN')}
               </Text>
               <Text style={{ fontSize: 14, color: theme.danger, fontWeight: '700', marginTop: 4 , fontFamily: 'Inter_700Bold'}}>
@@ -227,21 +227,21 @@ export default function RoommateLedgerDetail() {
 
         {/* Quick Stats */}
         <View style={{ flexDirection: 'row', gap: 12, marginBottom: 24 }}>
-          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 18, padding: 16, borderWidth: 1, borderColor: theme.border }}>
+          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 16, padding: 14, borderWidth: 1, borderColor: theme.border }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
               <ArrowUpRight size={14} color={theme.success} strokeWidth={2.5} />
               <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>You Paid</Text>
             </View>
-            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} adjustsFontSizeToFit numberOfLines={1}>
+            <Text style={{ fontSize: 16, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} adjustsFontSizeToFit numberOfLines={1}>
               ₹{entries.filter(e => e.paidBy === 'me' && !e.isPaid).reduce((s, e) => s + e.amount, 0).toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 18, padding: 16, borderWidth: 1, borderColor: theme.border }}>
+          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 16, padding: 14, borderWidth: 1, borderColor: theme.border }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
               <ArrowDownLeft size={14} color={theme.danger} strokeWidth={2.5} />
               <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>{roommateName} Paid</Text>
             </View>
-            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} adjustsFontSizeToFit numberOfLines={1}>
+            <Text style={{ fontSize: 16, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} adjustsFontSizeToFit numberOfLines={1}>
               ₹{entries.filter(e => e.paidBy === 'roommate' && !e.isPaid).reduce((s, e) => s + e.amount, 0).toLocaleString('en-IN')}
             </Text>
           </View>
@@ -255,8 +255,8 @@ export default function RoommateLedgerDetail() {
 
         {/* Entry List */}
         {entries.length === 0 ? (
-          <View style={{ backgroundColor: theme.card, borderRadius: 22, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed' }}>
-            <Text style={{ fontSize: 36, marginBottom: 12 , fontFamily: 'Inter_500Medium'}}>📝</Text>
+          <View style={{ backgroundColor: theme.card, borderRadius: 20, padding: 32, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed' }}>
+            <Text style={{ fontSize: 32, marginBottom: 12 , fontFamily: 'Inter_500Medium'}}>📝</Text>
             <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink, marginBottom: 6 , fontFamily: 'Outfit_700Bold'}}>No entries yet</Text>
             <Text style={{ fontSize: 13, color: theme.muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'Inter_500Medium'}}>
               Tap + to add who paid for what
@@ -336,7 +336,7 @@ export default function RoommateLedgerDetail() {
       {/* FAB */}
       <TouchableOpacity onPress={openAddModal} activeOpacity={0.85} style={{
         position: 'absolute', bottom: 32, right: 20,
-        width: 58, height: 58, borderRadius: 29,
+        width: 56, height: 56, borderRadius: 28,
         alignItems: 'center', justifyContent: 'center',
         shadowColor: theme.primary, shadowOpacity: 0.5, shadowRadius: 16, shadowOffset: { width: 0, height: 6 }, elevation: 12,
         overflow: 'hidden'
@@ -353,7 +353,8 @@ export default function RoommateLedgerDetail() {
 
       {/* Add/Edit Entry Modal */}
       <Modal visible={showModal} animationType="slide" transparent>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
           <View style={{ backgroundColor: theme.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 420 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
               <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{editingId ? 'Edit Entry ✏️' : 'Add Entry 📝'}</Text>
@@ -392,7 +393,7 @@ export default function RoommateLedgerDetail() {
             {/* Amount */}
             <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Amount (₹)</Text>
             <TextInput
-              style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: formPaidBy === 'me' ? theme.success : theme.danger, fontSize: 28, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] }}
+              style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: formPaidBy === 'me' ? theme.success : theme.danger, fontSize: 24, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] }}
               placeholder="0"
               placeholderTextColor={theme.muted + '50'}
               keyboardType="numeric"
@@ -443,7 +444,7 @@ export default function RoommateLedgerDetail() {
               </LinearGradient>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

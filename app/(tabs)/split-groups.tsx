@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { CustomAlert as Alert } from '../../utils/alert';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -66,15 +66,32 @@ export default function SplitGroups() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 64, paddingBottom: 20, backgroundColor: theme.background, borderBottomWidth: 1, borderBottomColor: theme.border }}>
-        <View>
-          <Text style={{ fontSize: 32, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Split 🍕</Text>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>Share expenses with friends</Text>
+    <KeyboardAvoidingView 
+      style={{ flex: 1, backgroundColor: theme.background }} 
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <LinearGradient
+        colors={['#A855F7', '#7C3AED']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: 56,
+          paddingBottom: 16,
+          paddingHorizontal: 24,
+          borderBottomLeftRadius: 28,
+          borderBottomRightRadius: 28,
+          marginBottom: 0,
+        }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <View>
+            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Split 🍕</Text>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>Share expenses with friends</Text>
+          </View>
         </View>
-      </View>
+      </LinearGradient>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
 
         {/* ============ SHARED ROOMS (CLOUD) SECTION ============ */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
@@ -91,16 +108,16 @@ export default function SplitGroups() {
               colors={theme.primaryGradient}
               start={Gradients.diagonal.start}
               end={Gradients.diagonal.end}
-              style={{ width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' }}
+              style={{ width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' }}
             >
-              <Plus size={16} color="#fff" strokeWidth={2.5} />
+              <Plus size={20} color="#fff" strokeWidth={2.5} />
             </LinearGradient>
           </TouchableOpacity>
         </View>
 
         {rooms.length === 0 ? (
           <TouchableOpacity onPress={() => router.push('/join-shared-room' as any)} activeOpacity={0.8}
-            style={{ backgroundColor: theme.card, borderRadius: 24, padding: 28, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed', marginBottom: 28 }}>
+            style={{ backgroundColor: theme.card, borderRadius: 20, padding: 20, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed', marginBottom: 28 }}>
             <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
               <Cloud size={24} color={theme.muted} />
             </View>
@@ -116,7 +133,7 @@ export default function SplitGroups() {
                 key={room.roomCode}
                 onPress={() => router.push({ pathname: '/shared-room', params: { code: room.roomCode } } as any)}
                 activeOpacity={0.75}
-                style={{ backgroundColor: theme.card, borderRadius: 24, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: theme.border, flexDirection: 'row', alignItems: 'center', gap: 14 }}
+                style={{ backgroundColor: theme.card, borderRadius: 20, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: theme.border, flexDirection: 'row', alignItems: 'center', gap: 14 }}
               >
                 <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: theme.primary + '15', alignItems: 'center', justifyContent: 'center' }}>
                   <Cloud size={20} color={theme.primary} />
@@ -143,46 +160,46 @@ export default function SplitGroups() {
           <TouchableOpacity onPress={() => { setIsAddingGroup(!isAddingGroup); if(isAddingGroup) { setEditingGroupId(null); setNewGroupName(''); } }} activeOpacity={0.7}
             style={{ shadowColor: theme.primary, shadowOpacity: isAddingGroup ? 0 : 0.4, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: isAddingGroup ? 0 : 4 }}>
             {isAddingGroup ? (
-              <View style={{ width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.surface }}>
-                <X size={16} color={theme.muted} />
+              <View style={{ width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.surface }}>
+                <X size={20} color={theme.muted} />
               </View>
             ) : (
               <LinearGradient
                 colors={theme.primaryGradient}
                 start={Gradients.diagonal.start}
                 end={Gradients.diagonal.end}
-                style={{ width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' }}
+                style={{ width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' }}
               >
-                <Plus size={16} color="#fff" strokeWidth={2.5} />
+                <Plus size={20} color="#fff" strokeWidth={2.5} />
               </LinearGradient>
             )}
           </TouchableOpacity>
         </View>
 
         {isAddingGroup && (
-          <View style={{ backgroundColor: theme.card, borderRadius: 24, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: theme.primary + '40' }}>
+          <View style={{ backgroundColor: theme.card, borderRadius: 20, padding: 14, marginBottom: 16, borderWidth: 1, borderColor: theme.primary + '40' }}>
             <Text style={{ fontSize: 14, fontWeight: '800', color: theme.ink, marginBottom: 10 , fontFamily: 'Outfit_700Bold'}}>{editingGroupId ? 'Edit Group Name' : 'New Group'}</Text>
             <TextInput
-              style={{ backgroundColor: theme.surface, borderRadius: 18, padding: 12, color: theme.ink, fontSize: 14, borderWidth: 1, borderColor: theme.border, marginBottom: 12 }}
+              style={{ backgroundColor: theme.surface, borderRadius: 20, paddingHorizontal: 16, height: 50, color: theme.ink, fontSize: 15, borderWidth: 1, borderColor: theme.border, marginBottom: 16, fontFamily: 'Inter_500Medium' }}
               placeholder="e.g. Goa Trip, Roommates"
               placeholderTextColor={theme.muted}
               value={newGroupName}
               onChangeText={setNewGroupName}
             />
-            <View style={{ flexDirection: 'row', gap: 10 }}>
+            <View style={{ flexDirection: 'row', gap: 12 }}>
               <TouchableOpacity onPress={() => { setIsAddingGroup(false); setEditingGroupId(null); setNewGroupName(''); }} activeOpacity={0.7}
-                style={{ flex: 1, padding: 12, borderRadius: 18, borderWidth: 1, borderColor: theme.border, alignItems: 'center' }}>
-                <Text style={{ color: theme.muted, fontWeight: '600' , fontFamily: 'Inter_500Medium'}}>Cancel</Text>
+                style={{ flex: 1, height: 48, borderRadius: 24, borderWidth: 1, borderColor: theme.border, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.surface }}>
+                <Text style={{ color: theme.ink, fontWeight: '700' , fontFamily: 'Inter_700Bold', fontSize: 15 }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={createGroup} activeOpacity={0.8}
-                style={{ flex: 1, borderRadius: 18, overflow: 'hidden' }}>
+                style={{ flex: 1, height: 48, borderRadius: 24, shadowColor: theme.primary, shadowOpacity: 0.3, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 6 }}>
                 <LinearGradient
                   colors={theme.primaryGradient}
                   start={Gradients.diagonal.start}
                   end={Gradients.diagonal.end}
-                  style={{ padding: 12, alignItems: 'center' }}
+                  style={{ flex: 1, borderRadius: 26, alignItems: 'center', justifyContent: 'center' }}
                 >
-                  <Text style={{ color: '#fff', fontWeight: '700' , fontFamily: 'Inter_700Bold'}}>{editingGroupId ? 'Save' : 'Create'}</Text>
+                  <Text style={{ color: '#fff', fontWeight: '800' , fontFamily: 'Inter_700Bold', fontSize: 15 }}>{editingGroupId ? 'Save' : 'Create'}</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>
@@ -190,7 +207,7 @@ export default function SplitGroups() {
         )}
 
         {groups.length === 0 && !isAddingGroup ? (
-          <View style={{ backgroundColor: theme.card, borderRadius: 24, padding: 32, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed', marginTop: 8 }}>
+          <View style={{ backgroundColor: theme.card, borderRadius: 20, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed', marginTop: 8 }}>
             <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
               <Users size={24} color={theme.muted} />
             </View>
@@ -207,7 +224,7 @@ export default function SplitGroups() {
               onLongPress={() => handleGroupAction(group)}
               delayLongPress={350}
               activeOpacity={0.75}
-              style={{ backgroundColor: theme.card, borderRadius: 24, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: theme.border, flexDirection: 'row', alignItems: 'center', gap: 14 }}
+              style={{ backgroundColor: theme.card, borderRadius: 20, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: theme.border, flexDirection: 'row', alignItems: 'center', gap: 14 }}
             >
               <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: theme.primary + '18', alignItems: 'center', justifyContent: 'center' }}>
                 <Users size={22} color={theme.primary} />
@@ -222,6 +239,6 @@ export default function SplitGroups() {
         )}
         <View style={{ height: 24 }} />
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

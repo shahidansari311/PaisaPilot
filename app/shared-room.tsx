@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, Share as RNShare, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, Share as RNShare, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import { CustomAlert as Alert } from '../utils/alert';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useThemeStore } from '../store/useThemeStore';
@@ -6,8 +6,7 @@ import { useSharedRoomStore } from '../store/useSharedRoomStore';
 import { useEffect, useState, useRef } from 'react';
 import { ArrowLeft, Plus, X, Check, Trash2, ArrowUpRight, ArrowDownLeft, CheckCircle, Circle, Copy, Users, Cloud, LogOut } from 'lucide-react-native';
 import { SharedRoomEntry, SharedRoomMember } from '../types/database';
-import { firebaseDB } from '../config/firebaseConfig';
-import { ref, onValue, set, remove, push, get, off } from 'firebase/database';
+import { supabase } from '../config/supabaseConfig';
 import { Colors, Gradients } from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -35,36 +34,52 @@ export default function SharedRoom() {
   const myMemberId = localRoom?.myMemberId || '';
   const myName = localRoom?.myName || 'Me';
 
-  // ── Real-time listeners ──
+  // ── Real-time listeners (Supabase) ──
   useEffect(() => {
     if (!roomCode) return;
-    const metaRef = ref(firebaseDB, `shared_rooms/${roomCode}/meta`);
-    const membersRef = ref(firebaseDB, `shared_rooms/${roomCode}/members`);
-    const entriesRef = ref(firebaseDB, `shared_rooms/${roomCode}/entries`);
 
-    const unsubMeta = onValue(metaRef, (snap) => {
-      if (snap.exists()) setRoomName(snap.val().roomName || 'Shared Room');
-    });
-    const unsubMembers = onValue(membersRef, (snap) => {
-      if (snap.exists()) setMembers(snap.val());
-      else setMembers({});
-    });
-    const unsubEntries = onValue(entriesRef, (snap) => {
-      if (snap.exists()) {
-        const data = snap.val();
-        const arr: SharedRoomEntry[] = Object.keys(data).map(k => ({ ...data[k], id: k }));
-        arr.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt));
-        setEntries(arr);
-      } else {
-        setEntries([]);
+    const loadData = async () => {
+      try {
+        const { data: roomData } = await supabase.from('shared_rooms').select('room_name').eq('code', roomCode).single();
+        if (roomData) setRoomName(roomData.room_name);
+        
+        const { data: membersData } = await supabase.from('room_members').select('*').eq('room_code', roomCode);
+        if (membersData) {
+          const memObj: Record<string, SharedRoomMember> = {};
+          membersData.forEach(m => memObj[m.id] = { name: m.name, joinedAt: m.joined_at });
+          setMembers(memObj);
+        }
+
+        const { data: entriesData } = await supabase.from('room_entries').select('*').eq('room_code', roomCode).order('date', { ascending: false }).order('created_at', { ascending: false });
+        if (entriesData) {
+          setEntries(entriesData.map(e => ({
+            id: e.id,
+            paidByMemberId: e.paid_by_member_id,
+            paidByName: e.paid_by_name,
+            amount: Number(e.amount),
+            description: e.description,
+            date: e.date,
+            isPaid: e.is_paid,
+            createdAt: e.created_at
+          })));
+        }
+        setLoading(false);
+      } catch (err) {
+        console.warn("Supabase Load Error:", err);
+        setLoading(false);
+        Alert.alert('Error', 'Could not sync room data.');
       }
-      setLoading(false);
-    });
+    };
+
+    loadData();
+
+    const channel = supabase.channel(`room_${roomCode}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_members', filter: `room_code=eq.${roomCode}` }, () => loadData())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_entries', filter: `room_code=eq.${roomCode}` }, () => loadData())
+      .subscribe();
 
     return () => {
-      off(metaRef);
-      off(membersRef);
-      off(entriesRef);
+      supabase.removeChannel(channel);
     };
   }, [roomCode]);
 
@@ -113,23 +128,27 @@ export default function SharedRoom() {
 
     try {
       if (editingId) {
-        const entryRef = ref(firebaseDB, `shared_rooms/${roomCode}/entries/${editingId}`);
-        const snap = await get(entryRef);
-        if (snap.exists()) {
-          await set(entryRef, { ...snap.val(), amount: amt, description: formDesc.trim(), date: formDate });
-        }
+        await supabase
+          .from('room_entries')
+          .update({
+            amount: amt,
+            description: formDesc.trim(),
+            date: formDate
+          })
+          .eq('id', editingId);
       } else {
-        const entriesRef = ref(firebaseDB, `shared_rooms/${roomCode}/entries`);
-        const newRef = push(entriesRef);
-        await set(newRef, {
-          paidByName: myName,
-          paidByMemberId: myMemberId,
-          amount: amt,
-          description: formDesc.trim(),
-          date: formDate,
-          isPaid: false,
-          createdAt: new Date().toISOString(),
-        });
+        await supabase
+          .from('room_entries')
+          .insert({
+            room_code: roomCode,
+            paid_by_member_id: myMemberId,
+            paid_by_name: myName,
+            amount: amt,
+            description: formDesc.trim(),
+            date: formDate,
+            is_paid: false,
+            created_at: new Date().toISOString()
+          });
       }
       setShowModal(false);
     } catch (e) {
@@ -140,8 +159,7 @@ export default function SharedRoom() {
 
   const togglePaid = async (entry: SharedRoomEntry) => {
     try {
-      const entryRef = ref(firebaseDB, `shared_rooms/${roomCode}/entries/${entry.id}/isPaid`);
-      await set(entryRef, !entry.isPaid);
+      await supabase.from('room_entries').update({ is_paid: !entry.isPaid }).eq('id', entry.id);
     } catch { Alert.alert('Error', 'Failed to update'); }
   };
 
@@ -150,7 +168,7 @@ export default function SharedRoom() {
       { text: 'Cancel', style: 'cancel' },
       { text: 'Delete', style: 'destructive', onPress: async () => {
         try {
-          await remove(ref(firebaseDB, `shared_rooms/${roomCode}/entries/${entryId}`));
+          await supabase.from('room_entries').delete().eq('id', entryId);
         } catch { Alert.alert('Error', 'Failed to delete'); }
       }},
     ]);
@@ -181,7 +199,7 @@ export default function SharedRoom() {
           { text: 'Cancel', style: 'cancel' },
           { text: 'Delete', style: 'destructive', onPress: async () => {
             try {
-              await remove(ref(firebaseDB, `shared_rooms/${roomCode}`));
+              await supabase.from('shared_rooms').delete().eq('code', roomCode);
               await removeRoom(roomCode);
               router.back();
             } catch {
@@ -250,7 +268,7 @@ export default function SharedRoom() {
           {/* Net Balance Card */}
           <View style={{
             backgroundColor: myBalance === 0 ? (isDark ? 'rgba(16,185,129,0.08)' : '#ECFDF5') : myBalance > 0 ? (isDark ? 'rgba(16,185,129,0.08)' : '#ECFDF5') : (isDark ? 'rgba(244,63,94,0.08)' : '#FFF1F2'),
-            borderRadius: 24, padding: 24, marginBottom: 20,
+            borderRadius: 20, padding: 20, marginBottom: 20,
             borderWidth: 1.5,
             borderColor: myBalance === 0 ? theme.success + '30' : myBalance > 0 ? theme.success + '30' : theme.danger + '30',
           }}>
@@ -259,24 +277,24 @@ export default function SharedRoom() {
             </Text>
             {myBalance === 0 ? (
               <View>
-                <Text style={{ fontSize: 28, fontWeight: '900', color: theme.success , fontFamily: 'Outfit_700Bold'}}>All Settled! 🎉</Text>
+                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success , fontFamily: 'Outfit_700Bold'}}>All Settled! 🎉</Text>
                 <Text style={{ fontSize: 14, color: theme.muted, fontWeight: '600', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>No pending dues</Text>
               </View>
             ) : myBalance > 0 ? (
               <View>
-                <Text style={{ fontSize: 28, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
+                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
                 <Text style={{ fontSize: 14, color: theme.success, fontWeight: '700', marginTop: 4 , fontFamily: 'Inter_700Bold'}}>Others owe you 💰</Text>
               </View>
             ) : (
               <View>
-                <Text style={{ fontSize: 28, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
+                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
                 <Text style={{ fontSize: 14, color: theme.danger, fontWeight: '700', marginTop: 4 , fontFamily: 'Inter_700Bold'}}>You owe others 😅</Text>
               </View>
             )}
           </View>
 
           {/* Members */}
-          <View style={{ backgroundColor: theme.card, borderRadius: 18, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: theme.border }}>
+          <View style={{ backgroundColor: theme.card, borderRadius: 16, padding: 14, marginBottom: 20, borderWidth: 1, borderColor: theme.border }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
               <Users size={16} color={theme.primary} />
               <Text style={{ fontSize: 14, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Members ({memberList.length})</Text>
@@ -364,7 +382,7 @@ export default function SharedRoom() {
       {/* FAB */}
       <TouchableOpacity onPress={openAddModal} activeOpacity={0.85} style={{
         position: 'absolute', bottom: 32, right: 20,
-        width: 58, height: 58, borderRadius: 29,
+        width: 56, height: 56, borderRadius: 28,
         alignItems: 'center', justifyContent: 'center',
         shadowColor: theme.primary, shadowOpacity: 0.5, shadowRadius: 16, shadowOffset: { width: 0, height: 6 }, elevation: 12,
         overflow: 'hidden'
@@ -381,7 +399,8 @@ export default function SharedRoom() {
 
       {/* Add/Edit Modal */}
       <Modal visible={showModal} animationType="slide" transparent>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
           <View style={{ backgroundColor: theme.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 380 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
               <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{editingId ? 'Edit Entry ✏️' : 'Add Entry 📝'}</Text>
@@ -399,7 +418,7 @@ export default function SharedRoom() {
 
             <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Amount (₹)</Text>
             <TextInput
-              style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.success, fontSize: 28, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] }}
+              style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.success, fontSize: 24, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] }}
               placeholder="0"
               placeholderTextColor={theme.muted + '50'}
               keyboardType="numeric"
@@ -441,7 +460,7 @@ export default function SharedRoom() {
               </LinearGradient>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

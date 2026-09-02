@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { CustomAlert as Alert } from '../../utils/alert';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -331,7 +331,8 @@ export default function GroupDetails() {
 
       {/* Add Expense Modal */}
       <Modal visible={showExpenseModal} animationType="slide" transparent>
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
           <View style={{ backgroundColor: theme.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 400 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
               <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{editingExpenseId ? 'Edit Expense' : 'Add Expense'}</Text>
@@ -383,7 +384,7 @@ export default function GroupDetails() {
               <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' , fontFamily: 'Outfit_700Bold'}}>{editingExpenseId ? 'Save Changes 💾' : 'Split Equally 💸'}</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

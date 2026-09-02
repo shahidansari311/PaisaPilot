@@ -82,14 +82,26 @@ export default function BorrowLend() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* HEADER */}
-      <View style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: theme.border, backgroundColor: theme.background }}>
+      <LinearGradient
+        colors={['#A855F7', '#7C3AED']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          paddingTop: 56,
+          paddingBottom: 20,
+          paddingHorizontal: 24,
+          borderBottomLeftRadius: 28,
+          borderBottomRightRadius: 28,
+          marginBottom: 0,
+        }}
+      >
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <View>
-            <Text style={{ fontSize: 26, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>Debt Tracker 🤝</Text>
-            <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, marginTop: 3 , fontFamily: 'Inter_500Medium'}}>Long press to delete</Text>
+            <Text style={{ fontSize: 32, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Debt Tracker</Text>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>Long press a record to delete</Text>
           </View>
         </View>
-      </View>
+      </LinearGradient>
 
       {/* SUMMARY */}
       <View style={{ flexDirection: 'row', paddingHorizontal: 16, paddingTop: 16, gap: 12, marginBottom: 16 }}>
@@ -124,7 +136,7 @@ export default function BorrowLend() {
 
       {/* LIST */}
       <ScrollView style={{ flex: 1, paddingHorizontal: 16 }} showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 110 }}>
+        contentContainerStyle={{ paddingBottom: 24 }}>
 
         {activeRecords.length === 0 ? (
           <View style={{ backgroundColor: theme.card, borderRadius: 22, padding: 36, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed', marginTop: 8 }}>
@@ -219,7 +231,7 @@ export default function BorrowLend() {
       {/* FAB — positioned above tab bar */}
       <Link href="/add-borrow-lend" asChild>
         <TouchableOpacity activeOpacity={0.85} style={{
-          position: 'absolute', bottom: 90, right: 20,
+          position: 'absolute', bottom: 24, right: 20,
           shadowColor: theme.primary, shadowOpacity: 0.5, shadowRadius: 16, shadowOffset: { width: 0, height: 6 }, elevation: 12
         }}>
           <LinearGradient

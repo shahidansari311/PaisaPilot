@@ -160,9 +160,9 @@ export default function CalendarScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 64, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: theme.border }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 56, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <View>
-          <Text style={{ fontSize: 32, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Calendar 📅</Text>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Calendar 📅</Text>
           <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>Tap a day to see spending</Text>
         </View>
         <TouchableOpacity onPress={handleExportMonth} activeOpacity={0.7}
@@ -174,7 +174,7 @@ export default function CalendarScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
 
         {/* Month Navigator */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 20 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 16 }}>
           <TouchableOpacity onPress={() => goMonth(-1)} activeOpacity={0.7}
             style={{ backgroundColor: theme.card, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
             <ChevronLeft size={22} color={theme.ink} />
@@ -191,7 +191,7 @@ export default function CalendarScreen() {
 
         {/* Month Summary */}
         <View style={{ flexDirection: 'row', marginHorizontal: 24, gap: 16, marginBottom: 24 }}>
-          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: theme.border }}>
+          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 20, padding: 14, borderWidth: 1, borderColor: theme.border }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
               <TrendingUp size={16} color={theme.success} />
               <Text style={{ fontSize: 12, fontWeight: '800', color: theme.success, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>In</Text>
@@ -200,7 +200,7 @@ export default function CalendarScreen() {
               ₹{monthIncome.toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: theme.border }}>
+          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 20, padding: 14, borderWidth: 1, borderColor: theme.border }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
               <TrendingDown size={16} color={theme.danger} />
               <Text style={{ fontSize: 12, fontWeight: '800', color: theme.danger, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>Out</Text>
@@ -212,7 +212,7 @@ export default function CalendarScreen() {
         </View>
 
         {/* Calendar Grid */}
-        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 28, borderWidth: 1, borderColor: theme.border, padding: 16, marginBottom: 24 }}>
+        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 20, borderWidth: 1, borderColor: theme.border, padding: 14, marginBottom: 24 }}>
           {/* Day Labels */}
           <View style={{ flexDirection: 'row', marginBottom: 8 }}>
             {DAYS.map(d => (
@@ -271,9 +271,9 @@ export default function CalendarScreen() {
 
         {/* Day Detail Panel */}
         {selectedDate && (
-          <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 28, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 24 }}>
+          <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 20, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 24 }}>
             {/* Panel Header */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20, borderBottomWidth: 1, borderBottomColor: theme.border }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottomWidth: 1, borderBottomColor: theme.border }}>
               <View>
                 <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>
                   {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -322,9 +322,9 @@ export default function CalendarScreen() {
                 return (
                   <TouchableOpacity key={tx.id} 
                     onLongPress={() => handleAction(tx.id)} delayLongPress={350} activeOpacity={0.7}
-                    style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 16, borderBottomWidth: i < dayTransactions.length - 1 ? 1 : 0, borderBottomColor: theme.border }}>
-                    <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
-                      <Text style={{ fontSize: 18, fontWeight: '900', color , fontFamily: 'Outfit_700Bold'}}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
+                    style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: i < dayTransactions.length - 1 ? 1 : 0, borderBottomColor: theme.border }}>
+                    <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
+                      <Text style={{ fontSize: 16, fontWeight: '900', color , fontFamily: 'Outfit_700Bold'}}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
                     </View>
                     <View style={{ flex: 1 }}>
                       <Text style={{ fontSize: 16, fontWeight: '700', color: theme.ink, marginBottom: 2 , fontFamily: 'Inter_700Bold'}} numberOfLines={1}>
@@ -366,9 +366,9 @@ export default function CalendarScreen() {
           colors={theme.primaryGradient}
           start={Gradients.diagonal.start}
           end={Gradients.diagonal.end}
-          style={{ width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' }}
         >
-          <Plus size={32} color="#fff" strokeWidth={3.5} />
+          <Plus size={28} color="#fff" strokeWidth={3.5} />
         </LinearGradient>
       </TouchableOpacity>
     </View>

@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'center', 
-    gap: 8, 
-    paddingVertical: 18, 
-    borderRadius: 20,
+    gap: 6, 
+    paddingVertical: 12, 
+    borderRadius: 25,
   },
   text: {
     color: '#fff', 

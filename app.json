@@ -7,13 +7,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "jsEngine": "hermes",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0f1729"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.shahid310.PaisaPilot"
@@ -23,7 +16,6 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0f1729"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.shahid310.PaisaPilot"
     },
@@ -53,7 +45,11 @@
           "android": {
             "enableProguardInReleaseBuilds": true,
             "enableMinifyInReleaseBuilds": true,
-            "shrinkResources": true
+            "shrinkResources": true,
+            "buildArchs": ["arm64-v8a"],
+            "useLegacyPackaging": true,
+            "gifEnabled": false,
+            "webpEnabled": false
           }
         }
       ]

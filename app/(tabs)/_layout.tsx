@@ -6,14 +6,14 @@ import { Colors, Gradients } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef } from 'react';
 
-function TabBarButton({ isFocused, onPress, onLongPress, routeName, label, theme }: any) {
-  const scale = useRef(new RNAnimated.Value(isFocused ? 1 : 0)).current;
+function TabBarButton({ isFocused, onPress, onLongPress, routeName, theme, isDark }: any) {
+  const anim = useRef(new RNAnimated.Value(isFocused ? 1 : 0)).current;
 
   useEffect(() => {
-    RNAnimated.spring(scale, {
+    RNAnimated.spring(anim, {
       toValue: isFocused ? 1 : 0,
       useNativeDriver: true,
-      friction: 6,
+      friction: 8,
       tension: 60,
     }).start();
   }, [isFocused]);
@@ -30,63 +30,65 @@ function TabBarButton({ isFocused, onPress, onLongPress, routeName, label, theme
   };
   const IconComponent = getIcon(routeName);
 
-  const translateY = scale.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -10]
-  });
+  const activeBgColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)';
 
-  const iconScale = scale.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.15]
-  });
-
-  const textOpacity = scale.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0]
-  });
+  // Icon color: solid bright/dark for active, muted for inactive
+  const iconColor = isFocused 
+    ? (isDark ? '#FFFFFF' : '#111827') 
+    : (isDark ? '#6B7280' : '#9CA3AF');
 
   return (
     <TouchableOpacity
       onPress={onPress}
       onLongPress={onLongPress}
       activeOpacity={0.85}
-      style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 72 }}
+      style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: 64 }}
     >
-      <RNAnimated.View style={{ position: 'absolute', transform: [{ translateY }, { scale: iconScale }] }}>
-        {isFocused ? (
-          <LinearGradient
-            colors={theme.primaryGradient}
-            start={Gradients.diagonal.start}
-            end={Gradients.diagonal.end}
-            style={{ 
-              width: 52, height: 52, borderRadius: 26, 
-              alignItems: 'center', justifyContent: 'center',
-              shadowColor: theme.primary, shadowOpacity: 0.5, 
-              shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, 
-              elevation: 8
-            }}
-          >
-            <IconComponent size={24} color="#FFFFFF" strokeWidth={2.5} />
-          </LinearGradient>
-        ) : (
-          <View style={{ width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}>
-            <IconComponent size={24} color={theme.icon} strokeWidth={2.5} />
-          </View>
-        )}
-      </RNAnimated.View>
-      <RNAnimated.Text 
-        style={{ 
-          position: 'absolute',
-          bottom: 12,
-          fontSize: 10, 
-          fontWeight: '700', 
-          color: theme.muted, 
-          fontFamily: 'Inter_500Medium',
-          opacity: textOpacity,
+      <View
+        style={{
+          width: 52,
+          height: 52,
+          borderRadius: 18,
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        {label}
-      </RNAnimated.Text>
+        {/* Animated Background Layer */}
+        <RNAnimated.View 
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            borderRadius: 18,
+            backgroundColor: activeBgColor,
+            opacity: anim,
+          }}
+        />
+
+        <RNAnimated.View style={{ 
+          transform: [{
+            translateY: anim.interpolate({ inputRange: [0, 1], outputRange: [0, -4] })
+          }]
+        }}>
+          <IconComponent size={22} color={iconColor} strokeWidth={2.5} />
+        </RNAnimated.View>
+        
+        {/* Green Dash Indicator */}
+        <RNAnimated.View 
+          style={{
+            position: 'absolute',
+            bottom: 8,
+            width: 14,
+            height: 4,
+            borderRadius: 2,
+            backgroundColor: '#8CC63F', // Green dash from the design
+            opacity: anim,
+            transform: [{
+              scaleX: anim.interpolate({ inputRange: [0, 1], outputRange: [0.3, 1] })
+            }]
+          }}
+        />
+      </View>
     </TouchableOpacity>
   );
 }
@@ -97,23 +99,20 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
 
   return (
     <View style={{
-      position: 'absolute',
-      bottom: Platform.OS === 'ios' ? 24 : 16,
-      left: 20,
-      right: 20,
-      height: 72,
-      backgroundColor: isDark ? 'rgba(25, 25, 30, 0.85)' : 'rgba(255, 255, 255, 0.85)',
-      borderRadius: 36,
+      paddingBottom: Platform.OS === 'ios' ? 32 : 16,
+      paddingTop: 8,
+      backgroundColor: isDark ? '#262629' : '#FFFFFF',
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32,
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 8,
-      borderWidth: 1,
-      borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 10 },
-      shadowOpacity: 0.15,
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      shadowColor: isDark ? '#000' : '#9CA3AF',
+      shadowOffset: { width: 0, height: -8 },
+      shadowOpacity: isDark ? 0.4 : 0.15,
       shadowRadius: 20,
-      elevation: 10,
+      elevation: 24,
     }}>
       {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
@@ -158,8 +157,8 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
             onPress={onPress}
             onLongPress={onLongPress}
             routeName={route.name}
-            label={label as string}
             theme={theme}
+            isDark={isDark}
           />
         );
       })}
@@ -168,13 +167,17 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
 }
 
 export default function TabLayout() {
+  const { isDark } = useThemeStore();
+  const theme = isDark ? Colors.dark : Colors.light;
+
   return (
-    <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
+      <Tabs
+        tabBar={(props) => <CustomTabBar {...props} />}
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
       <Tabs.Screen name="index" options={{ title: 'Home' }} />
       <Tabs.Screen name="transactions" options={{ title: 'History' }} />
       <Tabs.Screen name="borrow-lend" options={{ title: 'Debt' }} />
@@ -185,5 +188,6 @@ export default function TabLayout() {
       <Tabs.Screen name="settings" options={{ href: null }} />
       <Tabs.Screen name="calendar" options={{ href: null }} />
     </Tabs>
+    </View>
   );
 }

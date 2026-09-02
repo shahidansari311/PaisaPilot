@@ -1,12 +1,11 @@
-  import { View, Text, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, Share } from 'react-native';
+  import { View, Text, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, Share, KeyboardAvoidingView, Platform } from 'react-native';
   import { CustomAlert as Alert } from '../utils/alert';
   import { router } from 'expo-router';
   import { useThemeStore } from '../store/useThemeStore';
   import { useSharedRoomStore } from '../store/useSharedRoomStore';
   import { useState } from 'react';
   import { Copy, Shuffle, Cloud, Users, Sparkles, ArrowLeft, Plus, LogIn } from 'lucide-react-native';
-  import { firebaseDB } from '../config/firebaseConfig';
-  import { ref, set, get, push } from 'firebase/database';
+  import { supabase } from '../config/supabaseConfig';
   import { Colors, Gradients } from '../constants/Colors';
   import { LinearGradient } from 'expo-linear-gradient';
 
@@ -39,10 +38,14 @@
 
       setLoading(true);
       try {
-        // Check if code already exists
-        const roomRef = ref(firebaseDB, `shared_rooms/${code}`);
-        const snapshot = await get(roomRef);
-        if (snapshot.exists()) {
+        // Check if code already exists in Supabase
+        const { data: existingRoom } = await supabase
+          .from('shared_rooms')
+          .select('code')
+          .eq('code', code)
+          .single();
+
+        if (existingRoom) {
           Alert.alert('Code Taken', `The code "${code}" is already in use. Try a different one or generate a random code.`);
           setLoading(false);
           return;
@@ -51,20 +54,29 @@
         const memberId = `member_${Date.now()}`;
         const now = new Date().toISOString();
 
-        // Create room in Firebase
-        await set(roomRef, {
-          meta: {
-            createdAt: now,
-            createdBy: displayName.trim(),
-            roomName: roomName.trim(),
-          },
-          members: {
-            [memberId]: {
-              name: displayName.trim(),
-              joinedAt: now,
-            },
-          },
-        });
+        // Create room in Supabase
+        const { error: roomError } = await supabase
+          .from('shared_rooms')
+          .insert({
+            code: code,
+            room_name: roomName.trim(),
+            created_by: displayName.trim(),
+            created_at: now
+          });
+
+        if (roomError) throw roomError;
+
+        // Add creator as member
+        const { error: memberError } = await supabase
+          .from('room_members')
+          .insert({
+            id: memberId,
+            room_code: code,
+            name: displayName.trim(),
+            joined_at: now
+          });
+
+        if (memberError) throw memberError;
 
         // Save locally
         await addRoom({
@@ -91,32 +103,39 @@
 
       setLoading(true);
       try {
-        const roomRef = ref(firebaseDB, `shared_rooms/${code}`);
-        const snapshot = await get(roomRef);
+        const { data: roomData, error: findError } = await supabase
+          .from('shared_rooms')
+          .select('*')
+          .eq('code', code)
+          .single();
 
-        if (!snapshot.exists()) {
+        if (findError || !roomData) {
           Alert.alert('Not Found', `No room found with code "${code}". Double-check the code.`);
           setLoading(false);
           return;
         }
 
-        const roomData = snapshot.val();
         const memberId = `member_${Date.now()}`;
         const now = new Date().toISOString();
 
-        // Add self as member
-        const memberRef = ref(firebaseDB, `shared_rooms/${code}/members/${memberId}`);
-        await set(memberRef, {
-          name: displayName.trim(),
-          joinedAt: now,
-        });
+        // Add self as member in Supabase
+        const { error: joinError } = await supabase
+          .from('room_members')
+          .insert({
+            id: memberId,
+            room_code: code,
+            name: displayName.trim(),
+            joined_at: now
+          });
+
+        if (joinError) throw joinError;
 
         // Save locally
         await addRoom({
           roomCode: code,
           myMemberId: memberId,
           myName: displayName.trim(),
-          roomName: roomData.meta?.roomName || 'Shared Room',
+          roomName: roomData.room_name || 'Shared Room',
           joinedAt: now,
         });
 
@@ -165,9 +184,9 @@
             </Text>
 
             {/* Code Display */}
-            <View style={{ backgroundColor: theme.card, borderRadius: 24, padding: 28, borderWidth: 2, borderColor: theme.primary + '40', marginBottom: 24, width: '100%', alignItems: 'center' }}>
+            <View style={{ backgroundColor: theme.card, borderRadius: 20, padding: 24, borderWidth: 2, borderColor: theme.primary + '40', marginBottom: 24, width: '100%', alignItems: 'center' }}>
               <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>Room Code</Text>
-              <Text style={{ fontSize: 42, fontWeight: '900', color: theme.primary, letterSpacing: 8, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+              <Text style={{ fontSize: 36, fontWeight: '900', color: theme.primary, letterSpacing: 8, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
                 {createdCode}
               </Text>
               <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, marginTop: 8 , fontFamily: 'Inter_500Medium'}}>{roomName}</Text>
@@ -183,8 +202,8 @@
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 8,
-                  padding: 16,
-                  borderRadius: 24,
+                  padding: 14,
+                  borderRadius: 20,
                   backgroundColor: '#25D36615',
                   borderWidth: 1,
                   borderColor: '#25D36630',
@@ -197,12 +216,12 @@
             </View>
 
             <TouchableOpacity onPress={goToRoom} activeOpacity={0.85}
-              style={{ width: '100%', borderRadius: 18, overflow: 'hidden' }}>
+              style={{ width: '100%', borderRadius: 16, overflow: 'hidden' }}>
               <LinearGradient
                 colors={theme.primaryGradient}
                 start={Gradients.diagonal.start}
                 end={Gradients.diagonal.end}
-                style={{ padding: 18, alignItems: 'center' }}
+                style={{ padding: 16, alignItems: 'center' }}
               >
                 <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'Outfit_700Bold'}}>Open Room →</Text>
               </LinearGradient>
@@ -241,9 +260,9 @@
 
             {/* Create Card */}
             <TouchableOpacity onPress={() => setMode('create')} activeOpacity={0.8}
-              style={{ backgroundColor: theme.card, borderRadius: 22, padding: 24, marginBottom: 16, borderWidth: 1.5, borderColor: theme.primary + '30', flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-              <View style={{ backgroundColor: theme.primary + '15', width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' }}>
-                <Plus size={26} color={theme.primary} strokeWidth={2.5} />
+              style={{ backgroundColor: theme.card, borderRadius: 20, padding: 20, marginBottom: 14, borderWidth: 1.5, borderColor: theme.primary + '30', flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+              <View style={{ backgroundColor: theme.primary + '15', width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' }}>
+                <Plus size={24} color={theme.primary} strokeWidth={2.5} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 17, fontWeight: '900', color: theme.ink, marginBottom: 4 , fontFamily: 'Outfit_700Bold'}}>Create a Room</Text>
@@ -255,9 +274,9 @@
 
             {/* Join Card */}
             <TouchableOpacity onPress={() => setMode('join')} activeOpacity={0.8}
-              style={{ backgroundColor: theme.card, borderRadius: 22, padding: 24, borderWidth: 1.5, borderColor: theme.success + '30', flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-              <View style={{ backgroundColor: theme.success + '15', width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' }}>
-                <LogIn size={26} color={theme.success} strokeWidth={2.5} />
+              style={{ backgroundColor: theme.card, borderRadius: 20, padding: 20, borderWidth: 1.5, borderColor: theme.success + '30', flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+              <View style={{ backgroundColor: theme.success + '15', width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' }}>
+                <LogIn size={24} color={theme.success} strokeWidth={2.5} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 17, fontWeight: '900', color: theme.ink, marginBottom: 4 , fontFamily: 'Outfit_700Bold'}}>Join a Room</Text>
@@ -275,7 +294,10 @@
     const isCreate = mode === 'create';
 
     return (
-      <View style={{ flex: 1, backgroundColor: theme.background }}>
+      <KeyboardAvoidingView 
+        style={{ flex: 1, backgroundColor: theme.background }} 
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
           <TouchableOpacity onPress={() => setMode('choose')} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
             <ArrowLeft size={22} color={theme.ink} />
@@ -289,7 +311,7 @@
           {/* Display Name */}
           <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Your Display Name</Text>
           <TextInput
-            style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
+            style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
             placeholder="e.g. Shahid, Arjun"
             placeholderTextColor={theme.muted}
             value={displayName}
@@ -302,7 +324,7 @@
               {/* Room Name */}
               <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Room Name</Text>
               <TextInput
-                style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
+                style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
                 placeholder="e.g. Flat 302, PG Room"
                 placeholderTextColor={theme.muted}
                 value={roomName}
@@ -313,7 +335,7 @@
               <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Room Code (optional — leave blank for random)</Text>
               <View style={{ flexDirection: 'row', gap: 10, marginBottom: 8 }}>
                 <TextInput
-                  style={{ flex: 1, backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.primary, fontSize: 20, fontWeight: '900', letterSpacing: 4, textTransform: 'uppercase' }}
+                  style={{ flex: 1, backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.primary, fontSize: 18, fontWeight: '900', letterSpacing: 4, textTransform: 'uppercase' }}
                   placeholder="AUTO"
                   placeholderTextColor={theme.muted + '50'}
                   value={roomCode}
@@ -322,8 +344,8 @@
                   maxLength={8}
                 />
                 <TouchableOpacity onPress={() => setRoomCode(generateCode())} activeOpacity={0.7}
-                  style={{ width: 52, borderRadius: 14, backgroundColor: theme.primary + '15', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.primary + '30' }}>
-                  <Shuffle size={22} color={theme.primary} />
+                  style={{ width: 48, borderRadius: 12, backgroundColor: theme.primary + '15', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.primary + '30' }}>
+                  <Shuffle size={20} color={theme.primary} />
                 </TouchableOpacity>
               </View>
               <Text style={{ fontSize: 11, color: theme.muted, fontWeight: '600', marginBottom: 24 , fontFamily: 'Inter_500Medium'}}>
@@ -337,7 +359,7 @@
               {/* Enter Room Code */}
               <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Room Code</Text>
               <TextInput
-                style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.success, fontSize: 24, fontWeight: '900', letterSpacing: 6, marginBottom: 24, textAlign: 'center', textTransform: 'uppercase' }}
+                style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.success, fontSize: 20, fontWeight: '900', letterSpacing: 6, marginBottom: 24, textAlign: 'center', textTransform: 'uppercase' }}
                 placeholder="ENTER CODE"
                 placeholderTextColor={theme.muted + '50'}
                 value={roomCode}
@@ -353,14 +375,14 @@
             onPress={isCreate ? handleCreate : handleJoin}
             activeOpacity={0.85}
             disabled={loading}
-            style={{ borderRadius: 18, overflow: 'hidden' }}
+            style={{ borderRadius: 16, overflow: 'hidden' }}
           >
             <LinearGradient
               colors={isCreate ? theme.primaryGradient : theme.successGradient || [theme.success, theme.success]}
               start={Gradients.diagonal.start}
               end={Gradients.diagonal.end}
               style={{
-                padding: 18, alignItems: 'center',
+                padding: 16, alignItems: 'center',
                 flexDirection: 'row', justifyContent: 'center', gap: 10,
                 opacity: loading ? 0.6 : 1,
               }}
@@ -378,6 +400,6 @@
             </LinearGradient>
           </TouchableOpacity>
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
     );
   }

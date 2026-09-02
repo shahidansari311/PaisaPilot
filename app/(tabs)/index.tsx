@@ -16,8 +16,7 @@ import { DashboardSharedRooms } from '../../components/dashboard/DashboardShared
 import { DashboardRecentList } from '../../components/dashboard/DashboardRecentList';
 import { Colors } from '../../constants/Colors';
 
-const currentMonthKey = () => {
-  const d = new Date();
+const monthKeyFromDate = (d: Date) => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 };
 
@@ -27,8 +26,10 @@ export default function Dashboard() {
 
   const [userName, setUserName] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
   const [budgetAmount, setBudgetAmount] = useState(0);
   const [levelData, setLevelData] = useState({ level: 1, rank: 'Financial Noob' });
   const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([]);
@@ -46,14 +47,14 @@ export default function Dashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  useFocusEffect(useCallback(() => { loadDashboardData(); }, []));
+  useFocusEffect(useCallback(() => { loadDashboardData(); }, [currentDate]));
 
   const loadDashboardData = async () => {
     try {
       const nameRow = await db.getFirstAsync<{ value: string }>(`SELECT value FROM app_settings WHERE key = 'user_name'`);
       setUserName(nameRow?.value || null);
 
-      const month = currentMonthKey();
+      const month = monthKeyFromDate(currentDate);
       const recent = await db.getAllAsync<Transaction>('SELECT * FROM transactions ORDER BY date DESC LIMIT 5');
       setRecentTransactions(recent);
 
@@ -89,9 +90,11 @@ export default function Dashboard() {
       const csvObj = await db.getFirstAsync<{value:string}>("SELECT value FROM app_settings WHERE key = 'has_imported_csv'");
       if (csvObj?.value === 'true') unlockedCount++;
 
-      const totalIncObj = await db.getFirstAsync<{t:number}>("SELECT SUM(amount) as t FROM transactions WHERE type='income'");
-      const totalExpObj = await db.getFirstAsync<{t:number}>("SELECT SUM(amount) as t FROM transactions WHERE type='expense'");
+      const totalIncObj = await db.getFirstAsync<{t:number}>(`SELECT SUM(amount) as t FROM transactions WHERE type='income' AND strftime('%Y-%m', date) = ?`, [month]);
+      const totalExpObj = await db.getFirstAsync<{t:number}>(`SELECT SUM(amount) as t FROM transactions WHERE type='expense' AND strftime('%Y-%m', date) = ?`, [month]);
       const bal = (totalIncObj?.t || 0) - (totalExpObj?.t || 0);
+      setTotalBalance(bal);
+      
       if (bal >= 1000000) unlockedCount++;
 
       const level = Math.floor(unlockedCount / 2) + 1;
@@ -110,40 +113,52 @@ export default function Dashboard() {
   const progressColor = pct >= 0.9 ? colors.danger : pct >= 0.7 ? colors.warning : colors.success;
   const progressGradient = pct >= 0.9 ? colors.dangerGradient : pct >= 0.7 ? colors.warningGradient : colors.successGradient;
 
-  const today = new Date();
-  const daysLeft = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() - today.getDate() + 1;
+  const daysLeft = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() - currentDate.getDate() + 1;
   const safeSpend = !isOverBudget && remaining > 0 ? Math.floor(remaining / daysLeft) : 0;
+
+  const now = new Date();
+  const isCurrentMonth = currentDate.getMonth() === now.getMonth() && currentDate.getFullYear() === now.getFullYear();
+
+  const nextMonth = () => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(newDate.getMonth() + 1);
+      return newDate;
+    });
+  };
+
+  const prevMonth = () => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(newDate.getMonth() - 1);
+      return newDate;
+    });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: bg }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 48 }} showsVerticalScrollIndicator={false}>
+      <DashboardHeader 
+        userName={userName} 
+        isDark={isDark} 
+        toggleTheme={toggleTheme} 
+        colors={colors} 
+        totalBalance={remaining}
+        currentDate={currentDate}
+        prevMonth={prevMonth}
+        nextMonth={nextMonth}
+        isCurrentMonth={isCurrentMonth}
+      />
 
-        <DashboardHeader 
-          userName={userName} 
-          isDark={isDark} 
-          toggleTheme={toggleTheme} 
-          colors={colors} 
-        />
+      <DashboardAchievements 
+        levelData={levelData} 
+        colors={colors} 
+      />
 
-        <DashboardAchievements 
-          levelData={levelData} 
-          colors={colors} 
-        />
+      <DashboardQuickAdd 
+        colors={colors} 
+      />
 
-        <DashboardQuickAdd 
-          colors={colors} 
-        />
-
-        <DashboardBudget 
-          budgetAmount={budgetAmount} 
-          expense={expense} 
-          remaining={remaining} 
-          isOverBudget={isOverBudget} 
-          pct={pct} 
-          progressColor={progressColor} 
-          progressGradient={progressGradient}
-          colors={colors} 
-        />
+      <ScrollView contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false} bounces={false}>
 
         <DashboardSummary 
           income={income} 

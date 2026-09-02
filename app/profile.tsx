@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { CustomAlert as Alert } from '../utils/alert';
 import { useThemeStore } from '../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -49,7 +49,10 @@ export default function ProfileScreen() {
   const initials = name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase() || '?';
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
+    <KeyboardAvoidingView 
+      style={{ flex: 1, backgroundColor: theme.background }} 
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}
@@ -62,9 +65,9 @@ export default function ProfileScreen() {
       <ScrollView contentContainerStyle={{ padding: 24, paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
 
         {/* Avatar */}
-        <View style={{ alignItems: 'center', marginBottom: 32 }}>
-          <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center', marginBottom: 12, shadowColor: theme.primary, shadowOpacity: 0.35, shadowRadius: 14, shadowOffset: { width: 0, height: 6 } }}>
-            <Text style={{ fontSize: 38, fontWeight: '900', color: '#fff' , fontFamily: 'Outfit_700Bold'}}>{initials}</Text>
+        <View style={{ alignItems: 'center', marginBottom: 24 }}>
+          <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center', marginBottom: 12, shadowColor: theme.primary, shadowOpacity: 0.35, shadowRadius: 14, shadowOffset: { width: 0, height: 6 } }}>
+            <Text style={{ fontSize: 32, fontWeight: '900', color: '#fff' , fontFamily: 'Outfit_700Bold'}}>{initials}</Text>
           </View>
           <Text style={{ fontSize: 20, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{name || 'Your Name'}</Text>
           {phone ? <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>+91 {phone}</Text> : null}
@@ -80,10 +83,10 @@ export default function ProfileScreen() {
         {/* Name Input */}
         <View style={{ marginBottom: 18 }}>
           <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>Your Name</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 18, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 14 }}>
             <User size={18} color={theme.muted} style={{ marginRight: 12 }} />
             <TextInput
-              style={{ flex: 1, paddingVertical: 16, color: theme.ink, fontSize: 17, fontWeight: '600' }}
+              style={{ flex: 1, paddingVertical: 14, color: theme.ink, fontSize: 16, fontWeight: '600' }}
               placeholder="e.g. Rahul Verma"
               placeholderTextColor={theme.muted}
               value={name}
@@ -95,10 +98,10 @@ export default function ProfileScreen() {
         {/* Phone Input */}
         <View style={{ marginBottom: 32 }}>
           <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>Your WhatsApp Number</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 18, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 14 }}>
             <Text style={{ fontSize: 15, fontWeight: '700', color: theme.muted, marginRight: 8 , fontFamily: 'Inter_700Bold'}}>+91</Text>
             <TextInput
-              style={{ flex: 1, paddingVertical: 16, color: theme.ink, fontSize: 17, fontWeight: '600', fontVariant: ['tabular-nums'] }}
+              style={{ flex: 1, paddingVertical: 14, color: theme.ink, fontSize: 16, fontWeight: '600', fontVariant: ['tabular-nums'] }}
               placeholder="9876543210"
               placeholderTextColor={theme.muted}
               keyboardType="phone-pad"
@@ -114,12 +117,12 @@ export default function ProfileScreen() {
 
         {/* Save Button */}
         <TouchableOpacity onPress={handleSave} activeOpacity={0.85}
-          style={{ borderRadius: 22, overflow: 'hidden' }}>
+          style={{ borderRadius: 20, overflow: 'hidden' }}>
           <LinearGradient
             colors={saved ? [theme.success, theme.success] : theme.primaryGradient}
             start={Gradients.diagonal.start}
             end={Gradients.diagonal.end}
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, padding: 18 }}
+            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, padding: 16 }}
           >
             {saved ? <Check size={22} color="#fff" strokeWidth={3} /> : <Save size={22} color="#fff" />}
             <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 , fontFamily: 'Outfit_700Bold'}}>{saved ? 'Saved! ✅' : 'Save Profile'}</Text>
@@ -127,6 +130,6 @@ export default function ProfileScreen() {
         </TouchableOpacity>
 
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

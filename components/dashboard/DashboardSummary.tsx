@@ -17,97 +17,102 @@ interface Props {
     danger: string;
     dangerGradient: readonly [string, string, ...string[]];
     primaryGradient: readonly [string, string, ...string[]];
+    ink: string;
   };
 }
 
 export function DashboardSummary({ income, expense, safeSpend, isDark, colors }: Props) {
   return (
-    <View style={{ flexDirection: 'row', marginHorizontal: 20, gap: 14, marginBottom: 24 }}>
+    <View style={{ marginHorizontal: 20, marginBottom: 20 }}>
       
-      {/* Income Card */}
-      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-          <LinearGradient
-            colors={colors.successGradient}
-            start={Gradients.diagonal.start}
-            end={Gradients.diagonal.end}
-            style={styles.iconCircle}
-          >
-            <TrendingUp size={16} color="#fff" strokeWidth={2.5} />
-          </LinearGradient>
-          <Text style={[styles.label, { color: colors.muted }]}>In</Text>
-        </View>
-        <Text style={[styles.amount, { color: colors.success }]} adjustsFontSizeToFit numberOfLines={1}>
-          ₹{income.toLocaleString('en-IN')}
-        </Text>
+      {/* Section Header */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <Text style={{ fontSize: 18, fontWeight: '900', color: colors.ink, fontFamily: 'Outfit_700Bold' }}>Your Money</Text>
       </View>
 
-      {/* Expense Card */}
-      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-          <LinearGradient
-            colors={colors.dangerGradient}
-            start={Gradients.diagonal.start}
-            end={Gradients.diagonal.end}
-            style={styles.iconCircle}
-          >
-            <TrendingDown size={16} color="#fff" strokeWidth={2.5} />
-          </LinearGradient>
-          <Text style={[styles.label, { color: colors.muted }]}>Out</Text>
-        </View>
-        <Text style={[styles.amount, { color: colors.danger }]} adjustsFontSizeToFit numberOfLines={1}>
-          ₹{expense.toLocaleString('en-IN')}
-        </Text>
-      </View>
-
-      {/* Safe to Spend Card */}
-      {safeSpend > 0 && (
-        <LinearGradient
-          colors={colors.primaryGradient}
-          start={Gradients.diagonal.start}
-          end={Gradients.diagonal.end}
-          style={[styles.card, { borderWidth: 0 }]}
-        >
-          <Text style={[styles.label, { color: 'rgba(255,255,255,0.8)', marginBottom: 12 }]}>Safe/day</Text>
-          <Text style={[styles.amount, { color: '#ffffff' }]} adjustsFontSizeToFit numberOfLines={1}>
-            ₹{safeSpend.toLocaleString('en-IN')}
+      {/* Income & Expense Cards */}
+      <View style={{ flexDirection: 'row', gap: 16, marginBottom: 16 }}>
+        
+        {/* Income Card */}
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, flex: 1 }]}>
+          <View style={[styles.iconWrapper, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
+            <TrendingUp size={20} color={colors.success} strokeWidth={2.5} />
+          </View>
+          <Text style={[styles.label, { color: colors.muted }]}>Income</Text>
+          <Text style={[styles.amount, { color: colors.ink }]} adjustsFontSizeToFit numberOfLines={1}>
+            ₹{income.toLocaleString('en-IN')}
           </Text>
-        </LinearGradient>
+        </View>
+
+        {/* Expense Card */}
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, flex: 1 }]}>
+          <View style={[styles.iconWrapper, { backgroundColor: 'rgba(244, 63, 94, 0.1)' }]}>
+            <TrendingDown size={20} color={colors.danger} strokeWidth={2.5} />
+          </View>
+          <Text style={[styles.label, { color: colors.muted }]}>Expenses</Text>
+          <Text style={[styles.amount, { color: colors.ink }]} adjustsFontSizeToFit numberOfLines={1}>
+            ₹{expense.toLocaleString('en-IN')}
+          </Text>
+        </View>
+        
+      </View>
+
+      {/* Safe to Spend Banner (Insight style) */}
+      {safeSpend > 0 && (
+        <View style={[styles.insightBanner, { backgroundColor: isDark ? '#19191E' : '#F3E8FF' }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Text style={{ fontSize: 16 }}>✨</Text>
+            <Text style={{ color: isDark ? '#FFFFFF' : colors.ink, fontSize: 14, fontWeight: '700', fontFamily: 'Inter_700Bold' }}>
+              Safe to spend today
+            </Text>
+          </View>
+          <Text style={{ color: '#A855F7', fontSize: 15, fontWeight: '900', fontFamily: 'Outfit_700Bold' }}>
+            ₹{safeSpend.toLocaleString('en-IN')} / day
+          </Text>
+        </View>
       )}
-      
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1, 
-    borderRadius: 22, 
-    padding: 16, 
+    borderRadius: 20, 
+    padding: 12, 
     borderWidth: 1,
     shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
+    shadowOpacity: 0.04,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
   },
-  iconCircle: {
-    width: 32, 
-    height: 32, 
-    borderRadius: 16, 
-    alignItems: 'center', 
+  iconWrapper: {
+    width: 36,
+    height: 30,
+    borderRadius: 18,
+    alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 12,
   },
   label: {
-    fontSize: 12, 
-    fontWeight: '800', 
-    textTransform: 'uppercase', 
-    fontFamily: 'Outfit_700Bold',
+    fontSize: 13, 
+    fontWeight: '600', 
+    marginBottom: 4,
+    fontFamily: 'Inter_500Medium',
   },
   amount: {
-    fontSize: 22, 
+    fontSize: 20, 
     fontWeight: '900', 
     fontVariant: ['tabular-nums'], 
     fontFamily: 'Outfit_700Bold',
   },
+  insightBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderRadius: 100, // Pill shape
+  }
 });

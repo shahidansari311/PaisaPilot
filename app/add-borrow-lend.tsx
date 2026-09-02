@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { CustomAlert as Alert } from '../utils/alert';
 import { useThemeStore } from '../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -61,10 +61,13 @@ export default function AddBorrowLend() {
     </View>
   );
 
-  const inputStyle = { backgroundColor: theme.card, borderRadius: 18, padding: 16, color: theme.ink, fontSize: 16, fontWeight: '600' as const, borderWidth: 1, borderColor: theme.border };
+  const inputStyle = { backgroundColor: theme.card, borderRadius: 16, padding: 14, color: theme.ink, fontSize: 15, fontWeight: '600' as const, borderWidth: 1, borderColor: theme.border };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
+    <KeyboardAvoidingView 
+      style={{ flex: 1, backgroundColor: theme.background }} 
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}
@@ -77,7 +80,7 @@ export default function AddBorrowLend() {
       <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
 
         {/* Type Toggle */}
-        <View style={{ backgroundColor: theme.surface, borderRadius: 18, padding: 5, flexDirection: 'row', borderWidth: 1, borderColor: theme.border, marginBottom: 24 }}>
+        <View style={{ backgroundColor: theme.surface, borderRadius: 18, padding: 5, flexDirection: 'row', borderWidth: 1, borderColor: theme.border, marginBottom: 16 }}>
           {(['borrowed', 'lent'] as const).map(t => {
             const c = t === 'borrowed' ? theme.danger : theme.success;
             const active = selectedType === t;
@@ -103,7 +106,7 @@ export default function AddBorrowLend() {
             <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 18, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 14 }}>
               <Text style={{ fontSize: 15, fontWeight: '700', color: theme.muted, marginRight: 8 , fontFamily: 'Inter_700Bold'}}>+91</Text>
               <TextInput
-                style={{ flex: 1, paddingVertical: 16, color: theme.ink, fontSize: 16, fontWeight: '600', fontVariant: ['tabular-nums'] }}
+                style={{ flex: 1, paddingVertical: 14, color: theme.ink, fontSize: 15, fontWeight: '600', fontVariant: ['tabular-nums'] }}
                 placeholder="9876543210 (optional)"
                 placeholderTextColor={theme.muted}
                 keyboardType="phone-pad"
@@ -120,7 +123,7 @@ export default function AddBorrowLend() {
 
         <Field icon={<IndianRupee size={16} color={activeAccent} />} label="Amount (₹)" error={errors.amount?.message}>
           <Controller control={control} name="amount" render={({ field: { onChange, value } }) => (
-            <TextInput style={{ ...inputStyle, fontSize: 28, fontWeight: '900', color: activeAccent, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}
+            <TextInput style={{ ...inputStyle, fontSize: 24, fontWeight: '900', color: activeAccent, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}
               keyboardType="numeric" placeholder="0" placeholderTextColor={theme.muted + '50'}
               value={value ? value.toString() : ''} onChangeText={onChange} />
           )} />
@@ -164,13 +167,13 @@ export default function AddBorrowLend() {
             colors={theme.primaryGradient}
             start={Gradients.diagonal.start}
             end={Gradients.diagonal.end}
-            style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 18, borderRadius: 22 }}
+            style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 16, borderRadius: 20 }}
           >
             <Check size={22} color="#fff" strokeWidth={3} />
             <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 , fontFamily: 'Outfit_700Bold'}}>Save Record 🔒</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

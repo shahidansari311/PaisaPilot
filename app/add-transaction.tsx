@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { CustomAlert as Alert } from '../utils/alert';
 import { useThemeStore } from '../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -84,16 +84,19 @@ export default function AddTransaction() {
       const timeStr = now.toTimeString().split(' ')[0]; // HH:MM:SS
       const finalDateString = `${data.date}T${timeStr}`; 
 
+      const fallbackCat = data.type === 'expense' ? 'cat-other-exp' : 'cat-other-inc';
+      const finalCategoryId = data.categoryId || fallbackCat;
+
       if (isEditing && params.id) {
         await db.runAsync(
           `UPDATE transactions SET categoryId = ?, amount = ?, type = ?, date = ?, note = ? WHERE id = ?`,
-          [data.categoryId || null, data.amount, data.type, finalDateString, data.note || '', params.id]
+          [finalCategoryId, data.amount, data.type, finalDateString, data.note || '', params.id]
         );
       } else {
         const id = 'tx-' + Date.now();
         await db.runAsync(
           `INSERT INTO transactions (id, accountId, categoryId, amount, type, date, note, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [id, 'default-wallet', data.categoryId || null, data.amount, data.type, finalDateString, data.note || '', now.toISOString()]
+          [id, 'default-wallet', finalCategoryId, data.amount, data.type, finalDateString, data.note || '', now.toISOString()]
         );
       }
       router.back();
@@ -112,7 +115,10 @@ export default function AddTransaction() {
   })();
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
+    <KeyboardAvoidingView 
+      style={{ flex: 1, backgroundColor: theme.background }} 
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border, zIndex: 10 }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}
@@ -146,12 +152,12 @@ export default function AddTransaction() {
         </View>
 
         {/* Amount */}
-        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 20, borderWidth: 1, borderColor: theme.border, marginBottom: 18 }}>
+        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 16, borderWidth: 1, borderColor: theme.border, marginBottom: 16 }}>
           <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 , fontFamily: 'Outfit_700Bold'}}>How much?</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 40, fontWeight: '900', color: primaryColor, marginRight: 6 , fontFamily: 'Outfit_700Bold'}}>₹</Text>
+            <Text style={{ fontSize: 32, fontWeight: '900', color: primaryColor, marginRight: 6 , fontFamily: 'Outfit_700Bold'}}>₹</Text>
             <Controller control={control} name="amount" render={({ field: { onChange, value } }) => (
-              <TextInput style={{ flex: 1, fontSize: 48, fontWeight: '900', color: primaryColor, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}
+              <TextInput style={{ flex: 1, fontSize: 40, fontWeight: '900', color: primaryColor, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}
                 keyboardType="numeric" placeholder="0" placeholderTextColor={theme.muted + '50'}
                 value={value ? value.toString() : ''} onChangeText={onChange} />
             )} />
@@ -160,7 +166,7 @@ export default function AddTransaction() {
         </View>
 
         {/* Note */}
-        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 18, borderWidth: 1, borderColor: theme.border, marginBottom: 18 }}>
+        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 16, borderWidth: 1, borderColor: theme.border, marginBottom: 16 }}>
           <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 , fontFamily: 'Outfit_700Bold'}}>What was it for?</Text>
           <Controller control={control} name="note" render={({ field: { onChange, value } }) => (
             <TextInput style={{ fontSize: 17, fontWeight: '600', color: theme.ink, padding: 0 , fontFamily: 'Inter_500Medium'}}
@@ -170,7 +176,7 @@ export default function AddTransaction() {
         </View>
 
         {/* Date */}
-        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 18, borderWidth: 1, borderColor: theme.border, marginBottom: 18 }}>
+        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 16, borderWidth: 1, borderColor: theme.border, marginBottom: 16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <Calendar size={16} color={theme.primary} />
             <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>Date</Text>
@@ -225,13 +231,13 @@ export default function AddTransaction() {
             colors={primaryGradient}
             start={Gradients.diagonal.start}
             end={Gradients.diagonal.end}
-            style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 18, borderRadius: 22 }}
+            style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 16, borderRadius: 20 }}
           >
             <Check size={22} color="#fff" strokeWidth={3} />
             <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 , fontFamily: 'Outfit_700Bold'}}>{isEditing ? 'Save Changes 💾' : 'Lock it in 🔒'}</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

@@ -1,4 +1,5 @@
 import { File, Paths } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
 import { SQLiteDatabase } from 'expo-sqlite';
@@ -132,7 +133,12 @@ export const exportTransactionsPDF = async (db: SQLiteDatabase, monthPrefix?: st
     `;
 
     const { uri } = await Print.printToFileAsync({ html: htmlContent });
-    await shareFile(uri, 'application/pdf');
+    // @ts-ignore
+    const docUri = `${FileSystem.documentDirectory}PaisaPilot_Report.pdf`;
+    const fileInfo = await FileSystem.getInfoAsync(docUri);
+    if (fileInfo.exists) await FileSystem.deleteAsync(docUri);
+    await FileSystem.copyAsync({ from: uri, to: docUri });
+    await shareFile(docUri, 'application/pdf');
   } catch (error) {
     console.error('PDF Export failed:', error);
     throw error;
@@ -239,7 +245,12 @@ export const exportSplitGroupPDF = async (db: SQLiteDatabase, groupId: string) =
     `;
 
     const { uri } = await Print.printToFileAsync({ html: htmlContent });
-    await shareFile(uri, 'application/pdf');
+    // @ts-ignore
+    const docUri = `${FileSystem.documentDirectory}PaisaPilot_Group_Report.pdf`;
+    const fileInfo = await FileSystem.getInfoAsync(docUri);
+    if (fileInfo.exists) await FileSystem.deleteAsync(docUri);
+    await FileSystem.copyAsync({ from: uri, to: docUri });
+    await shareFile(docUri, 'application/pdf');
   } catch (error) {
     console.error('Group PDF Export failed:', error);
     throw error;
