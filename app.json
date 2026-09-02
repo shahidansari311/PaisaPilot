@@ -4,7 +4,6 @@
     "slug": "PaisaPilot",
     "version": "1.0.0",
     "scheme": "paisapilot",
-    "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -44,11 +43,12 @@
         "expo-build-properties",
         {
           "android": {
+            "jsEngine": "hermes",
             "enableProguardInReleaseBuilds": true,
             "enableMinifyInReleaseBuilds": true,
             "shrinkResources": true,
             "buildArchs": ["arm64-v8a"],
-            "useLegacyPackaging": true,
+            "useLegacyPackaging": false,
             "gifEnabled": false,
             "webpEnabled": false
           }
