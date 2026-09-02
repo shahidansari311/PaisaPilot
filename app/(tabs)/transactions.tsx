@@ -1,10 +1,9 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { CustomAlert as Alert } from '../../utils/alert';
 import { useThemeStore } from '../../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useState } from 'react';
 import { Transaction } from '../../types/database';
-import { FlashList } from '@shopify/flash-list';
 import { Link, router, useFocusEffect } from 'expo-router';
 import { Plus, ReceiptText, Coffee, Car, ShoppingBag, Book, Heart, FileText, Smile, MoreHorizontal, Briefcase, Laptop, Gift, CircleDashed, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { Colors, Gradients } from '../../constants/Colors';
@@ -201,12 +200,11 @@ export default function Transactions() {
       {/* Content Area */}
       {viewMode === 'list' ? (
         <View style={{ flex: 1, marginHorizontal: 20, marginTop: 10 }}>
-          <FlashList
+          <FlatList
             data={transactions}
             renderItem={renderItem}
             showsVerticalScrollIndicator={false}
-            // @ts-ignore
-            estimatedItemSize={90}
+            keyExtractor={(item) => item.id}
             contentContainerStyle={{ paddingBottom: 24, paddingTop: 10 }}
             ListEmptyComponent={
               <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 100, paddingHorizontal: 40 }}>
