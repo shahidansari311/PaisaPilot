@@ -54,39 +54,39 @@ export default function ProfileScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 48, paddingBottom: 12, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}
-          style={{ backgroundColor: theme.surface, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
-          <ArrowLeft size={22} color={theme.ink} />
+          style={{ backgroundColor: theme.surface, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+          <ArrowLeft size={18} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 22, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>My Profile 👤</Text>
+        <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>My Profile 👤</Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 24, paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
 
         {/* Avatar */}
-        <View style={{ alignItems: 'center', marginBottom: 24 }}>
-          <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center', marginBottom: 12, shadowColor: theme.primary, shadowOpacity: 0.35, shadowRadius: 14, shadowOffset: { width: 0, height: 6 } }}>
-            <Text style={{ fontSize: 32, fontWeight: '900', color: '#fff' , fontFamily: 'Outfit_700Bold'}}>{initials}</Text>
+        <View style={{ alignItems: 'center', marginBottom: 20 }}>
+          <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center', marginBottom: 12, shadowColor: theme.primary, shadowOpacity: 0.35, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } }}>
+            <Text style={{ fontSize: 24, fontWeight: '900', color: '#fff' , fontFamily: 'Outfit_700Bold'}}>{initials}</Text>
           </View>
-          <Text style={{ fontSize: 20, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{name || 'Your Name'}</Text>
-          {phone ? <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>+91 {phone}</Text> : null}
+          <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{name || 'Your Name'}</Text>
+          {phone ? <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>+91 {phone}</Text> : null}
         </View>
 
         {/* Info Banner */}
-        <View style={{ backgroundColor: theme.primary + '15', borderRadius: 18, padding: 16, marginBottom: 24, borderWidth: 1, borderColor: theme.primary + '30' }}>
-          <Text style={{ fontSize: 14, fontWeight: '700', color: theme.primary, lineHeight: 22 , fontFamily: 'Inter_700Bold'}}>
+        <View style={{ backgroundColor: theme.primary + '15', borderRadius: 16, padding: 12, marginBottom: 20, borderWidth: 1, borderColor: theme.primary + '30' }}>
+          <Text style={{ fontSize: 13, fontWeight: '700', color: theme.primary, lineHeight: 20 , fontFamily: 'Inter_700Bold'}}>
             💡 Your name appears on WhatsApp reminders sent to people who owe you money. Your phone number is used to identify your WhatsApp account.
           </Text>
         </View>
 
         {/* Name Input */}
-        <View style={{ marginBottom: 18 }}>
-          <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>Your Name</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 14 }}>
-            <User size={18} color={theme.muted} style={{ marginRight: 12 }} />
+        <View style={{ marginBottom: 16 }}>
+          <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>Your Name</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 12 }}>
+            <User size={16} color={theme.muted} style={{ marginRight: 10 }} />
             <TextInput
-              style={{ flex: 1, paddingVertical: 14, color: theme.ink, fontSize: 16, fontWeight: '600' }}
+              style={{ flex: 1, paddingVertical: 12, color: theme.ink, fontSize: 14, fontWeight: '600' }}
               placeholder="e.g. Rahul Verma"
               placeholderTextColor={theme.muted}
               value={name}
@@ -96,12 +96,12 @@ export default function ProfileScreen() {
         </View>
 
         {/* Phone Input */}
-        <View style={{ marginBottom: 32 }}>
-          <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>Your WhatsApp Number</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 14 }}>
-            <Text style={{ fontSize: 15, fontWeight: '700', color: theme.muted, marginRight: 8 , fontFamily: 'Inter_700Bold'}}>+91</Text>
+        <View style={{ marginBottom: 24 }}>
+          <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>Your WhatsApp Number</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 12 }}>
+            <Text style={{ fontSize: 14, fontWeight: '700', color: theme.muted, marginRight: 8 , fontFamily: 'Inter_700Bold'}}>+91</Text>
             <TextInput
-              style={{ flex: 1, paddingVertical: 14, color: theme.ink, fontSize: 16, fontWeight: '600', fontVariant: ['tabular-nums'] }}
+              style={{ flex: 1, paddingVertical: 12, color: theme.ink, fontSize: 14, fontWeight: '600', fontVariant: ['tabular-nums'] }}
               placeholder="9876543210"
               placeholderTextColor={theme.muted}
               keyboardType="phone-pad"
@@ -110,22 +110,22 @@ export default function ProfileScreen() {
               onChangeText={(t) => setPhone(t.replace(/\D/g, ''))}
             />
           </View>
-          <Text style={{ fontSize: 12, color: theme.muted, marginTop: 8, fontWeight: '500' , fontFamily: 'Inter_500Medium'}}>
+          <Text style={{ fontSize: 11, color: theme.muted, marginTop: 8, fontWeight: '500' , fontFamily: 'Inter_500Medium'}}>
             This is used to auto-open WhatsApp reminders from your account.
           </Text>
         </View>
 
         {/* Save Button */}
         <TouchableOpacity onPress={handleSave} activeOpacity={0.85}
-          style={{ borderRadius: 20, overflow: 'hidden' }}>
+          style={{ borderRadius: 16, overflow: 'hidden' }}>
           <LinearGradient
             colors={saved ? [theme.success, theme.success] : theme.primaryGradient}
             start={Gradients.diagonal.start}
             end={Gradients.diagonal.end}
-            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, padding: 16 }}
+            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 14 }}
           >
-            {saved ? <Check size={22} color="#fff" strokeWidth={3} /> : <Save size={22} color="#fff" />}
-            <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 , fontFamily: 'Outfit_700Bold'}}>{saved ? 'Saved! ✅' : 'Save Profile'}</Text>
+            {saved ? <Check size={18} color="#fff" strokeWidth={3} /> : <Save size={18} color="#fff" />}
+            <Text style={{ color: '#fff', fontWeight: '900', fontSize: 15 , fontFamily: 'Outfit_700Bold'}}>{saved ? 'Saved! ✅' : 'Save Profile'}</Text>
           </LinearGradient>
         </TouchableOpacity>
 

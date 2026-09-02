@@ -38,13 +38,13 @@ export default function CustomAlert() {
 
   return (
     <Modal visible={visible} transparent animationType="none" onRequestClose={hideAlert}>
-      <Animated.View style={{ flex: 1, backgroundColor: bg, justifyContent: 'center', alignItems: 'center', padding: 24, opacity: fadeAnim }}>
-        <Animated.View style={{ backgroundColor: card, borderRadius: 24, width: '100%', maxWidth: 360, overflow: 'hidden', transform: [{ scale: scaleAnim }], elevation: 10, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } }}>
+      <Animated.View style={{ flex: 1, backgroundColor: bg, justifyContent: 'center', alignItems: 'center', padding: 20, opacity: fadeAnim }}>
+        <Animated.View style={{ backgroundColor: card, borderRadius: 16, width: '100%', maxWidth: 320, overflow: 'hidden', transform: [{ scale: scaleAnim }], elevation: 10, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } }}>
           
-          <View style={{ padding: 24, alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, fontWeight: '900', color: ink, marginBottom: 8, textAlign: 'center' }}>{title}</Text>
+          <View style={{ padding: 20, alignItems: 'center' }}>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: ink, marginBottom: 8, textAlign: 'center' }}>{title}</Text>
             {!!message && (
-              <Text style={{ fontSize: 15, color: muted, textAlign: 'center', lineHeight: 22 }}>{message}</Text>
+              <Text style={{ fontSize: 13, color: muted, textAlign: 'center', lineHeight: 20 }}>{message}</Text>
             )}
           </View>
 
@@ -58,8 +58,8 @@ export default function CustomAlert() {
 
               return (
                 <TouchableOpacity key={idx} activeOpacity={0.7} onPress={() => handlePress(btn.onPress)}
-                  style={{ flex: buttons.length > 2 ? 0 : 1, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', borderRightWidth: (buttons.length <= 2 && !isLast) ? 1 : 0, borderRightColor: border, borderBottomWidth: (buttons.length > 2 && !isLast) ? 1 : 0, borderBottomColor: border }}>
-                  <Text style={{ fontSize: 16, fontWeight: fontWeight, color: textColor }}>{btn.text}</Text>
+                  style={{ flex: buttons.length > 2 ? 0 : 1, paddingVertical: 14, alignItems: 'center', justifyContent: 'center', borderRightWidth: (buttons.length <= 2 && !isLast) ? 1 : 0, borderRightColor: border, borderBottomWidth: (buttons.length > 2 && !isLast) ? 1 : 0, borderBottomColor: border }}>
+                  <Text style={{ fontSize: 14, fontWeight: fontWeight, color: textColor }}>{btn.text}</Text>
                 </TouchableOpacity>
               );
             })}

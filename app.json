@@ -4,6 +4,7 @@
     "slug": "PaisaPilot",
     "version": "1.0.0",
     "scheme": "paisapilot",
+    "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

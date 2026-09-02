@@ -18,9 +18,9 @@ export const Colors = {
     icon: '#334155',
   },
   dark: {
-    background: '#09090E',
-    card: '#161622',
-    border: '#2A2A35',
+    background: '#12141C',
+    card: '#1D202C',
+    border: '#2F3346',
     ink: '#F8FAFC',
     muted: '#94A3B8',
     primary: '#6366F1', // Indigo
@@ -32,7 +32,7 @@ export const Colors = {
     warning: '#F59E0B',
     warningGradient: ['#F59E0B', '#FCD34D'] as const,
     accent: '#8B5CF6',
-    surface: '#1E1E2D',
+    surface: '#262938',
     icon: '#94A3B8',
   },
 };

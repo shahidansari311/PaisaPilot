@@ -9,7 +9,6 @@ import { useSharedRoomStore } from '../../store/useSharedRoomStore';
 import { DashboardHeader } from '../../components/dashboard/DashboardHeader';
 import { DashboardAchievements } from '../../components/dashboard/DashboardAchievements';
 import { DashboardQuickAdd } from '../../components/dashboard/DashboardQuickAdd';
-import { DashboardBudget } from '../../components/dashboard/DashboardBudget';
 import { DashboardSummary } from '../../components/dashboard/DashboardSummary';
 import { DashboardBorrowLend } from '../../components/dashboard/DashboardBorrowLend';
 import { DashboardSharedRooms } from '../../components/dashboard/DashboardSharedRooms';

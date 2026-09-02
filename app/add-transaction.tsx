@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { Category, Transaction } from '../types/database';
 import { Colors, Gradients } from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import { guessCategoryId } from '../utils/autoCategorize';
 
 const transactionSchema = z.object({
   amount: z.coerce.number().min(1, 'Amount must be greater than 0'),
@@ -84,8 +85,10 @@ export default function AddTransaction() {
       const timeStr = now.toTimeString().split(' ')[0]; // HH:MM:SS
       const finalDateString = `${data.date}T${timeStr}`; 
 
-      const fallbackCat = data.type === 'expense' ? 'cat-other-exp' : 'cat-other-inc';
-      const finalCategoryId = data.categoryId || fallbackCat;
+      let finalCategoryId = data.categoryId;
+      if (!finalCategoryId) {
+        finalCategoryId = guessCategoryId(data.note || '', data.type);
+      }
 
       if (isEditing && params.id) {
         await db.runAsync(

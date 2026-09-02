@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { CustomAlert as Alert } from '../../utils/alert';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -384,6 +384,7 @@ export default function GroupDetails() {
               <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' , fontFamily: 'Outfit_700Bold'}}>{editingExpenseId ? 'Save Changes 💾' : 'Split Equally 💸'}</Text>
             </TouchableOpacity>
           </View>
+        </View>
         </KeyboardAvoidingView>
       </Modal>
     </View>

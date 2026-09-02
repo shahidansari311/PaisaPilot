@@ -26,31 +26,35 @@ export function DashboardSummary({ income, expense, safeSpend, isDark, colors }:
     <View style={{ marginHorizontal: 20, marginBottom: 20 }}>
       
       {/* Section Header */}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <Text style={{ fontSize: 18, fontWeight: '900', color: colors.ink, fontFamily: 'Outfit_700Bold' }}>Your Money</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <Text style={{ fontSize: 16, fontWeight: '900', color: colors.ink, fontFamily: 'Outfit_700Bold' }}>Your Money</Text>
       </View>
 
       {/* Income & Expense Cards */}
-      <View style={{ flexDirection: 'row', gap: 16, marginBottom: 16 }}>
+      <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
         
         {/* Income Card */}
-        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, flex: 1 }]}>
-          <View style={[styles.iconWrapper, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
-            <TrendingUp size={20} color={colors.success} strokeWidth={2.5} />
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, flex: 1, padding: 10 }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+            <View style={[styles.iconWrapper, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
+              <TrendingUp size={14} color={colors.success} strokeWidth={2.5} />
+            </View>
+            <Text style={[styles.label, { color: colors.muted }]}>Income</Text>
           </View>
-          <Text style={[styles.label, { color: colors.muted }]}>Income</Text>
-          <Text style={[styles.amount, { color: colors.ink }]} adjustsFontSizeToFit numberOfLines={1}>
+          <Text style={[styles.amount, { color: colors.ink, fontSize: 16 }]} adjustsFontSizeToFit numberOfLines={1}>
             ₹{income.toLocaleString('en-IN')}
           </Text>
         </View>
 
         {/* Expense Card */}
-        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, flex: 1 }]}>
-          <View style={[styles.iconWrapper, { backgroundColor: 'rgba(244, 63, 94, 0.1)' }]}>
-            <TrendingDown size={20} color={colors.danger} strokeWidth={2.5} />
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, flex: 1, padding: 10 }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+            <View style={[styles.iconWrapper, { backgroundColor: 'rgba(244, 63, 94, 0.1)' }]}>
+              <TrendingDown size={14} color={colors.danger} strokeWidth={2.5} />
+            </View>
+            <Text style={[styles.label, { color: colors.muted }]}>Expenses</Text>
           </View>
-          <Text style={[styles.label, { color: colors.muted }]}>Expenses</Text>
-          <Text style={[styles.amount, { color: colors.ink }]} adjustsFontSizeToFit numberOfLines={1}>
+          <Text style={[styles.amount, { color: colors.ink, fontSize: 16 }]} adjustsFontSizeToFit numberOfLines={1}>
             ₹{expense.toLocaleString('en-IN')}
           </Text>
         </View>
@@ -59,14 +63,14 @@ export function DashboardSummary({ income, expense, safeSpend, isDark, colors }:
 
       {/* Safe to Spend Banner (Insight style) */}
       {safeSpend > 0 && (
-        <View style={[styles.insightBanner, { backgroundColor: isDark ? '#19191E' : '#F3E8FF' }]}>
+        <View style={[styles.insightBanner, { backgroundColor: isDark ? '#19191E' : colors.primaryGradient[0] + '15' }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={{ fontSize: 16 }}>✨</Text>
-            <Text style={{ color: isDark ? '#FFFFFF' : colors.ink, fontSize: 14, fontWeight: '700', fontFamily: 'Inter_700Bold' }}>
+            <Text style={{ fontSize: 14 }}>✨</Text>
+            <Text style={{ color: isDark ? '#FFFFFF' : colors.ink, fontSize: 12, fontWeight: '700', fontFamily: 'Inter_700Bold' }}>
               Safe to spend today
             </Text>
           </View>
-          <Text style={{ color: '#A855F7', fontSize: 15, fontWeight: '900', fontFamily: 'Outfit_700Bold' }}>
+          <Text style={{ color: '#A855F7', fontSize: 14, fontWeight: '900', fontFamily: 'Outfit_700Bold' }}>
             ₹{safeSpend.toLocaleString('en-IN')} / day
           </Text>
         </View>
@@ -88,21 +92,19 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   iconWrapper: {
-    width: 36,
-    height: 30,
-    borderRadius: 18,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
   },
   label: {
-    fontSize: 13, 
+    fontSize: 11, 
     fontWeight: '600', 
-    marginBottom: 4,
     fontFamily: 'Inter_500Medium',
   },
   amount: {
-    fontSize: 20, 
+    fontSize: 16, 
     fontWeight: '900', 
     fontVariant: ['tabular-nums'], 
     fontFamily: 'Outfit_700Bold',
@@ -111,8 +113,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderRadius: 100, // Pill shape
   }
 });

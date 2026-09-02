@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import { ArrowLeft, Check, MessageSquare, RefreshCw } from 'lucide-react-native';
 import { Colors, Gradients } from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import { guessCategoryId } from '../utils/autoCategorize';
 
 interface ParsedTx {
   amount: number;
@@ -66,9 +67,11 @@ export default function SmsParser() {
     try {
       const id = 'tx-sms-' + Date.now();
       const now = new Date().toISOString();
+      const categoryId = guessCategoryId(parsed.note, parsed.type);
+      
       await db.runAsync(
         `INSERT INTO transactions (id, accountId, categoryId, amount, type, date, note, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [id, 'default-wallet', null, parsed.amount, parsed.type, now, parsed.note, now]
+        [id, 'default-wallet', categoryId, parsed.amount, parsed.type, now, parsed.note, now]
       );
       setSaved(true);
       Alert.alert('Saved! ✅', `We recorded your ${parsed.type} of ₹${parsed.amount} for "${parsed.note}".`);
@@ -83,35 +86,35 @@ export default function SmsParser() {
   const txColor = parsed?.type === 'expense' ? theme.danger : theme.success;
 
   return (
-    <KeyboardAvoidingView 
+      <KeyboardAvoidingView 
       style={{ flex: 1, backgroundColor: theme.background }} 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 48, paddingBottom: 12, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}
-          style={{ marginRight: 14, backgroundColor: theme.surface, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
-          <ArrowLeft size={22} color={theme.ink} />
+          style={{ marginRight: 12, backgroundColor: theme.surface, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' }}>
+          <ArrowLeft size={18} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 22, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>SMS Parser 📱</Text>
+        <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>SMS Parser 📱</Text>
       </View>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }} showsVerticalScrollIndicator={false}>
 
         {/* Info banner */}
-        <View style={{ backgroundColor: theme.primary + '15', borderRadius: 16, padding: 14, marginBottom: 20, flexDirection: 'row', gap: 12 }}>
-          <MessageSquare size={20} color={theme.primary} />
+        <View style={{ backgroundColor: theme.primary + '15', borderRadius: 12, padding: 12, marginBottom: 16, flexDirection: 'row', gap: 10 }}>
+          <MessageSquare size={16} color={theme.primary} />
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 14, fontWeight: '800', color: theme.primary, marginBottom: 4 , fontFamily: 'Outfit_700Bold'}}>Paste your bank SMS</Text>
-            <Text style={{ fontSize: 13, color: theme.primary, opacity: 0.8, lineHeight: 19 , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ fontSize: 12, fontWeight: '800', color: theme.primary, marginBottom: 2 , fontFamily: 'Outfit_700Bold'}}>Paste your bank SMS</Text>
+            <Text style={{ fontSize: 11, color: theme.primary, opacity: 0.8, lineHeight: 16 , fontFamily: 'Inter_500Medium'}}>
               Copy the SMS from your Messages app and paste it below. We'll extract the amount and type automatically.
             </Text>
           </View>
         </View>
 
         {/* SMS Input */}
-        <View style={{ backgroundColor: theme.card, borderRadius: 18, borderWidth: 1, borderColor: theme.border, marginBottom: 16, overflow: 'hidden' }}>
+        <View style={{ backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, marginBottom: 16, overflow: 'hidden' }}>
           <TextInput
-            style={{ padding: 16, color: theme.ink, fontSize: 14, minHeight: 120, textAlignVertical: 'top', lineHeight: 22, fontWeight: '500' }}
+            style={{ padding: 14, color: theme.ink, fontSize: 13, minHeight: 100, textAlignVertical: 'top', lineHeight: 20, fontWeight: '500' }}
             placeholder={'e.g. Your A/c XX1234 is debited by INR 450.00 on 19-07-2026 at ZOMATO UPI Ref:123456789'}
             placeholderTextColor={theme.muted}
             multiline
@@ -121,50 +124,50 @@ export default function SmsParser() {
         </View>
 
         {/* Parse button */}
-        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 24 }}>
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 20 }}>
           <TouchableOpacity onPress={handleReset} activeOpacity={0.7}
-            style={{ backgroundColor: theme.surface, paddingVertical: 14, paddingHorizontal: 20, borderRadius: 18, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <RefreshCw size={16} color={theme.muted} />
-            <Text style={{ color: theme.muted, fontWeight: '700' , fontFamily: 'Inter_700Bold'}}>Clear</Text>
+            style={{ backgroundColor: theme.surface, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 16, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <RefreshCw size={14} color={theme.muted} />
+            <Text style={{ color: theme.muted, fontWeight: '700', fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Clear</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleParse} activeOpacity={0.85} style={{ flex: 1, borderRadius: 18, overflow: 'hidden' }}>
+          <TouchableOpacity onPress={handleParse} activeOpacity={0.85} style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
             <LinearGradient
               colors={theme.primaryGradient}
               start={Gradients.diagonal.start}
               end={Gradients.diagonal.end}
-              style={{ paddingVertical: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+              style={{ paddingVertical: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             >
-              <MessageSquare size={18} color="#fff" />
-              <Text style={{ color: '#fff', fontWeight: '900', fontSize: 15 , fontFamily: 'Outfit_700Bold'}}>Extract Data</Text>
+              <MessageSquare size={16} color="#fff" />
+              <Text style={{ color: '#fff', fontWeight: '900', fontSize: 14 , fontFamily: 'Outfit_700Bold'}}>Extract Data</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
 
         {/* Parsed result card */}
         {parsed && (
-          <View style={{ backgroundColor: theme.card, borderRadius: 20, borderWidth: 2, borderColor: txColor + '50', overflow: 'hidden', marginBottom: 16 }}>
-            <View style={{ height: 5, backgroundColor: txColor }} />
-            <View style={{ padding: 16 }}>
-              <Text style={{ fontSize: 12, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 16 , fontFamily: 'Outfit_700Bold'}}>
+          <View style={{ backgroundColor: theme.card, borderRadius: 16, borderWidth: 2, borderColor: txColor + '50', overflow: 'hidden', marginBottom: 16 }}>
+            <View style={{ height: 4, backgroundColor: txColor }} />
+            <View style={{ padding: 14 }}>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>
                 {saved ? '✅ Saved!' : 'Detected Transaction'}
               </Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, marginBottom: 6 , fontFamily: 'Inter_700Bold'}}>{parsed.note}</Text>
-                  <View style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, backgroundColor: txColor + '20', alignSelf: 'flex-start' }}>
-                    <Text style={{ fontSize: 12, fontWeight: '800', color: txColor, textTransform: 'capitalize' , fontFamily: 'Outfit_700Bold'}}>{parsed.type}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'Inter_700Bold'}}>{parsed.note}</Text>
+                  <View style={{ paddingHorizontal: 8, paddingVertical: 4, borderRadius: 16, backgroundColor: txColor + '20', alignSelf: 'flex-start' }}>
+                    <Text style={{ fontSize: 11, fontWeight: '800', color: txColor, textTransform: 'capitalize' , fontFamily: 'Outfit_700Bold'}}>{parsed.type}</Text>
                   </View>
                 </View>
-                <Text style={{ fontSize: 26, fontWeight: '900', color: txColor, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+                <Text style={{ fontSize: 20, fontWeight: '900', color: txColor, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
                   {parsed.type === 'expense' ? '−' : '+'}₹{parsed.amount.toLocaleString('en-IN')}
                 </Text>
               </View>
 
               {!saved && (
                 <TouchableOpacity onPress={handleSave} activeOpacity={0.85}
-                  style={{ backgroundColor: txColor, padding: 14, borderRadius: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  <Check size={20} color="#fff" strokeWidth={3} />
-                  <Text style={{ color: '#fff', fontWeight: '900', fontSize: 16 , fontFamily: 'Outfit_700Bold'}}>Save Transaction</Text>
+                  style={{ backgroundColor: txColor, padding: 12, borderRadius: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <Check size={16} color="#fff" strokeWidth={3} />
+                  <Text style={{ color: '#fff', fontWeight: '900', fontSize: 14 , fontFamily: 'Outfit_700Bold'}}>Save Transaction</Text>
                 </TouchableOpacity>
               )}
 

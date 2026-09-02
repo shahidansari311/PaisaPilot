@@ -460,6 +460,7 @@ export default function SharedRoom() {
               </LinearGradient>
             </TouchableOpacity>
           </View>
+        </View>
         </KeyboardAvoidingView>
       </Modal>
     </View>

@@ -160,64 +160,64 @@ export default function CalendarScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingTop: 56, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: theme.border }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 48, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <View>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: theme.ink, letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Calendar 📅</Text>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, marginTop: 4 , fontFamily: 'Inter_500Medium'}}>Tap a day to see spending</Text>
+          <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>Calendar 📅</Text>
+          <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'Inter_500Medium'}}>Tap a day to see spending</Text>
         </View>
         <TouchableOpacity onPress={handleExportMonth} activeOpacity={0.7}
-          style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: theme.card, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
-          <Download size={20} color={theme.primary} />
+          style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: theme.card, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
+          <Download size={16} color={theme.primary} />
         </TouchableOpacity>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
 
         {/* Month Navigator */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 24, paddingVertical: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12 }}>
           <TouchableOpacity onPress={() => goMonth(-1)} activeOpacity={0.7}
-            style={{ backgroundColor: theme.card, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
-            <ChevronLeft size={22} color={theme.ink} />
+            style={{ backgroundColor: theme.card, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
+            <ChevronLeft size={18} color={theme.ink} />
           </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 22, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>{MONTHS[viewMonth]}</Text>
-            <Text style={{ fontSize: 14, fontWeight: '700', color: theme.muted , fontFamily: 'Inter_700Bold'}}>{viewYear}</Text>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>{MONTHS[viewMonth]}</Text>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted , fontFamily: 'Inter_700Bold'}}>{viewYear}</Text>
           </View>
           <TouchableOpacity onPress={() => goMonth(1)} activeOpacity={0.7}
-            style={{ backgroundColor: theme.card, width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
-            <ChevronRight size={22} color={theme.ink} />
+            style={{ backgroundColor: theme.card, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
+            <ChevronRight size={18} color={theme.ink} />
           </TouchableOpacity>
         </View>
 
         {/* Month Summary */}
-        <View style={{ flexDirection: 'row', marginHorizontal: 24, gap: 16, marginBottom: 24 }}>
-          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 20, padding: 14, borderWidth: 1, borderColor: theme.border }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-              <TrendingUp size={16} color={theme.success} />
-              <Text style={{ fontSize: 12, fontWeight: '800', color: theme.success, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>In</Text>
+        <View style={{ flexDirection: 'row', marginHorizontal: 16, gap: 12, marginBottom: 16 }}>
+          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 16, padding: 12, borderWidth: 1, borderColor: theme.border }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+              <TrendingUp size={14} color={theme.success} />
+              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.success, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>In</Text>
             </View>
-            <Text style={{ fontSize: 20, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} numberOfLines={1} adjustsFontSizeToFit>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} numberOfLines={1} adjustsFontSizeToFit>
               ₹{monthIncome.toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 20, padding: 14, borderWidth: 1, borderColor: theme.border }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-              <TrendingDown size={16} color={theme.danger} />
-              <Text style={{ fontSize: 12, fontWeight: '800', color: theme.danger, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>Out</Text>
+          <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 16, padding: 12, borderWidth: 1, borderColor: theme.border }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+              <TrendingDown size={14} color={theme.danger} />
+              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.danger, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>Out</Text>
             </View>
-            <Text style={{ fontSize: 20, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} numberOfLines={1} adjustsFontSizeToFit>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} numberOfLines={1} adjustsFontSizeToFit>
               ₹{monthExpense.toLocaleString('en-IN')}
             </Text>
           </View>
         </View>
 
         {/* Calendar Grid */}
-        <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 20, borderWidth: 1, borderColor: theme.border, padding: 14, marginBottom: 24 }}>
+        <View style={{ marginHorizontal: 16, backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, padding: 10, marginBottom: 16 }}>
           {/* Day Labels */}
-          <View style={{ flexDirection: 'row', marginBottom: 8 }}>
+          <View style={{ flexDirection: 'row', marginBottom: 4 }}>
             {DAYS.map(d => (
-              <View key={d} style={{ flex: 1, alignItems: 'center', paddingVertical: 8 }}>
-                <Text style={{ fontSize: 12, fontWeight: '800', color: theme.muted , fontFamily: 'Outfit_700Bold'}}>{d}</Text>
+              <View key={d} style={{ flex: 1, alignItems: 'center', paddingVertical: 4 }}>
+                <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted , fontFamily: 'Outfit_700Bold'}}>{d}</Text>
               </View>
             ))}
           </View>
@@ -241,19 +241,19 @@ export default function CalendarScreen() {
                     activeOpacity={isFuture ? 1 : 0.75}
                     style={{ flex: 1, aspectRatio: 1, alignItems: 'center', justifyContent: 'center', padding: 2 }}>
                     <View style={{
-                      width: '90%', aspectRatio: 1, borderRadius: 100, alignItems: 'center', justifyContent: 'center',
+                      width: '85%', aspectRatio: 1, borderRadius: 100, alignItems: 'center', justifyContent: 'center',
                       backgroundColor: isSelected ? theme.primary : isToday ? theme.surface : 'transparent',
                     }}>
                       <Text style={{
-                        fontSize: 14, fontWeight: isToday || isSelected ? '900' : '600',
+                        fontSize: 13, fontWeight: isToday || isSelected ? '900' : '600',
                         color: isSelected ? '#fff' : isToday ? theme.primary : isFuture ? theme.muted + '60' : theme.ink,
                       }}>{day}</Text>
                     </View>
                     {/* Spending dots */}
                     {hasData && !isSelected && (
                       <View style={{ flexDirection: 'row', gap: 2, marginTop: 2 }}>
-                        {isExpenseDay && <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: theme.danger }} />}
-                        {isIncomeDay && <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: theme.success }} />}
+                        {isExpenseDay && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: theme.danger }} />}
+                        {isIncomeDay && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: theme.success }} />}
                       </View>
                     )}
                     {/* Selected: mini spend label */}
@@ -271,22 +271,22 @@ export default function CalendarScreen() {
 
         {/* Day Detail Panel */}
         {selectedDate && (
-          <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 20, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 24 }}>
+          <View style={{ marginHorizontal: 16, backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 16 }}>
             {/* Panel Header */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottomWidth: 1, borderBottomColor: theme.border }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderBottomWidth: 1, borderBottomColor: theme.border }}>
               <View>
-                <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>
-                  {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
+                <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>
+                  {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}
                 </Text>
                 {monthData[selectedDate] && (
-                  <View style={{ flexDirection: 'row', gap: 12, marginTop: 6 }}>
+                  <View style={{ flexDirection: 'row', gap: 10, marginTop: 4 }}>
                     {monthData[selectedDate].totalExpense > 0 && (
-                      <Text style={{ fontSize: 13, fontWeight: '700', color: theme.danger , fontFamily: 'Inter_700Bold'}}>
+                      <Text style={{ fontSize: 12, fontWeight: '700', color: theme.danger , fontFamily: 'Inter_700Bold'}}>
                         −₹{monthData[selectedDate].totalExpense.toLocaleString('en-IN')}
                       </Text>
                     )}
                     {monthData[selectedDate].totalIncome > 0 && (
-                      <Text style={{ fontSize: 13, fontWeight: '700', color: theme.success , fontFamily: 'Inter_700Bold'}}>
+                      <Text style={{ fontSize: 12, fontWeight: '700', color: theme.success , fontFamily: 'Inter_700Bold'}}>
                         +₹{monthData[selectedDate].totalIncome.toLocaleString('en-IN')}
                       </Text>
                     )}
@@ -299,19 +299,19 @@ export default function CalendarScreen() {
                   colors={theme.primaryGradient}
                   start={Gradients.diagonal.start}
                   end={Gradients.diagonal.end}
-                  style={{ width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' }}
+                  style={{ width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' }}
                 >
-                  <Plus size={24} color="#fff" strokeWidth={3} />
+                  <Plus size={18} color="#fff" strokeWidth={3} />
                 </LinearGradient>
               </TouchableOpacity>
             </View>
 
             {/* Transactions for the day */}
             {dayTransactions.length === 0 ? (
-              <View style={{ padding: 32, alignItems: 'center' }}>
-                <Text style={{ fontSize: 32, marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>🌵</Text>
-                <Text style={{ fontSize: 16, fontWeight: '700', color: theme.ink, marginBottom: 6 , fontFamily: 'Inter_700Bold'}}>Nothing here</Text>
-                <Text style={{ fontSize: 14, color: theme.muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'Inter_500Medium'}}>
+              <View style={{ padding: 24, alignItems: 'center' }}>
+                <Text style={{ fontSize: 24, marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>🌵</Text>
+                <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'Inter_700Bold'}}>Nothing here</Text>
+                <Text style={{ fontSize: 12, color: theme.muted, textAlign: 'center', lineHeight: 18 , fontFamily: 'Inter_500Medium'}}>
                   Tap the + button to add a transaction for this day.
                 </Text>
               </View>
@@ -322,19 +322,19 @@ export default function CalendarScreen() {
                 return (
                   <TouchableOpacity key={tx.id} 
                     onLongPress={() => handleAction(tx.id)} delayLongPress={350} activeOpacity={0.7}
-                    style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: i < dayTransactions.length - 1 ? 1 : 0, borderBottomColor: theme.border }}>
-                    <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
-                      <Text style={{ fontSize: 16, fontWeight: '900', color , fontFamily: 'Outfit_700Bold'}}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
+                    style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 10, borderBottomWidth: i < dayTransactions.length - 1 ? 1 : 0, borderBottomColor: theme.border }}>
+                    <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                      <Text style={{ fontSize: 14, fontWeight: '900', color , fontFamily: 'Outfit_700Bold'}}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 16, fontWeight: '700', color: theme.ink, marginBottom: 2 , fontFamily: 'Inter_700Bold'}} numberOfLines={1}>
+                      <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 2 , fontFamily: 'Inter_700Bold'}} numberOfLines={1}>
                         {tx.note || 'Transaction'}
                       </Text>
-                      <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>
+                      <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>
                         {new Date(tx.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                       </Text>
                     </View>
-                    <Text style={{ fontSize: 18, fontWeight: '900', color, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+                    <Text style={{ fontSize: 16, fontWeight: '900', color, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
                       {isExp ? '−' : '+'}₹{tx.amount.toLocaleString('en-IN')}
                     </Text>
                   </TouchableOpacity>

@@ -37,21 +37,21 @@ export default function MenuScreen() {
         style={{
           paddingTop: 56,
           paddingBottom: 16,
-          paddingHorizontal: 24,
-          borderBottomLeftRadius: 28,
-          borderBottomRightRadius: 28,
+          paddingHorizontal: 20,
+          borderBottomLeftRadius: 24,
+          borderBottomRightRadius: 24,
           marginBottom: 0,
         }}
       >
-        <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Menu 🍔</Text>
-        <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>All your other stuff</Text>
+        <Text style={{ fontSize: 24, fontWeight: '900', color: '#FFFFFF', letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>Menu 🍔</Text>
+        <Text style={{ fontSize: 13, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>All your other stuff</Text>
       </LinearGradient>
 
-      <ScrollView contentContainerStyle={{ padding: 24, paddingBottom: 24 }}>
+      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 24 }}>
         
         {/* User Profile Stub */}
         <TouchableOpacity 
-          onPress={() => router.navigate('/profile')}
+          onPress={() => router.push('/profile')}
           activeOpacity={0.8}
           style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, padding: 14, borderRadius: 16, borderWidth: 1, borderColor: theme.border, marginBottom: 24 }}>
           <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: theme.primary + '20', alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
@@ -63,16 +63,16 @@ export default function MenuScreen() {
             <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{userName || 'Set Profile'}</Text>
             <Text style={{ fontSize: 12, fontWeight: '500', color: theme.muted , fontFamily: 'Inter_500Medium'}}>Tap to set WhatsApp details</Text>
           </View>
-          <ChevronRight size={20} color={theme.muted} />
+          <ChevronRight size={18} color={theme.muted} />
         </TouchableOpacity>
 
-        <Text style={{ fontSize: 12, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>Features</Text>
+        <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>Features</Text>
 
         <View style={{ backgroundColor: theme.card, borderRadius: 20, borderWidth: 1, borderColor: theme.border, overflow: 'hidden' }}>
           {menuItems.map((item, index) => (
             <TouchableOpacity 
               key={item.title} 
-              onPress={() => router.navigate(item.route as any)}
+              onPress={() => router.push(item.route as any)}
               activeOpacity={0.7}
               style={{ flexDirection: 'row', alignItems: 'center', padding: 14, borderBottomWidth: index === menuItems.length - 1 ? 0 : 1, borderBottomColor: theme.border }}
             >
@@ -81,9 +81,9 @@ export default function MenuScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 15, fontWeight: '800', color: theme.ink, marginBottom: 2 , fontFamily: 'Outfit_700Bold'}}>{item.title}</Text>
-                <Text style={{ fontSize: 11, fontWeight: '500', color: theme.muted , fontFamily: 'Inter_500Medium'}}>{item.subtitle}</Text>
+                <Text style={{ fontSize: 12, fontWeight: '500', color: theme.muted , fontFamily: 'Inter_500Medium'}}>{item.subtitle}</Text>
               </View>
-              <ChevronRight size={20} color={theme.muted} />
+              <ChevronRight size={18} color={theme.muted} />
             </TouchableOpacity>
           ))}
         </View>

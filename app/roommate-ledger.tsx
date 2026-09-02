@@ -444,6 +444,7 @@ export default function RoommateLedgerDetail() {
               </LinearGradient>
             </TouchableOpacity>
           </View>
+        </View>
         </KeyboardAvoidingView>
       </Modal>
     </View>
