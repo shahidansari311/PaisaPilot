@@ -11,6 +11,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import AnimatedSplashScreen from '../components/AnimatedSplashScreen';
 import { View, Text, TextInput } from 'react-native';
 import { useState } from 'react';
+import { setupDailyReminder } from '../utils/notifications';
 
 // Apply global font to all Text and TextInput components
 interface TextWithDefaultProps extends Text {
@@ -45,8 +46,10 @@ export default function RootLayout() {
     if (isReady && showSplash) {
       // Hide the native splash screen, revealing our JS AnimatedSplashScreen
       SplashScreen.hideAsync().catch(() => {});
+      setupDailyReminder();
     } else if (isReady && !showSplash) {
       SplashScreen.hideAsync().catch(() => {});
+      setupDailyReminder();
     }
   }, [isReady, showSplash]);
 
