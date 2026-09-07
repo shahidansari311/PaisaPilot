@@ -1,3 +1,4 @@
+/*
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
@@ -48,3 +49,4 @@ export async function setupDailyReminder() {
     });
   }
 }
+*/
