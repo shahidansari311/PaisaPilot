@@ -4,7 +4,7 @@
   import { useThemeStore } from '../store/useThemeStore';
   import { useSharedRoomStore } from '../store/useSharedRoomStore';
   import { useState } from 'react';
-  import { Copy, Shuffle, Cloud, Users, Sparkles, ArrowLeft, Plus, LogIn } from 'lucide-react-native';
+  import { Shuffle, Cloud, Sparkles, ArrowLeft, Plus, LogIn, Share2 as ShareIcon } from 'lucide-react-native';
   import { supabase } from '../config/supabaseConfig';
   import { Colors, Gradients } from '../constants/Colors';
   import { LinearGradient } from 'expo-linear-gradient';
@@ -151,7 +151,7 @@
       if (!createdCode) return;
       try {
         await Share.share({
-          message: `🏠 Join my shared expense room on PaisaPilot!\n\nRoom: ${roomName}\nCode: ${createdCode}\n\nDownload PaisaPilot and enter this code to start tracking our shared expenses! 💸`,
+          message: `🏠 Join my shared expense room on PaisaPilot!\n\nRoom: ${roomName}\nCode: ${createdCode}\n\nDownload PaisaPilot and enter this code to start tracking our shared expenses!`,
         });
       } catch {}
     };
@@ -170,26 +170,26 @@
             <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
               <ArrowLeft size={22} color={theme.ink} />
             </TouchableOpacity>
-            <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Room Created! 🎉</Text>
+            <Text style={{ fontSize: 20, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Room Created!</Text>
           </View>
           <ScrollView contentContainerStyle={{ padding: 24, alignItems: 'center', paddingTop: 48 }}>
             <View style={{ backgroundColor: theme.primary + '15', width: 80, height: 80, borderRadius: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
               <Sparkles size={40} color={theme.primary} />
             </View>
-            <Text style={{ fontSize: 22, fontWeight: '900', color: theme.ink, textAlign: 'center', marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>
+            <Text style={{ fontSize: 22, fontWeight: '900', color: theme.ink, textAlign: 'center', marginBottom: 8 , fontFamily: 'FjallaOne_400Regular'}}>
               Your room is ready!
             </Text>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, textAlign: 'center', marginBottom: 32, lineHeight: 22 , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, textAlign: 'center', marginBottom: 32, lineHeight: 22 , fontFamily: 'FjallaOne_400Regular'}}>
               Share this code with your roommate so they can join and start adding expenses together.
             </Text>
 
             {/* Code Display */}
             <View style={{ backgroundColor: theme.card, borderRadius: 20, padding: 24, borderWidth: 2, borderColor: theme.primary + '40', marginBottom: 24, width: '100%', alignItems: 'center' }}>
-              <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>Room Code</Text>
-              <Text style={{ fontSize: 36, fontWeight: '900', color: theme.primary, letterSpacing: 8, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+              <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 , fontFamily: 'FjallaOne_400Regular'}}>Room Code</Text>
+              <Text style={{ fontSize: 36, fontWeight: '900', color: theme.primary, letterSpacing: 8, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>
                 {createdCode}
               </Text>
-              <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, marginTop: 8 , fontFamily: 'Inter_500Medium'}}>{roomName}</Text>
+              <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, marginTop: 8 , fontFamily: 'FjallaOne_400Regular'}}>{roomName}</Text>
             </View>
 
             {/* Actions */}
@@ -208,8 +208,8 @@
                   borderWidth: 1,
                   borderColor: '#25D36630',
                 }}>
-                <Text style={{ fontSize: 16 , fontFamily: 'Inter_500Medium'}}>📤</Text>
-                <Text style={{ fontWeight: '800', fontSize: 14, color: '#25D366' , fontFamily: 'Outfit_700Bold'}}>
+                <ShareIcon size={16} color="#25D366" />
+                <Text style={{ fontWeight: '800', fontSize: 14, color: '#25D366' , fontFamily: 'FjallaOne_400Regular'}}>
                   Share Room Code
                 </Text>
               </TouchableOpacity>
@@ -223,7 +223,7 @@
                 end={Gradients.diagonal.end}
                 style={{ padding: 16, alignItems: 'center' }}
               >
-                <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'Outfit_700Bold'}}>Open Room →</Text>
+                <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'FjallaOne_400Regular'}}>Open Room →</Text>
               </LinearGradient>
             </TouchableOpacity>
           </ScrollView>
@@ -240,8 +240,8 @@
               <ArrowLeft size={22} color={theme.ink} />
             </TouchableOpacity>
             <View>
-              <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Shared Expenses ☁️</Text>
-              <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'Inter_500Medium'}}>Cloud-synced with your roommate</Text>
+              <Text style={{ fontSize: 20, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Shared Expenses</Text>
+              <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'FjallaOne_400Regular'}}>Cloud-synced with your roommate</Text>
             </View>
           </View>
           <ScrollView contentContainerStyle={{ padding: 24, paddingTop: 40 }}>
@@ -250,10 +250,10 @@
               <View style={{ backgroundColor: theme.primary + '12', width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
                 <Cloud size={36} color={theme.primary} />
               </View>
-              <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink, textAlign: 'center', marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>
+              <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink, textAlign: 'center', marginBottom: 8 , fontFamily: 'FjallaOne_400Regular'}}>
                 Real-time Expense Sharing
               </Text>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, textAlign: 'center', lineHeight: 22 , fontFamily: 'Inter_500Medium'}}>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: theme.muted, textAlign: 'center', lineHeight: 22 , fontFamily: 'FjallaOne_400Regular'}}>
                 Both you and your roommate can add, edit, and remove expenses from your own phones — synced instantly.
               </Text>
             </View>
@@ -265,8 +265,8 @@
                 <Plus size={24} color={theme.primary} strokeWidth={2.5} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 17, fontWeight: '900', color: theme.ink, marginBottom: 4 , fontFamily: 'Outfit_700Bold'}}>Create a Room</Text>
-                <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, lineHeight: 19 , fontFamily: 'Inter_500Medium'}}>
+                <Text style={{ fontSize: 17, fontWeight: '900', color: theme.ink, marginBottom: 4 , fontFamily: 'FjallaOne_400Regular'}}>Create a Room</Text>
+                <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, lineHeight: 19 , fontFamily: 'FjallaOne_400Regular'}}>
                   Start a new shared room and get a code to share with your roommate
                 </Text>
               </View>
@@ -279,8 +279,8 @@
                 <LogIn size={24} color={theme.success} strokeWidth={2.5} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 17, fontWeight: '900', color: theme.ink, marginBottom: 4 , fontFamily: 'Outfit_700Bold'}}>Join a Room</Text>
-                <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, lineHeight: 19 , fontFamily: 'Inter_500Medium'}}>
+                <Text style={{ fontSize: 17, fontWeight: '900', color: theme.ink, marginBottom: 4 , fontFamily: 'FjallaOne_400Regular'}}>Join a Room</Text>
+                <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted, lineHeight: 19 , fontFamily: 'FjallaOne_400Regular'}}>
                   Enter a code shared by your roommate to join their expense room
                 </Text>
               </View>
@@ -297,19 +297,18 @@
       <KeyboardAvoidingView 
         style={{ flex: 1, backgroundColor: theme.background }} 
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
           <TouchableOpacity onPress={() => setMode('choose')} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
             <ArrowLeft size={22} color={theme.ink} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>
-            {isCreate ? 'Create Room 🏠' : 'Join Room 🤝'}
-          </Text>
+            {isCreate ? 'Create Room' : 'Join Room'}
         </View>
 
         <ScrollView contentContainerStyle={{ padding: 24 }} keyboardShouldPersistTaps="handled">
           {/* Display Name */}
-          <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Your Display Name</Text>
+          <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>Your Display Name</Text>
           <TextInput
             style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
             placeholder="e.g. Shahid, Arjun"
@@ -322,7 +321,7 @@
           {isCreate && (
             <>
               {/* Room Name */}
-              <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Room Name</Text>
+              <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>Room Name</Text>
               <TextInput
                 style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
                 placeholder="e.g. Flat 302, PG Room"
@@ -332,7 +331,7 @@
               />
 
               {/* Custom Code (optional) */}
-              <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Room Code (optional — leave blank for random)</Text>
+              <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>Room Code (optional — leave blank for random)</Text>
               <View style={{ flexDirection: 'row', gap: 10, marginBottom: 8 }}>
                 <TextInput
                   style={{ flex: 1, backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.primary, fontSize: 18, fontWeight: '900', letterSpacing: 4, textTransform: 'uppercase' }}
@@ -348,7 +347,7 @@
                   <Shuffle size={20} color={theme.primary} />
                 </TouchableOpacity>
               </View>
-              <Text style={{ fontSize: 11, color: theme.muted, fontWeight: '600', marginBottom: 24 , fontFamily: 'Inter_500Medium'}}>
+              <Text style={{ fontSize: 11, color: theme.muted, fontWeight: '600', marginBottom: 24 , fontFamily: 'FjallaOne_400Regular'}}>
                 Leave blank to auto-generate a 6-character code
               </Text>
             </>
@@ -357,7 +356,7 @@
           {!isCreate && (
             <>
               {/* Enter Room Code */}
-              <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Room Code</Text>
+              <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>Room Code</Text>
               <TextInput
                 style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 12, padding: 12, color: theme.success, fontSize: 20, fontWeight: '900', letterSpacing: 6, marginBottom: 24, textAlign: 'center', textTransform: 'uppercase' }}
                 placeholder="ENTER CODE"
@@ -392,7 +391,7 @@
               ) : (
                 <>
                   {isCreate ? <Plus size={22} color="#fff" strokeWidth={3} /> : <LogIn size={22} color="#fff" strokeWidth={2.5} />}
-                  <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'Outfit_700Bold'}}>
+                  <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'FjallaOne_400Regular'}}>
                     {isCreate ? 'Create Room' : 'Join Room'}
                   </Text>
                 </>

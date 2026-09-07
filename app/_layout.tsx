@@ -6,12 +6,25 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useThemeStore } from '../store/useThemeStore';
 import CustomAlert from '../components/CustomAlert';
-import { useFonts as useOutfitFonts, Outfit_400Regular, Outfit_500Medium, Outfit_600SemiBold, Outfit_700Bold } from '@expo-google-fonts/outfit';
-import { useFonts as useInterFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
+import { useFonts as useFjallaFonts, FjallaOne_400Regular } from '@expo-google-fonts/fjalla-one';
 import * as SplashScreen from 'expo-splash-screen';
 import AnimatedSplashScreen from '../components/AnimatedSplashScreen';
-import { View } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import { useState } from 'react';
+
+// Apply global font to all Text and TextInput components
+interface TextWithDefaultProps extends Text {
+    defaultProps?: { style?: any };
+}
+interface TextInputWithDefaultProps extends TextInput {
+    defaultProps?: { style?: any };
+}
+
+((Text as unknown) as TextWithDefaultProps).defaultProps = ((Text as unknown) as TextWithDefaultProps).defaultProps || {};
+((Text as unknown) as TextWithDefaultProps).defaultProps!.style = { fontFamily: 'FjallaOne_400Regular' };
+
+((TextInput as unknown) as TextInputWithDefaultProps).defaultProps = ((TextInput as unknown) as TextInputWithDefaultProps).defaultProps || {};
+((TextInput as unknown) as TextInputWithDefaultProps).defaultProps!.style = { fontFamily: 'FjallaOne_400Regular' };
 
 // Keep native splash screen visible while fonts load
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -22,21 +35,11 @@ export default function RootLayout() {
   const isDark = useThemeStore((state) => state.isDark);
   const [showSplash, setShowSplash] = useState(!hasAppLaunched);
 
-  const [outfitLoaded] = useOutfitFonts({
-    Outfit_400Regular,
-    Outfit_500Medium,
-    Outfit_600SemiBold,
-    Outfit_700Bold,
+  const [fjallaLoaded] = useFjallaFonts({
+    FjallaOne_400Regular,
   });
 
-  const [interLoaded] = useInterFonts({
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
-  });
-
-  const isReady = outfitLoaded && interLoaded;
+  const isReady = fjallaLoaded;
 
   useEffect(() => {
     if (isReady && showSplash) {
@@ -53,8 +56,8 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SQLiteProvider databaseName="paisapilot.db" onInit={initializeDatabase}>
         <View style={{ flex: 1 }}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false, animation: 'default' }}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'fade' }} />
           </Stack>
           <CustomAlert />
           <StatusBar style={isDark ? 'light' : 'dark'} />

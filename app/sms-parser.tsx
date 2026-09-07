@@ -95,7 +95,7 @@ export default function SmsParser() {
           style={{ marginRight: 12, backgroundColor: theme.surface, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' }}>
           <ArrowLeft size={18} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>SMS Parser 📱</Text>
+        <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>SMS Parser 📱</Text>
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }} showsVerticalScrollIndicator={false}>
@@ -104,8 +104,8 @@ export default function SmsParser() {
         <View style={{ backgroundColor: theme.primary + '15', borderRadius: 12, padding: 12, marginBottom: 16, flexDirection: 'row', gap: 10 }}>
           <MessageSquare size={16} color={theme.primary} />
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 12, fontWeight: '800', color: theme.primary, marginBottom: 2 , fontFamily: 'Outfit_700Bold'}}>Paste your bank SMS</Text>
-            <Text style={{ fontSize: 11, color: theme.primary, opacity: 0.8, lineHeight: 16 , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ fontSize: 12, fontWeight: '800', color: theme.primary, marginBottom: 2 , fontFamily: 'FjallaOne_400Regular'}}>Paste your bank SMS</Text>
+            <Text style={{ fontSize: 11, color: theme.primary, opacity: 0.8, lineHeight: 16 , fontFamily: 'FjallaOne_400Regular'}}>
               Copy the SMS from your Messages app and paste it below. We'll extract the amount and type automatically.
             </Text>
           </View>
@@ -128,7 +128,7 @@ export default function SmsParser() {
           <TouchableOpacity onPress={handleReset} activeOpacity={0.7}
             style={{ backgroundColor: theme.surface, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 16, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <RefreshCw size={14} color={theme.muted} />
-            <Text style={{ color: theme.muted, fontWeight: '700', fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Clear</Text>
+            <Text style={{ color: theme.muted, fontWeight: '700', fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>Clear</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleParse} activeOpacity={0.85} style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
             <LinearGradient
@@ -138,7 +138,7 @@ export default function SmsParser() {
               style={{ paddingVertical: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             >
               <MessageSquare size={16} color="#fff" />
-              <Text style={{ color: '#fff', fontWeight: '900', fontSize: 14 , fontFamily: 'Outfit_700Bold'}}>Extract Data</Text>
+              <Text style={{ color: '#fff', fontWeight: '900', fontSize: 14 , fontFamily: 'FjallaOne_400Regular'}}>Extract Data</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -148,17 +148,17 @@ export default function SmsParser() {
           <View style={{ backgroundColor: theme.card, borderRadius: 16, borderWidth: 2, borderColor: txColor + '50', overflow: 'hidden', marginBottom: 16 }}>
             <View style={{ height: 4, backgroundColor: txColor }} />
             <View style={{ padding: 14 }}>
-              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'Outfit_700Bold'}}>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'FjallaOne_400Regular'}}>
                 {saved ? '✅ Saved!' : 'Detected Transaction'}
               </Text>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'Inter_700Bold'}}>{parsed.note}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'FjallaOne_400Regular'}}>{parsed.note}</Text>
                   <View style={{ paddingHorizontal: 8, paddingVertical: 4, borderRadius: 16, backgroundColor: txColor + '20', alignSelf: 'flex-start' }}>
-                    <Text style={{ fontSize: 11, fontWeight: '800', color: txColor, textTransform: 'capitalize' , fontFamily: 'Outfit_700Bold'}}>{parsed.type}</Text>
+                    <Text style={{ fontSize: 11, fontWeight: '800', color: txColor, textTransform: 'capitalize' , fontFamily: 'FjallaOne_400Regular'}}>{parsed.type}</Text>
                   </View>
                 </View>
-                <Text style={{ fontSize: 20, fontWeight: '900', color: txColor, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+                <Text style={{ fontSize: 20, fontWeight: '900', color: txColor, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>
                   {parsed.type === 'expense' ? '−' : '+'}₹{parsed.amount.toLocaleString('en-IN')}
                 </Text>
               </View>
@@ -167,7 +167,7 @@ export default function SmsParser() {
                 <TouchableOpacity onPress={handleSave} activeOpacity={0.85}
                   style={{ backgroundColor: txColor, padding: 12, borderRadius: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                   <Check size={16} color="#fff" strokeWidth={3} />
-                  <Text style={{ color: '#fff', fontWeight: '900', fontSize: 14 , fontFamily: 'Outfit_700Bold'}}>Save Transaction</Text>
+                  <Text style={{ color: '#fff', fontWeight: '900', fontSize: 14 , fontFamily: 'FjallaOne_400Regular'}}>Save Transaction</Text>
                 </TouchableOpacity>
               )}
 
@@ -175,7 +175,7 @@ export default function SmsParser() {
                 <TouchableOpacity onPress={() => router.back()} activeOpacity={0.85}
                   style={{ backgroundColor: theme.success, padding: 14, borderRadius: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                   <Check size={20} color="#fff" strokeWidth={3} />
-                  <Text style={{ color: '#fff', fontWeight: '900', fontSize: 16 , fontFamily: 'Outfit_700Bold'}}>Done! Go Back</Text>
+                  <Text style={{ color: '#fff', fontWeight: '900', fontSize: 16 , fontFamily: 'FjallaOne_400Regular'}}>Done! Go Back</Text>
                 </TouchableOpacity>
               )}
             </View>

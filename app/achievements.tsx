@@ -73,7 +73,7 @@ export default function Achievements() {
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
           <ArrowLeft size={22} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Achievements</Text>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Achievements</Text>
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20 }} showsVerticalScrollIndicator={false}>
@@ -82,17 +82,17 @@ export default function Achievements() {
           <View style={{ backgroundColor: '#FEF3C7', width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
             <Trophy size={36} color="#F59E0B" />
           </View>
-          <Text style={{ fontSize: 24, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Level {level}</Text>
-          <Text style={{ fontSize: 13, color: theme.muted, marginTop: 4, marginBottom: 16 , fontFamily: 'Inter_500Medium'}}>{rank}</Text>
+          <Text style={{ fontSize: 24, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Level {level}</Text>
+          <Text style={{ fontSize: 13, color: theme.muted, marginTop: 4, marginBottom: 16 , fontFamily: 'FjallaOne_400Regular'}}>{rank}</Text>
 
           {/* XP Bar */}
           <View style={{ width: '100%', height: 8, backgroundColor: theme.surface, borderRadius: 4, overflow: 'hidden' }}>
             <View style={{ width: `${xpPercent}%`, height: '100%', backgroundColor: '#F59E0B', borderRadius: 4 }} />
           </View>
-          <Text style={{ fontSize: 11, color: theme.muted, marginTop: 6, alignSelf: 'flex-end' , fontFamily: 'Inter_500Medium'}}>{xp} / {maxXP} XP</Text>
+          <Text style={{ fontSize: 11, color: theme.muted, marginTop: 6, alignSelf: 'flex-end' , fontFamily: 'FjallaOne_400Regular'}}>{xp} / {maxXP} XP</Text>
         </View>
 
-        <Text style={{ fontSize: 10, fontWeight: '600', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'Inter_500Medium'}}>Your Badges</Text>
+        <Text style={{ fontSize: 10, fontWeight: '600', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 , fontFamily: 'FjallaOne_400Regular'}}>Your Badges</Text>
 
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           {badges.map(badge => (
@@ -104,8 +104,8 @@ export default function Achievements() {
               <View style={{ width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: badge.unlocked ? badge.color + '20' : theme.surface }}>
                 <badge.icon size={26} color={badge.unlocked ? badge.color : theme.muted} />
               </View>
-              <Text style={{ fontSize: 13, fontWeight: '700', color: theme.ink, textAlign: 'center' , fontFamily: 'Inter_700Bold'}}>{badge.title}</Text>
-              <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', marginTop: 4, lineHeight: 16 , fontFamily: 'Inter_500Medium'}}>{badge.description}</Text>
+              <Text style={{ fontSize: 13, fontWeight: '700', color: theme.ink, textAlign: 'center' , fontFamily: 'FjallaOne_400Regular'}}>{badge.title}</Text>
+              <Text style={{ fontSize: 11, color: theme.muted, textAlign: 'center', marginTop: 4, lineHeight: 16 , fontFamily: 'FjallaOne_400Regular'}}>{badge.description}</Text>
             </View>
           ))}
         </View>

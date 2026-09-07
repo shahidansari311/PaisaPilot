@@ -31,8 +31,8 @@ export function DashboardSharedRooms({ roomsCount, colors }: Props) {
         <Cloud size={20} color="#fff" strokeWidth={2.5} />
       </LinearGradient>
       <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 15, fontWeight: '800', color: colors.ink, marginBottom: 6, fontFamily: 'Outfit_700Bold' }}>Shared Rooms ☁️</Text>
-        <Text style={{ fontSize: 13, fontWeight: '700', color: colors.primary, fontFamily: 'Inter_700Bold' }}>{roomsCount} active room{roomsCount > 1 ? 's' : ''} • Live synced</Text>
+        <Text style={{ fontSize: 15, fontWeight: '800', color: colors.ink, marginBottom: 6, fontFamily: 'FjallaOne_400Regular' }}>Shared Rooms ☁️</Text>
+        <Text style={{ fontSize: 13, fontWeight: '700', color: colors.primary, fontFamily: 'FjallaOne_400Regular' }}>{roomsCount} active room{roomsCount > 1 ? 's' : ''} • Live synced</Text>
       </View>
       <ChevronRight size={20} color={colors.muted} />
     </TouchableOpacity>

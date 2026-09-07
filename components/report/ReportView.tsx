@@ -47,13 +47,13 @@ export function ReportView({ transactions }: Props) {
           onPress={() => setReportType('expense')}
           activeOpacity={0.8}
           style={{ flex: 1, paddingVertical: 12, alignItems: 'center', backgroundColor: reportType === 'expense' ? theme.surface : 'transparent', borderRadius: 20, shadowColor: '#000', shadowOpacity: reportType === 'expense' ? 0.05 : 0, shadowRadius: 4, shadowOffset: { width: 0, height: 2 }, elevation: reportType === 'expense' ? 2 : 0 }}>
-          <Text style={{ fontSize: 14, fontWeight: '800', color: reportType === 'expense' ? theme.ink : theme.muted, fontFamily: 'Outfit_700Bold' }}>Expenses</Text>
+          <Text style={{ fontSize: 14, fontWeight: '800', color: reportType === 'expense' ? theme.ink : theme.muted, fontFamily: 'FjallaOne_400Regular' }}>Expenses</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           onPress={() => setReportType('income')}
           activeOpacity={0.8}
           style={{ flex: 1, paddingVertical: 12, alignItems: 'center', backgroundColor: reportType === 'income' ? theme.surface : 'transparent', borderRadius: 20, shadowColor: '#000', shadowOpacity: reportType === 'income' ? 0.05 : 0, shadowRadius: 4, shadowOffset: { width: 0, height: 2 }, elevation: reportType === 'income' ? 2 : 0 }}>
-          <Text style={{ fontSize: 14, fontWeight: '800', color: reportType === 'income' ? theme.ink : theme.muted, fontFamily: 'Outfit_700Bold' }}>Income</Text>
+          <Text style={{ fontSize: 14, fontWeight: '800', color: reportType === 'income' ? theme.ink : theme.muted, fontFamily: 'FjallaOne_400Regular' }}>Income</Text>
         </TouchableOpacity>
       </View>
 
@@ -95,16 +95,16 @@ export function ReportView({ transactions }: Props) {
             
             {/* Center Text */}
             <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: theme.background, width: 120, height: 120, borderRadius: 60 }}>
-              <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted, fontFamily: 'Inter_500Medium', marginBottom: 4 }}>Total {reportType === 'expense' ? 'Expenses' : 'Income'}</Text>
-              <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink, fontFamily: 'Outfit_700Bold', fontVariant: ['tabular-nums'] }}>
+              <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted, fontFamily: 'FjallaOne_400Regular', marginBottom: 4 }}>Total {reportType === 'expense' ? 'Expenses' : 'Income'}</Text>
+              <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink, fontFamily: 'FjallaOne_400Regular', fontVariant: ['tabular-nums'] }}>
                 ₹{total.toLocaleString('en-IN')}
               </Text>
             </View>
           </View>
         ) : (
           <View style={{ width: 220, height: 220, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: theme.border, borderRadius: 110, borderStyle: 'dashed' }}>
-            <Text style={{ fontSize: 14, color: theme.muted, fontFamily: 'Inter_500Medium' }}>No {reportType}s</Text>
-            <Text style={{ fontSize: 14, color: theme.muted, fontFamily: 'Inter_500Medium' }}>this month</Text>
+            <Text style={{ fontSize: 14, color: theme.muted, fontFamily: 'FjallaOne_400Regular' }}>No {reportType}s</Text>
+            <Text style={{ fontSize: 14, color: theme.muted, fontFamily: 'FjallaOne_400Regular' }}>this month</Text>
           </View>
         )}
       </View>
@@ -112,8 +112,8 @@ export function ReportView({ transactions }: Props) {
       {/* Breakdown List */}
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
-          <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink, fontFamily: 'Outfit_700Bold' }}>All {reportType === 'expense' ? 'Expenses' : 'Income'}</Text>
-          <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, fontFamily: 'Outfit_700Bold' }}>Total ₹{total.toLocaleString('en-IN')}</Text>
+          <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink, fontFamily: 'FjallaOne_400Regular' }}>All {reportType === 'expense' ? 'Expenses' : 'Income'}</Text>
+          <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, fontFamily: 'FjallaOne_400Regular' }}>Total ₹{total.toLocaleString('en-IN')}</Text>
         </View>
 
         {chartData.map((item, index) => {
@@ -123,11 +123,11 @@ export function ReportView({ transactions }: Props) {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                   <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: item.color }} />
-                  <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, fontFamily: 'Inter_700Bold' }}>{item.name}</Text>
+                  <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, fontFamily: 'FjallaOne_400Regular' }}>{item.name}</Text>
                 </View>
                 <View style={{ alignItems: 'flex-end' }}>
-                  <Text style={{ fontSize: 15, fontWeight: '800', color: theme.ink, fontFamily: 'Outfit_700Bold' }}>₹{item.amount.toLocaleString('en-IN')}</Text>
-                  <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted, fontFamily: 'Inter_500Medium', marginTop: 2 }}>{percent}% of total</Text>
+                  <Text style={{ fontSize: 15, fontWeight: '800', color: theme.ink, fontFamily: 'FjallaOne_400Regular' }}>₹{item.amount.toLocaleString('en-IN')}</Text>
+                  <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted, fontFamily: 'FjallaOne_400Regular', marginTop: 2 }}>{percent}% of total</Text>
                 </View>
               </View>
               

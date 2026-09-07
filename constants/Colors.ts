@@ -1,39 +1,35 @@
 export const Colors = {
   light: {
-    background: '#F4F6F9',
+    background: '#FAFAFA',
     card: '#FFFFFF',
-    border: '#E2E8F0',
-    ink: '#0F172A',
-    muted: '#64748B',
-    primary: '#3B82F6', // Royal Blue
-    primaryGradient: ['#3B82F6', '#6366F1'] as const,
-    success: '#10B981', // Emerald
-    successGradient: ['#10B981', '#0D9488'] as const,
-    danger: '#F43F5E', // Rose
-    dangerGradient: ['#F43F5E', '#F97316'] as const,
-    warning: '#F59E0B', // Amber
+    border: '#E5E7EB',
+    ink: '#111827',
+    muted: '#6B7280',
+    primary: '#6366F1', // Electric Indigo
+    primaryGradient: ['#6366F1', '#4F46E5'] as const,
+    success: '#10B981', // Clean Emerald
+    successGradient: ['#10B981', '#059669'] as const,
+    danger: '#EF4444', // Clean Red
+    dangerGradient: ['#EF4444', '#DC2626'] as const,
+    warning: '#F59E0B',
     warningGradient: ['#F59E0B', '#D97706'] as const,
-    accent: '#8B5CF6',
-    surface: '#F8FAFC',
-    icon: '#334155',
+    surface: '#F3F4F6',
   },
   dark: {
-    background: '#12141C',
-    card: '#1D202C',
-    border: '#2F3346',
-    ink: '#F8FAFC',
-    muted: '#94A3B8',
-    primary: '#6366F1', // Indigo
-    primaryGradient: ['#6366F1', '#8B5CF6'] as const,
-    success: '#10B981', // Emerald
-    successGradient: ['#10B981', '#0D9488'] as const,
-    danger: '#F43F5E', // Rose
-    dangerGradient: ['#F43F5E', '#F97316'] as const,
+    background: '#09090B',
+    card: '#18181B',
+    border: '#27272A',
+    ink: '#FAFAFA',
+    muted: '#A1A1AA',
+    primary: '#6366F1', // Electric Indigo
+    primaryGradient: ['#818CF8', '#6366F1'] as const,
+    success: '#10B981', // Clean Emerald
+    successGradient: ['#34D399', '#10B981'] as const,
+    danger: '#EF4444', // Clean Red
+    dangerGradient: ['#F87171', '#EF4444'] as const,
     warning: '#F59E0B',
-    warningGradient: ['#F59E0B', '#FCD34D'] as const,
-    accent: '#8B5CF6',
-    surface: '#262938',
-    icon: '#94A3B8',
+    warningGradient: ['#FBBF24', '#F59E0B'] as const,
+    surface: '#27272A',
   },
 };
 
@@ -41,5 +37,4 @@ export const Colors = {
 export const Gradients = {
   diagonal: { start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
   horizontal: { start: { x: 0, y: 0 }, end: { x: 1, y: 0 } },
-  vertical: { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } },
 };

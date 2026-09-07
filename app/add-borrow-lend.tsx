@@ -54,10 +54,10 @@ export default function AddBorrowLend() {
     <View style={{ marginBottom: 18 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
         {icon}
-        <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>{label}</Text>
+        <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase' , fontFamily: 'FjallaOne_400Regular'}}>{label}</Text>
       </View>
       {children}
-      {error && <Text style={{ color: theme.danger, fontSize: 12, fontWeight: '600', marginTop: 6 , fontFamily: 'Inter_500Medium'}}>{error}</Text>}
+      {error && <Text style={{ color: theme.danger, fontSize: 12, fontWeight: '600', marginTop: 6 , fontFamily: 'FjallaOne_400Regular'}}>{error}</Text>}
     </View>
   );
 
@@ -66,7 +66,8 @@ export default function AddBorrowLend() {
   return (
     <KeyboardAvoidingView 
       style={{ flex: 1, backgroundColor: theme.background }} 
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 20}
     >
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border }}>
@@ -74,10 +75,10 @@ export default function AddBorrowLend() {
           style={{ marginRight: 14, backgroundColor: theme.surface, width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
           <ArrowLeft size={22} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 22, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>Track Debt 📝</Text>
+        <Text style={{ fontSize: 22, fontWeight: '700', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'FjallaOne_400Regular'}}>Track Debt</Text>
       </View>
 
-      <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
 
         {/* Type Toggle */}
         <View style={{ backgroundColor: theme.surface, borderRadius: 18, padding: 5, flexDirection: 'row', borderWidth: 1, borderColor: theme.border, marginBottom: 16 }}>
@@ -87,8 +88,8 @@ export default function AddBorrowLend() {
             return (
               <TouchableOpacity key={t} onPress={() => setValue('type', t)} activeOpacity={0.8}
                 style={{ flex: 1, paddingVertical: 13, borderRadius: 14, alignItems: 'center', backgroundColor: active ? c : 'transparent' }}>
-                <Text style={{ fontSize: 14, fontWeight: '900', color: active ? '#fff' : theme.muted , fontFamily: 'Outfit_700Bold'}}>
-                  {t === 'borrowed' ? 'I Borrowed 🤲' : 'I Lent 💸'}
+                <Text style={{ fontSize: 14, fontWeight: '600', color: active ? '#fff' : theme.muted , fontFamily: 'FjallaOne_400Regular'}}>
+                  {t === 'borrowed' ? 'I Borrowed' : 'I Lent'}
                 </Text>
               </TouchableOpacity>
             );
@@ -104,27 +105,30 @@ export default function AddBorrowLend() {
         <Field icon={<Phone size={16} color={'#25D366'} />} label="WhatsApp Number (for reminders)">
           <Controller control={control} name="phone" render={({ field: { onChange, value } }) => (
             <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: theme.card, borderRadius: 18, borderWidth: 1, borderColor: theme.border, paddingHorizontal: 14 }}>
-              <Text style={{ fontSize: 15, fontWeight: '700', color: theme.muted, marginRight: 8 , fontFamily: 'Inter_700Bold'}}>+91</Text>
+              <Text style={{ fontSize: 15, fontWeight: '700', color: theme.muted, marginRight: 8 , fontFamily: 'FjallaOne_400Regular'}}>+91</Text>
               <TextInput
                 style={{ flex: 1, paddingVertical: 14, color: theme.ink, fontSize: 15, fontWeight: '600', fontVariant: ['tabular-nums'] }}
                 placeholder="9876543210 (optional)"
                 placeholderTextColor={theme.muted}
-                keyboardType="phone-pad"
+                keyboardType="number-pad"
+                textContentType="none"
+                autoComplete="off"
+                importantForAutofill="no"
                 maxLength={10}
                 value={value}
                 onChangeText={(t) => onChange(t.replace(/\D/g, ''))}
               />
             </View>
           )} />
-          <Text style={{ fontSize: 12, color: theme.muted, marginTop: 6, fontWeight: '500' , fontFamily: 'Inter_500Medium'}}>
-            💬 Saves their number for quick WhatsApp reminders
+          <Text style={{ fontSize: 12, color: theme.muted, marginTop: 6, fontWeight: '500' , fontFamily: 'FjallaOne_400Regular'}}>
+            Saves their number for quick WhatsApp reminders
           </Text>
         </Field>
 
         <Field icon={<IndianRupee size={16} color={activeAccent} />} label="Amount (₹)" error={errors.amount?.message}>
           <Controller control={control} name="amount" render={({ field: { onChange, value } }) => (
-            <TextInput style={{ ...inputStyle, fontSize: 24, fontWeight: '900', color: activeAccent, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}
-              keyboardType="numeric" placeholder="0" placeholderTextColor={theme.muted + '50'}
+            <TextInput style={{ ...inputStyle, fontSize: 24, fontWeight: '900', color: activeAccent, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}
+              keyboardType="decimal-pad" textContentType="none" autoComplete="off" importantForAutofill="no" placeholder="0" placeholderTextColor={theme.muted + '50'}
               value={value ? value.toString() : ''} onChangeText={onChange} />
           )} />
         </Field>
@@ -144,7 +148,7 @@ export default function AddBorrowLend() {
               return (
                 <TouchableOpacity key={label} onPress={() => setValue('dueDate', val)} activeOpacity={0.7}
                   style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 18, borderWidth: 1.5, borderColor: theme.border, backgroundColor: theme.surface }}>
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted , fontFamily: 'Inter_700Bold'}}>{label}</Text>
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>{label}</Text>
                 </TouchableOpacity>
               );
             })}
@@ -153,7 +157,7 @@ export default function AddBorrowLend() {
 
         <Field icon={<FileText size={16} color={theme.muted} />} label="Note (optional)">
           <Controller control={control} name="notes" render={({ field: { onChange, value } }) => (
-            <TextInput style={inputStyle} placeholder="e.g. For concert tickets 🎸" placeholderTextColor={theme.muted} value={value} onChangeText={onChange} />
+            <TextInput style={inputStyle} placeholder="e.g. For concert tickets" placeholderTextColor={theme.muted} value={value} onChangeText={onChange} />
           )} />
         </Field>
 
@@ -170,7 +174,7 @@ export default function AddBorrowLend() {
             style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 16, borderRadius: 20 }}
           >
             <Check size={22} color="#fff" strokeWidth={3} />
-            <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 , fontFamily: 'Outfit_700Bold'}}>Save Record 🔒</Text>
+            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 16 , fontFamily: 'FjallaOne_400Regular'}}>Save Record</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>

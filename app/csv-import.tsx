@@ -95,7 +95,7 @@ export default function CSVImport() {
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
           <ArrowLeft size={22} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Import CSV</Text>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Import CSV</Text>
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
@@ -107,25 +107,25 @@ export default function CSVImport() {
             style={{ width: '100%', padding: 40, borderRadius: 20, borderWidth: 2, borderStyle: 'dashed', borderColor: isProcessing ? theme.muted : theme.primary, alignItems: 'center' }}
           >
             <UploadCloud size={56} color={theme.primary} />
-            <Text style={{ marginTop: 20, fontSize: 18, fontWeight: '800', color: theme.ink, textAlign: 'center' , fontFamily: 'Outfit_700Bold'}}>
+            <Text style={{ marginTop: 20, fontSize: 18, fontWeight: '800', color: theme.ink, textAlign: 'center' , fontFamily: 'FjallaOne_400Regular'}}>
               {isProcessing ? 'Processing...' : 'Upload CSV Statement'}
             </Text>
-            <Text style={{ color: theme.muted, textAlign: 'center', marginTop: 8, lineHeight: 20, fontSize: 13 , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ color: theme.muted, textAlign: 'center', marginTop: 8, lineHeight: 20, fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>
               Select a bank statement in CSV format. We'll automatically map the columns and import your transactions.
             </Text>
           </TouchableOpacity>
         ) : (
           <View style={{ width: '100%', backgroundColor: theme.card, padding: 32, borderRadius: 20, borderWidth: 1, borderColor: theme.border, alignItems: 'center' }}>
             <CheckCircle2 size={56} color={theme.success} />
-            <Text style={{ marginTop: 20, fontSize: 22, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Import Complete</Text>
+            <Text style={{ marginTop: 20, fontSize: 22, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Import Complete</Text>
             <View style={{ flexDirection: 'row', gap: 48, marginTop: 20 }}>
               <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 32, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>{results.imported}</Text>
-                <Text style={{ color: theme.muted, marginTop: 4, fontWeight: '600' , fontFamily: 'Inter_500Medium'}}>Imported</Text>
+                <Text style={{ fontSize: 32, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>{results.imported}</Text>
+                <Text style={{ color: theme.muted, marginTop: 4, fontWeight: '600' , fontFamily: 'FjallaOne_400Regular'}}>Imported</Text>
               </View>
               <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontSize: 32, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>{results.failed}</Text>
-                <Text style={{ color: theme.muted, marginTop: 4, fontWeight: '600' , fontFamily: 'Inter_500Medium'}}>Failed</Text>
+                <Text style={{ fontSize: 32, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>{results.failed}</Text>
+                <Text style={{ color: theme.muted, marginTop: 4, fontWeight: '600' , fontFamily: 'FjallaOne_400Regular'}}>Failed</Text>
               </View>
             </View>
             <TouchableOpacity
@@ -133,7 +133,7 @@ export default function CSVImport() {
               activeOpacity={0.7}
               style={{ marginTop: 24, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 18, backgroundColor: theme.surface }}
             >
-              <Text style={{ color: theme.ink, fontWeight: '600' , fontFamily: 'Inter_500Medium'}}>Import Another</Text>
+              <Text style={{ color: theme.ink, fontWeight: '600' , fontFamily: 'FjallaOne_400Regular'}}>Import Another</Text>
             </TouchableOpacity>
           </View>
         )}

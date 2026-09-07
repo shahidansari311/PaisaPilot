@@ -19,18 +19,18 @@ export function DashboardRecentList({ recentTransactions, colors }: Props) {
   return (
     <View style={{ marginHorizontal: 20 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <Text style={{ fontSize: 18, fontWeight: '900', color: colors.ink, fontFamily: 'Outfit_700Bold' }}>Recent Moves 🚀</Text>
+        <Text style={{ fontSize: 18, fontWeight: '900', color: colors.ink, fontFamily: 'FjallaOne_400Regular' }}>Recent Moves 🚀</Text>
         <TouchableOpacity onPress={() => router.navigate('/(tabs)/transactions')} activeOpacity={0.7}
           style={{ backgroundColor: colors.primary + '15', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 }}>
-          <Text style={{ fontSize: 13, fontWeight: '800', color: colors.primary, fontFamily: 'Outfit_700Bold' }}>View All</Text>
+          <Text style={{ fontSize: 13, fontWeight: '800', color: colors.primary, fontFamily: 'FjallaOne_400Regular' }}>View All</Text>
         </TouchableOpacity>
       </View>
 
       {recentTransactions.length === 0 ? (
         <View style={{ backgroundColor: colors.card, borderRadius: 20, padding: 32, alignItems: 'center', borderWidth: 1, borderColor: colors.border, borderStyle: 'dashed' }}>
-          <Text style={{ fontSize: 36, marginBottom: 12, fontFamily: 'Inter_500Medium' }}>📭</Text>
-          <Text style={{ fontSize: 16, fontWeight: '800', color: colors.ink, marginBottom: 8, fontFamily: 'Outfit_700Bold' }}>No moves yet</Text>
-          <Text style={{ fontSize: 14, color: colors.muted, textAlign: 'center', lineHeight: 22, fontFamily: 'Inter_500Medium' }}>
+          <Text style={{ fontSize: 36, marginBottom: 12, fontFamily: 'FjallaOne_400Regular' }}>📭</Text>
+          <Text style={{ fontSize: 16, fontWeight: '800', color: colors.ink, marginBottom: 8, fontFamily: 'FjallaOne_400Regular' }}>No moves yet</Text>
+          <Text style={{ fontSize: 14, color: colors.muted, textAlign: 'center', lineHeight: 22, fontFamily: 'FjallaOne_400Regular' }}>
             Tap "Expense" or "Income" above to record your first transaction.
           </Text>
         </View>
@@ -42,15 +42,15 @@ export function DashboardRecentList({ recentTransactions, colors }: Props) {
             return (
               <View key={tx.id} style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 16, borderBottomWidth: i < recentTransactions.length - 1 ? 1 : 0, borderBottomColor: colors.border }}>
                 <View style={{ width: 44, height: 44, borderRadius: 22, marginRight: 14, backgroundColor: txColor + '15', alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 16, fontWeight: '900', color: txColor, fontFamily: 'Outfit_700Bold' }}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '900', color: txColor, fontFamily: 'FjallaOne_400Regular' }}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
                 </View>
                 <View style={{ flex: 1, marginRight: 12 }}>
-                  <Text style={{ fontSize: 15, fontWeight: '700', color: colors.ink, marginBottom: 4, fontFamily: 'Inter_700Bold' }} numberOfLines={1}>{tx.note || 'Transaction'}</Text>
-                  <Text style={{ fontSize: 12, fontWeight: '600', color: colors.muted, fontFamily: 'Inter_500Medium' }}>
+                  <Text style={{ fontSize: 15, fontWeight: '700', color: colors.ink, marginBottom: 4, fontFamily: 'FjallaOne_400Regular' }} numberOfLines={1}>{tx.note || 'Transaction'}</Text>
+                  <Text style={{ fontSize: 12, fontWeight: '600', color: colors.muted, fontFamily: 'FjallaOne_400Regular' }}>
                     {new Date(tx.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </Text>
                 </View>
-                <Text style={{ fontSize: 16, fontWeight: '900', color: txColor, fontVariant: ['tabular-nums'], fontFamily: 'Outfit_700Bold' }}>
+                <Text style={{ fontSize: 16, fontWeight: '900', color: txColor, fontVariant: ['tabular-nums'], fontFamily: 'FjallaOne_400Regular' }}>
                   {isExp ? '−' : '+'}₹{tx.amount.toLocaleString('en-IN')}
                 </Text>
               </View>

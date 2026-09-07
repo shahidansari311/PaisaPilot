@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { CustomAlert as Alert } from '../../utils/alert';
-import { useThemeStore } from '../../store/useThemeStore';
+import { CustomAlert as Alert } from '../utils/alert';
+import { useThemeStore } from '../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, router } from 'expo-router';
 import { ChevronLeft, ChevronRight, Plus, TrendingDown, TrendingUp, Download } from 'lucide-react-native';
-import { exportTransactionsCSV, exportTransactionsPDF } from '../../utils/export';
-import { Colors, Gradients } from '../../constants/Colors';
+import { exportTransactionsCSV, exportTransactionsPDF } from '../utils/export';
+import { Colors, Gradients } from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface DayTransaction {
@@ -94,7 +94,7 @@ export default function CalendarScreen() {
 
   const handleAction = (id: string) => {
     Alert.alert(
-      'Transaction Actions ⚙️',
+      'Transaction Actions',
       'What would you like to do with this transaction?',
       [
         { text: 'Cancel', style: 'cancel' },
@@ -117,17 +117,17 @@ export default function CalendarScreen() {
     const mm = String(viewMonth + 1).padStart(2, '0');
     const prefix = `${viewYear}-${mm}`;
     Alert.alert(
-      'Export Statement 📊',
+      'Export Statement',
       `Download your statement for ${MONTHS[viewMonth]} ${viewYear}`,
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Excel / CSV', onPress: async () => {
             try { await exportTransactionsCSV(db, prefix); }
-            catch { Alert.alert('Error', 'Failed to export CSV'); }
+            catch (e: any) { Alert.alert('Export Failed', e?.message || 'Failed to export CSV'); }
         }},
         { text: 'PDF Report', onPress: async () => {
             try { await exportTransactionsPDF(db, prefix); }
-            catch { Alert.alert('Error', 'Failed to export PDF'); }
+            catch (e: any) { Alert.alert('Export Failed', e?.message || 'Failed to export PDF'); }
         }}
       ]
     );
@@ -162,8 +162,8 @@ export default function CalendarScreen() {
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 48, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: theme.border }}>
         <View>
-          <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>Calendar 📅</Text>
-          <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'Inter_500Medium'}}>Tap a day to see spending</Text>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'FjallaOne_400Regular'}}>Calendar</Text>
+          <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'FjallaOne_400Regular'}}>Tap a day to see spending</Text>
         </View>
         <TouchableOpacity onPress={handleExportMonth} activeOpacity={0.7}
           style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: theme.card, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
@@ -180,8 +180,8 @@ export default function CalendarScreen() {
             <ChevronLeft size={18} color={theme.ink} />
           </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>{MONTHS[viewMonth]}</Text>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted , fontFamily: 'Inter_700Bold'}}>{viewYear}</Text>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'FjallaOne_400Regular'}}>{MONTHS[viewMonth]}</Text>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>{viewYear}</Text>
           </View>
           <TouchableOpacity onPress={() => goMonth(1)} activeOpacity={0.7}
             style={{ backgroundColor: theme.card, width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: theme.border }}>
@@ -194,18 +194,18 @@ export default function CalendarScreen() {
           <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 16, padding: 12, borderWidth: 1, borderColor: theme.border }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 }}>
               <TrendingUp size={14} color={theme.success} />
-              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.success, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>In</Text>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.success, textTransform: 'uppercase' , fontFamily: 'FjallaOne_400Regular'}}>In</Text>
             </View>
-            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} numberOfLines={1} adjustsFontSizeToFit>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}} numberOfLines={1} adjustsFontSizeToFit>
               ₹{monthIncome.toLocaleString('en-IN')}
             </Text>
           </View>
           <View style={{ flex: 1, backgroundColor: theme.card, borderRadius: 16, padding: 12, borderWidth: 1, borderColor: theme.border }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 }}>
               <TrendingDown size={14} color={theme.danger} />
-              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.danger, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>Out</Text>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.danger, textTransform: 'uppercase' , fontFamily: 'FjallaOne_400Regular'}}>Out</Text>
             </View>
-            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} numberOfLines={1} adjustsFontSizeToFit>
+            <Text style={{ fontSize: 18, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}} numberOfLines={1} adjustsFontSizeToFit>
               ₹{monthExpense.toLocaleString('en-IN')}
             </Text>
           </View>
@@ -217,7 +217,7 @@ export default function CalendarScreen() {
           <View style={{ flexDirection: 'row', marginBottom: 4 }}>
             {DAYS.map(d => (
               <View key={d} style={{ flex: 1, alignItems: 'center', paddingVertical: 4 }}>
-                <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted , fontFamily: 'Outfit_700Bold'}}>{d}</Text>
+                <Text style={{ fontSize: 10, fontWeight: '800', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>{d}</Text>
               </View>
             ))}
           </View>
@@ -258,7 +258,7 @@ export default function CalendarScreen() {
                     )}
                     {/* Selected: mini spend label */}
                     {isSelected && data && (
-                      <Text style={{ fontSize: 7, fontWeight: '800', color: theme.primary, marginTop: 1 , fontFamily: 'Outfit_700Bold'}}>
+                      <Text style={{ fontSize: 7, fontWeight: '800', color: theme.primary, marginTop: 1 , fontFamily: 'FjallaOne_400Regular'}}>
                         ₹{Math.round(data.totalExpense)}
                       </Text>
                     )}
@@ -275,18 +275,18 @@ export default function CalendarScreen() {
             {/* Panel Header */}
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderBottomWidth: 1, borderBottomColor: theme.border }}>
               <View>
-                <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>
+                <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>
                   {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}
                 </Text>
                 {monthData[selectedDate] && (
                   <View style={{ flexDirection: 'row', gap: 10, marginTop: 4 }}>
                     {monthData[selectedDate].totalExpense > 0 && (
-                      <Text style={{ fontSize: 12, fontWeight: '700', color: theme.danger , fontFamily: 'Inter_700Bold'}}>
+                      <Text style={{ fontSize: 12, fontWeight: '700', color: theme.danger , fontFamily: 'FjallaOne_400Regular'}}>
                         −₹{monthData[selectedDate].totalExpense.toLocaleString('en-IN')}
                       </Text>
                     )}
                     {monthData[selectedDate].totalIncome > 0 && (
-                      <Text style={{ fontSize: 12, fontWeight: '700', color: theme.success , fontFamily: 'Inter_700Bold'}}>
+                      <Text style={{ fontSize: 12, fontWeight: '700', color: theme.success , fontFamily: 'FjallaOne_400Regular'}}>
                         +₹{monthData[selectedDate].totalIncome.toLocaleString('en-IN')}
                       </Text>
                     )}
@@ -309,9 +309,8 @@ export default function CalendarScreen() {
             {/* Transactions for the day */}
             {dayTransactions.length === 0 ? (
               <View style={{ padding: 24, alignItems: 'center' }}>
-                <Text style={{ fontSize: 24, marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>🌵</Text>
-                <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'Inter_700Bold'}}>Nothing here</Text>
-                <Text style={{ fontSize: 12, color: theme.muted, textAlign: 'center', lineHeight: 18 , fontFamily: 'Inter_500Medium'}}>
+                <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'FjallaOne_400Regular'}}>Nothing here</Text>
+                <Text style={{ fontSize: 12, color: theme.muted, textAlign: 'center', lineHeight: 18 , fontFamily: 'FjallaOne_400Regular'}}>
                   Tap the + button to add a transaction for this day.
                 </Text>
               </View>
@@ -324,17 +323,17 @@ export default function CalendarScreen() {
                     onLongPress={() => handleAction(tx.id)} delayLongPress={350} activeOpacity={0.7}
                     style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 10, borderBottomWidth: i < dayTransactions.length - 1 ? 1 : 0, borderBottomColor: theme.border }}>
                     <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
-                      <Text style={{ fontSize: 14, fontWeight: '900', color , fontFamily: 'Outfit_700Bold'}}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
+                      <Text style={{ fontSize: 14, fontWeight: '900', color , fontFamily: 'FjallaOne_400Regular'}}>{(tx.note || 'T').charAt(0).toUpperCase()}</Text>
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 2 , fontFamily: 'Inter_700Bold'}} numberOfLines={1}>
+                      <Text style={{ fontSize: 14, fontWeight: '700', color: theme.ink, marginBottom: 2 , fontFamily: 'FjallaOne_400Regular'}} numberOfLines={1}>
                         {tx.note || 'Transaction'}
                       </Text>
-                      <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>
+                      <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>
                         {new Date(tx.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                       </Text>
                     </View>
-                    <Text style={{ fontSize: 16, fontWeight: '900', color, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+                    <Text style={{ fontSize: 16, fontWeight: '900', color, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>
                       {isExp ? '−' : '+'}₹{tx.amount.toLocaleString('en-IN')}
                     </Text>
                   </TouchableOpacity>
@@ -348,11 +347,11 @@ export default function CalendarScreen() {
         <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 24, marginBottom: 8 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: theme.danger }} />
-            <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>Expense day</Text>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>Expense day</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: theme.success }} />
-            <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>Income day</Text>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>Income day</Text>
           </View>
         </View>
       </ScrollView>

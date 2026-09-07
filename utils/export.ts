@@ -47,7 +47,7 @@ export const exportTransactionsCSV = async (db: SQLiteDatabase, monthPrefix?: st
     const file = new File(Paths.document, 'PaisaPilot_Statement.csv');
     file.write(csvString);
     
-    await shareFile(file.uri, 'text/csv');
+    await shareFile(file.uri, 'text/comma-separated-values', 'public.comma-separated-values-text', 'PaisaPilot Statement');
   } catch (error) {
     console.error('CSV Export failed:', error);
     throw error;
@@ -133,12 +133,7 @@ export const exportTransactionsPDF = async (db: SQLiteDatabase, monthPrefix?: st
     `;
 
     const { uri } = await Print.printToFileAsync({ html: htmlContent });
-    // @ts-ignore
-    const docUri = `${FileSystem.documentDirectory}PaisaPilot_Report.pdf`;
-    const fileInfo = await FileSystem.getInfoAsync(docUri);
-    if (fileInfo.exists) await FileSystem.deleteAsync(docUri);
-    await FileSystem.copyAsync({ from: uri, to: docUri });
-    await shareFile(docUri, 'application/pdf');
+    await shareFile(uri, 'application/pdf', 'com.adobe.pdf', 'PaisaPilot Report');
   } catch (error) {
     console.error('PDF Export failed:', error);
     throw error;
@@ -245,22 +240,41 @@ export const exportSplitGroupPDF = async (db: SQLiteDatabase, groupId: string) =
     `;
 
     const { uri } = await Print.printToFileAsync({ html: htmlContent });
-    // @ts-ignore
-    const docUri = `${FileSystem.documentDirectory}PaisaPilot_Group_Report.pdf`;
-    const fileInfo = await FileSystem.getInfoAsync(docUri);
-    if (fileInfo.exists) await FileSystem.deleteAsync(docUri);
-    await FileSystem.copyAsync({ from: uri, to: docUri });
-    await shareFile(docUri, 'application/pdf');
+    await shareFile(uri, 'application/pdf', 'com.adobe.pdf', 'PaisaPilot Split Report');
   } catch (error) {
     console.error('Group PDF Export failed:', error);
     throw error;
   }
 };
 
-const shareFile = async (uri: string, mimeType: string) => {
+const shareFile = async (uri: string, mimeType: string, uti: string, title: string) => {
   if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(uri, { UTI: mimeType, mimeType });
+    try {
+      let fileToShare = uri;
+      const docDir = (FileSystem as any).documentDirectory;
+      if (docDir && !uri.startsWith(docDir)) {
+        const fileName = uri.split('/').pop() || `export_${Date.now()}.pdf`;
+        const newUri = docDir + fileName;
+        try {
+          const fileContent = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+          await FileSystem.writeAsStringAsync(newUri, fileContent, { encoding: FileSystem.EncodingType.Base64 });
+          fileToShare = newUri;
+        } catch (e) {
+          console.warn('Fallback copy failed, using original URI', e);
+        }
+      }
+      await Sharing.shareAsync(fileToShare, { UTI: uti, mimeType, dialogTitle: title });
+    } catch (err) {
+      console.error('Sharing failed with exact uri:', uri, err);
+      // Fallback: sometimes the FileProvider on Android blocks certain URIs. 
+      // We can try to share without specifying mimeType/UTI.
+      try {
+        await Sharing.shareAsync(uri, { dialogTitle: title });
+      } catch (fallbackErr) {
+        throw new Error('Failed to share file. Please check app permissions.');
+      }
+    }
   } else {
-    console.warn('Sharing is not available on this platform');
+    throw new Error('Sharing is not available on this platform.');
   }
 };

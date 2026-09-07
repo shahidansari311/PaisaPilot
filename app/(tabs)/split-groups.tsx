@@ -53,11 +53,11 @@ export default function SplitGroups() {
   };
 
   const handleGroupAction = (group: SplitGroup) => {
-    Alert.alert('Group Actions ⚙️', 'What would you like to do?', [
+    Alert.alert('Group Actions', 'What would you like to do?', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Edit Name', onPress: () => { setEditingGroupId(group.id); setNewGroupName(group.name); setIsAddingGroup(true); } },
       { text: 'Delete Group', style: 'destructive', onPress: () => {
-        Alert.alert('Delete Group? 🗑️', 'This will remove all participants and expenses in this group.', [
+        Alert.alert('Delete Group', 'This will remove all participants and expenses in this group.', [
           { text: 'Cancel', style: 'cancel' },
           { text: 'Delete', style: 'destructive', onPress: () => deleteGroup(group.id) }
         ]);
@@ -71,22 +71,22 @@ export default function SplitGroups() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <LinearGradient
-        colors={['#A855F7', '#7C3AED']}
+        colors={theme.primaryGradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
           paddingTop: 56,
-          paddingBottom: 16,
+          paddingBottom: 20,
           paddingHorizontal: 24,
           borderBottomLeftRadius: 28,
           borderBottomRightRadius: 28,
           marginBottom: 0,
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <View>
-            <Text style={{ fontSize: 28, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Split 🍕</Text>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>Share expenses with friends</Text>
+            <Text style={{ fontSize: 32, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'FjallaOne_400Regular'}}>Split</Text>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>Share expenses with friends</Text>
           </View>
         </View>
       </LinearGradient>
@@ -97,9 +97,9 @@ export default function SplitGroups() {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Cloud size={18} color={theme.primary} />
-            <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Shared Rooms</Text>
+            <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Shared Rooms</Text>
             <View style={{ backgroundColor: theme.primary + '20', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 }}>
-              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.primary , fontFamily: 'Outfit_700Bold'}}>LIVE</Text>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: theme.primary , fontFamily: 'FjallaOne_400Regular'}}>LIVE</Text>
             </View>
           </View>
           <TouchableOpacity onPress={() => router.push('/join-shared-room' as any)} activeOpacity={0.7}
@@ -121,8 +121,8 @@ export default function SplitGroups() {
             <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
               <Cloud size={24} color={theme.muted} />
             </View>
-            <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'Inter_700Bold'}}>No shared rooms</Text>
-            <Text style={{ fontSize: 12, color: theme.muted, textAlign: 'center', lineHeight: 18 , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'FjallaOne_400Regular'}}>No shared rooms</Text>
+            <Text style={{ fontSize: 12, color: theme.muted, textAlign: 'center', lineHeight: 18 , fontFamily: 'FjallaOne_400Regular'}}>
               Create or join a room to sync expenses with your roommate in real-time.
             </Text>
           </TouchableOpacity>
@@ -139,10 +139,10 @@ export default function SplitGroups() {
                   <Cloud size={20} color={theme.primary} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink , fontFamily: 'Inter_700Bold'}}>{room.roomName}</Text>
+                  <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{room.roomName}</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
-                    <Text style={{ fontSize: 11, fontWeight: '700', color: theme.primary, backgroundColor: theme.primary + '12', paddingHorizontal: 6, paddingVertical: 1, borderRadius: 6 , fontFamily: 'Inter_700Bold'}}>{room.roomCode}</Text>
-                    <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>as {room.myName}</Text>
+                    <Text style={{ fontSize: 11, fontWeight: '700', color: theme.primary, backgroundColor: theme.primary + '12', paddingHorizontal: 6, paddingVertical: 1, borderRadius: 6 , fontFamily: 'FjallaOne_400Regular'}}>{room.roomCode}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>as {room.myName}</Text>
                   </View>
                 </View>
                 <ChevronRight size={18} color={theme.muted} />
@@ -155,7 +155,7 @@ export default function SplitGroups() {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Users size={18} color={theme.primary} />
-            <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Split Groups</Text>
+            <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Split Groups</Text>
           </View>
           <TouchableOpacity onPress={() => { setIsAddingGroup(!isAddingGroup); if(isAddingGroup) { setEditingGroupId(null); setNewGroupName(''); } }} activeOpacity={0.7}
             style={{ shadowColor: theme.primary, shadowOpacity: isAddingGroup ? 0 : 0.4, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: isAddingGroup ? 0 : 4 }}>
@@ -178,9 +178,9 @@ export default function SplitGroups() {
 
         {isAddingGroup && (
           <View style={{ backgroundColor: theme.card, borderRadius: 20, padding: 14, marginBottom: 16, borderWidth: 1, borderColor: theme.primary + '40' }}>
-            <Text style={{ fontSize: 14, fontWeight: '800', color: theme.ink, marginBottom: 10 , fontFamily: 'Outfit_700Bold'}}>{editingGroupId ? 'Edit Group Name' : 'New Group'}</Text>
+            <Text style={{ fontSize: 14, fontWeight: '800', color: theme.ink, marginBottom: 10 , fontFamily: 'FjallaOne_400Regular'}}>{editingGroupId ? 'Edit Group Name' : 'New Group'}</Text>
             <TextInput
-              style={{ backgroundColor: theme.surface, borderRadius: 20, paddingHorizontal: 16, height: 50, color: theme.ink, fontSize: 15, borderWidth: 1, borderColor: theme.border, marginBottom: 16, fontFamily: 'Inter_500Medium' }}
+              style={{ backgroundColor: theme.surface, borderRadius: 20, paddingHorizontal: 16, height: 50, color: theme.ink, fontSize: 15, borderWidth: 1, borderColor: theme.border, marginBottom: 16, fontFamily: 'FjallaOne_400Regular' }}
               placeholder="e.g. Goa Trip, Roommates"
               placeholderTextColor={theme.muted}
               value={newGroupName}
@@ -189,7 +189,7 @@ export default function SplitGroups() {
             <View style={{ flexDirection: 'row', gap: 12 }}>
               <TouchableOpacity onPress={() => { setIsAddingGroup(false); setEditingGroupId(null); setNewGroupName(''); }} activeOpacity={0.7}
                 style={{ flex: 1, height: 48, borderRadius: 24, borderWidth: 1, borderColor: theme.border, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.surface }}>
-                <Text style={{ color: theme.ink, fontWeight: '700' , fontFamily: 'Inter_700Bold', fontSize: 15 }}>Cancel</Text>
+                <Text style={{ color: theme.ink, fontWeight: '700' , fontFamily: 'FjallaOne_400Regular', fontSize: 15 }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={createGroup} activeOpacity={0.8}
                 style={{ flex: 1, height: 48, borderRadius: 24, shadowColor: theme.primary, shadowOpacity: 0.3, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 6 }}>
@@ -199,7 +199,7 @@ export default function SplitGroups() {
                   end={Gradients.diagonal.end}
                   style={{ flex: 1, borderRadius: 26, alignItems: 'center', justifyContent: 'center' }}
                 >
-                  <Text style={{ color: '#fff', fontWeight: '800' , fontFamily: 'Inter_700Bold', fontSize: 15 }}>{editingGroupId ? 'Save' : 'Create'}</Text>
+                  <Text style={{ color: '#fff', fontWeight: '800' , fontFamily: 'FjallaOne_400Regular', fontSize: 15 }}>{editingGroupId ? 'Save' : 'Create'}</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>
@@ -211,8 +211,8 @@ export default function SplitGroups() {
             <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
               <Users size={24} color={theme.muted} />
             </View>
-            <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'Inter_700Bold'}}>No groups yet</Text>
-            <Text style={{ fontSize: 12, color: theme.muted, textAlign: 'center', lineHeight: 18 , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, marginBottom: 4 , fontFamily: 'FjallaOne_400Regular'}}>No groups yet</Text>
+            <Text style={{ fontSize: 12, color: theme.muted, textAlign: 'center', lineHeight: 18 , fontFamily: 'FjallaOne_400Regular'}}>
               Create a group to split expenses with friends or roommates.
             </Text>
           </View>
@@ -230,8 +230,8 @@ export default function SplitGroups() {
                 <Users size={22} color={theme.primary} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink , fontFamily: 'Inter_700Bold'}}>{group.name}</Text>
-                <Text style={{ fontSize: 12, color: theme.muted, marginTop: 2 , fontFamily: 'Inter_500Medium'}}>Tap to view details</Text>
+                <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{group.name}</Text>
+                <Text style={{ fontSize: 12, color: theme.muted, marginTop: 2 , fontFamily: 'FjallaOne_400Regular'}}>Tap to view details</Text>
               </View>
               <ChevronRight size={18} color={theme.muted} />
             </TouchableOpacity>

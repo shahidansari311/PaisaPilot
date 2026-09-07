@@ -171,6 +171,7 @@ export default function TabLayout() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <Tabs
         tabBar={(props) => <CustomTabBar {...props} />}
+        backBehavior="history"
         screenOptions={{
           headerShown: false,
         }}
@@ -180,10 +181,6 @@ export default function TabLayout() {
       <Tabs.Screen name="borrow-lend" options={{ title: 'Debt' }} />
       <Tabs.Screen name="split-groups" options={{ title: 'Split' }} />
       <Tabs.Screen name="menu" options={{ title: 'Menu' }} />
-      
-      {/* Hidden Tabs - Accessed via Menu */}
-      <Tabs.Screen name="settings" options={{ href: null }} />
-      <Tabs.Screen name="calendar" options={{ href: null }} />
     </Tabs>
     </View>
   );

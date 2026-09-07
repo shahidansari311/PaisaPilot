@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Transaction } from '../../types/database';
 import { useFocusEffect } from 'expo-router';
 import { useSharedRoomStore } from '../../store/useSharedRoomStore';
+import { getMonthKey } from '../../utils/dateUtils';
 
 import { DashboardHeader } from '../../components/dashboard/DashboardHeader';
 import { DashboardAchievements } from '../../components/dashboard/DashboardAchievements';
@@ -15,19 +16,18 @@ import { DashboardSharedRooms } from '../../components/dashboard/DashboardShared
 import { DashboardRecentList } from '../../components/dashboard/DashboardRecentList';
 import { Colors } from '../../constants/Colors';
 
-const monthKeyFromDate = (d: Date) => {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-};
+
 
 export default function Dashboard() {
   const { isDark, toggleTheme } = useThemeStore();
   const db = useSQLiteContext();
 
   const [userName, setUserName] = useState<string | null>(null);
-  const [currentTime, setCurrentTime] = useState(Date.now());
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
+  const [todayExpense, setTodayExpense] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
   const [budgetAmount, setBudgetAmount] = useState(0);
   const [levelData, setLevelData] = useState({ level: 1, rank: 'Financial Noob' });
@@ -40,7 +40,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(Date.now());
       loadDashboardData();
     }, 60000);
     return () => clearInterval(timer);
@@ -53,7 +52,7 @@ export default function Dashboard() {
       const nameRow = await db.getFirstAsync<{ value: string }>(`SELECT value FROM app_settings WHERE key = 'user_name'`);
       setUserName(nameRow?.value || null);
 
-      const month = monthKeyFromDate(currentDate);
+      const month = getMonthKey(currentDate);
       const recent = await db.getAllAsync<Transaction>('SELECT * FROM transactions ORDER BY date DESC LIMIT 5');
       setRecentTransactions(recent);
 
@@ -62,8 +61,34 @@ export default function Dashboard() {
       const expRow = await db.getFirstAsync<{ total: number }>(
         `SELECT SUM(amount) as total FROM transactions WHERE type = 'expense' AND strftime('%Y-%m', date) = ?`, [month]);
 
-      setIncome(incRow?.total || 0);
-      setExpense(expRow?.total || 0);
+      let calculatedIncome = incRow?.total || 0;
+      let calculatedExpense = expRow?.total || 0;
+
+      const debtSetting = await db.getFirstAsync<{ value: string }>(`SELECT value FROM app_settings WHERE key = 'include_debt_in_stats'`);
+      if (debtSetting?.value === 'true') {
+        const lentRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM lend_records WHERE strftime('%Y-%m', createdAt) = ?`, [month]);
+        const borrowRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM borrow_records WHERE strftime('%Y-%m', createdAt) = ?`, [month]);
+        calculatedExpense += (lentRow?.total || 0);
+        calculatedIncome += (borrowRow?.total || 0);
+      }
+
+      setIncome(calculatedIncome);
+      setExpense(calculatedExpense);
+
+      let calcTodayExp = 0;
+      const now = new Date();
+      if (currentDate.getMonth() === now.getMonth() && currentDate.getFullYear() === now.getFullYear()) {
+        const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+        const todayExpRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM transactions WHERE type = 'expense' AND date LIKE ?`, [`${todayStr}%`]);
+        calcTodayExp = todayExpRow?.total || 0;
+        
+        if (debtSetting?.value === 'true') {
+          const todayLentRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM lend_records WHERE createdAt LIKE ?`, [`${todayStr}%`]);
+          calcTodayExp += (todayLentRow?.total || 0);
+        }
+      }
+      setTodayExpense(calcTodayExp);
+
 
       const budgetRow = await db.getFirstAsync<{ amount: number }>(
         `SELECT amount FROM budgets WHERE period = 'monthly' AND month = ? LIMIT 1`, [month]);
@@ -113,10 +138,19 @@ export default function Dashboard() {
   const progressGradient = pct >= 0.9 ? colors.dangerGradient : pct >= 0.7 ? colors.warningGradient : colors.successGradient;
 
   const daysLeft = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() - currentDate.getDate() + 1;
-  const safeSpend = !isOverBudget && remaining > 0 ? Math.floor(remaining / daysLeft) : 0;
-
   const now = new Date();
   const isCurrentMonth = currentDate.getMonth() === now.getMonth() && currentDate.getFullYear() === now.getFullYear();
+
+  const expensesBeforeToday = isCurrentMonth ? expense - todayExpense : expense;
+  const remainingBeforeToday = budgetAmount + income - expensesBeforeToday;
+
+  let safeSpend = 0;
+  if (isCurrentMonth && remainingBeforeToday > 0) {
+    safeSpend = Math.floor(remainingBeforeToday / daysLeft);
+  } else if (!isCurrentMonth && remaining > 0) {
+    safeSpend = Math.floor(remaining / daysLeft);
+  }
+
 
   const nextMonth = () => {
     setCurrentDate(prev => {
@@ -163,6 +197,7 @@ export default function Dashboard() {
           income={income} 
           expense={expense} 
           safeSpend={safeSpend} 
+          todayExpense={todayExpense}
           isDark={isDark} 
           colors={colors} 
         />

@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, Share as RNShare, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, Modal, ActivityIndicator, KeyboardAvoidingView, Platform, RefreshControl } from 'react-native';
 import { CustomAlert as Alert } from '../utils/alert';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useThemeStore } from '../store/useThemeStore';
 import { useSharedRoomStore } from '../store/useSharedRoomStore';
-import { useEffect, useState, useRef } from 'react';
-import { ArrowLeft, Plus, X, Check, Trash2, ArrowUpRight, ArrowDownLeft, CheckCircle, Circle, Copy, Users, Cloud, LogOut } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, Plus, X, Check, Trash2, ArrowUpRight, ArrowDownLeft, CheckCircle, Circle, Copy, Users, Cloud, LogOut , Receipt} from 'lucide-react-native';
 import { SharedRoomEntry, SharedRoomMember } from '../types/database';
 import { supabase } from '../config/supabaseConfig';
 import { Colors, Gradients } from '../constants/Colors';
@@ -29,59 +29,58 @@ export default function SharedRoom() {
   const [formAmount, setFormAmount] = useState('');
   const [formDesc, setFormDesc] = useState('');
   const [formDate, setFormDate] = useState(new Date().toISOString().split('T')[0]);
+  const [refreshing, setRefreshing] = useState(false);
   const theme = isDark ? Colors.dark : Colors.light;
 
   const myMemberId = localRoom?.myMemberId || '';
   const myName = localRoom?.myName || 'Me';
 
+  // ── Shared data fetcher ──
+  const fetchRoomData = async () => {
+    const { data: roomData } = await supabase.from('shared_rooms').select('room_name').eq('code', roomCode).single();
+    if (roomData) setRoomName(roomData.room_name);
+    const { data: membersData } = await supabase.from('room_members').select('*').eq('room_code', roomCode);
+    if (membersData) {
+      const memObj: Record<string, SharedRoomMember> = {};
+      membersData.forEach(m => memObj[m.id] = { name: m.name, joinedAt: m.joined_at });
+      setMembers(memObj);
+    }
+    const { data: entriesData } = await supabase.from('room_entries').select('*').eq('room_code', roomCode).order('date', { ascending: false }).order('created_at', { ascending: false });
+    if (entriesData) {
+      setEntries(entriesData.map(e => ({
+        id: e.id, paidByMemberId: e.paid_by_member_id, paidByName: e.paid_by_name,
+        amount: Number(e.amount), description: e.description, date: e.date, isPaid: e.is_paid, createdAt: e.created_at
+      })));
+    }
+  };
+
   // ── Real-time listeners (Supabase) ──
   useEffect(() => {
     if (!roomCode) return;
-
     const loadData = async () => {
       try {
-        const { data: roomData } = await supabase.from('shared_rooms').select('room_name').eq('code', roomCode).single();
-        if (roomData) setRoomName(roomData.room_name);
-        
-        const { data: membersData } = await supabase.from('room_members').select('*').eq('room_code', roomCode);
-        if (membersData) {
-          const memObj: Record<string, SharedRoomMember> = {};
-          membersData.forEach(m => memObj[m.id] = { name: m.name, joinedAt: m.joined_at });
-          setMembers(memObj);
-        }
-
-        const { data: entriesData } = await supabase.from('room_entries').select('*').eq('room_code', roomCode).order('date', { ascending: false }).order('created_at', { ascending: false });
-        if (entriesData) {
-          setEntries(entriesData.map(e => ({
-            id: e.id,
-            paidByMemberId: e.paid_by_member_id,
-            paidByName: e.paid_by_name,
-            amount: Number(e.amount),
-            description: e.description,
-            date: e.date,
-            isPaid: e.is_paid,
-            createdAt: e.created_at
-          })));
-        }
+        await fetchRoomData();
         setLoading(false);
+        setRefreshing(false);
       } catch (err) {
-        console.warn("Supabase Load Error:", err);
+        console.warn('Supabase Load Error:', err);
         setLoading(false);
+        setRefreshing(false);
         Alert.alert('Error', 'Could not sync room data.');
       }
     };
-
     loadData();
-
     const channel = supabase.channel(`room_${roomCode}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'room_members', filter: `room_code=eq.${roomCode}` }, () => loadData())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'room_entries', filter: `room_code=eq.${roomCode}` }, () => loadData())
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [roomCode]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchRoomData().catch(() => {}).finally(() => setRefreshing(false));
+  };
 
   // ── Calculate net balances ──
   useEffect(() => {
@@ -164,7 +163,7 @@ export default function SharedRoom() {
   };
 
   const deleteEntry = (entryId: string) => {
-    Alert.alert('Delete Entry? 🗑️', 'This will be removed for everyone.', [
+    Alert.alert('Delete Entry?', 'This will be removed for everyone.', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Delete', style: 'destructive', onPress: async () => {
         try {
@@ -175,38 +174,35 @@ export default function SharedRoom() {
   };
 
   const handleEntryAction = (entry: SharedRoomEntry) => {
-    Alert.alert('Entry Actions ⚙️', entry.description, [
+    Alert.alert('Entry Actions', entry.description, [
       { text: 'Cancel', style: 'cancel' },
-      { text: entry.isPaid ? 'Mark Pending' : 'Mark Settled ✅', onPress: () => togglePaid(entry) },
-      { text: 'Edit ✏️', onPress: () => openEditModal(entry) },
+      { text: entry.isPaid ? 'Mark Pending' : 'Mark Settled', onPress: () => togglePaid(entry) },
+      { text: 'Edit', onPress: () => openEditModal(entry) },
       { text: 'Delete', style: 'destructive', onPress: () => deleteEntry(entry.id) },
     ]);
   };
 
   const copyCode = () => {
-    Alert.alert('Room Code 📋', roomCode);
+    Alert.alert('Room Code', roomCode);
   };
 
   const leaveRoom = () => {
-    Alert.alert('Room Options ⚙️', 'You can leave this room (removes it locally) or delete it permanently from the cloud database for everyone.', [
+    Alert.alert('Room Options', 'You can leave this room. If you are the last person, the room will be deleted permanently.', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Leave Room', onPress: async () => {
-        await removeRoom(roomCode);
-        router.back();
-      }},
-      { text: 'Delete from Database', style: 'destructive', onPress: async () => {
-        Alert.alert('Delete Permanently? 🗑️', 'This will delete the room and all entries for all members. This cannot be undone.', [
-          { text: 'Cancel', style: 'cancel' },
-          { text: 'Delete', style: 'destructive', onPress: async () => {
-            try {
-              await supabase.from('shared_rooms').delete().eq('code', roomCode);
-              await removeRoom(roomCode);
-              router.back();
-            } catch {
-              Alert.alert('Error', 'Failed to delete room from database');
-            }
-          }}
-        ]);
+      { text: 'Leave Room', style: 'destructive', onPress: async () => {
+        try {
+          await supabase.from('room_members').delete().eq('id', myMemberId);
+          
+          const { count } = await supabase.from('room_members').select('*', { count: 'exact', head: true }).eq('room_code', roomCode);
+          if (count === 0) {
+            await supabase.from('shared_rooms').delete().eq('code', roomCode);
+          }
+          
+          await removeRoom(roomCode);
+          router.back();
+        } catch (e) {
+          Alert.alert('Error', 'Failed to leave room');
+        }
       }},
     ]);
   };
@@ -217,8 +213,8 @@ export default function SharedRoom() {
   if (!localRoom) {
     return (
       <View style={{ flex: 1, backgroundColor: theme.background, alignItems: 'center', justifyContent: 'center', padding: 40 }}>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink, marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>Room not found</Text>
-        <Text style={{ fontSize: 14, color: theme.muted, textAlign: 'center' , fontFamily: 'Inter_500Medium'}}>This room is no longer in your local storage.</Text>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink, marginBottom: 8 , fontFamily: 'FjallaOne_400Regular'}}>Room not found</Text>
+        <Text style={{ fontSize: 14, color: theme.muted, textAlign: 'center' , fontFamily: 'FjallaOne_400Regular'}}>This room is no longer in your local storage.</Text>
         <TouchableOpacity onPress={() => router.back()} style={{ marginTop: 20, borderRadius: 14, overflow: 'hidden' }}>
           <LinearGradient
             colors={theme.primaryGradient}
@@ -226,7 +222,7 @@ export default function SharedRoom() {
             end={Gradients.diagonal.end}
             style={{ padding: 14, alignItems: 'center' }}
           >
-            <Text style={{ color: '#fff', fontWeight: '800' , fontFamily: 'Outfit_700Bold'}}>Go Back</Text>
+            <Text style={{ color: '#fff', fontWeight: '800' , fontFamily: 'FjallaOne_400Regular'}}>Go Back</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
@@ -242,12 +238,12 @@ export default function SharedRoom() {
             <ArrowLeft size={22} color={theme.ink} />
           </TouchableOpacity>
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}} numberOfLines={1}>{roomName} ☁️</Text>
+            <Text style={{ fontSize: 20, fontWeight: '700', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'FjallaOne_400Regular'}} numberOfLines={1}>{roomName}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 2 }}>
               <Cloud size={11} color={theme.primary} />
-              <Text style={{ fontSize: 11, fontWeight: '700', color: theme.primary , fontFamily: 'Inter_700Bold'}}>Live Synced</Text>
-              <Text style={{ fontSize: 11, color: theme.muted , fontFamily: 'Inter_500Medium'}}>•</Text>
-              <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>{roomCode}</Text>
+              <Text style={{ fontSize: 11, fontWeight: '700', color: theme.primary , fontFamily: 'FjallaOne_400Regular'}}>Live Synced</Text>
+              <Text style={{ fontSize: 11, color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>•</Text>
+              <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>{roomCode}</Text>
             </View>
           </View>
         </View>
@@ -258,12 +254,19 @@ export default function SharedRoom() {
       </View>
 
       {loading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size="large" color={theme.primary} />
-          <Text style={{ color: theme.muted, marginTop: 12, fontWeight: '600' , fontFamily: 'Inter_500Medium'}}>Syncing...</Text>
+        <View style={{ flex: 1, padding: 20 }}>
+          {/* Skeleton Loaders */}
+          <View style={{ backgroundColor: theme.card, borderRadius: 20, height: 120, marginBottom: 20, opacity: 0.5 }} />
+          <View style={{ backgroundColor: theme.card, borderRadius: 16, height: 80, marginBottom: 20, opacity: 0.5 }} />
+          <View style={{ backgroundColor: theme.card, borderRadius: 22, height: 200, opacity: 0.5 }} />
         </View>
       ) : (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          style={{ flex: 1 }} 
+          contentContainerStyle={{ padding: 20, paddingBottom: 120 }} 
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primary} />}
+        >
 
           {/* Net Balance Card */}
           <View style={{
@@ -272,23 +275,23 @@ export default function SharedRoom() {
             borderWidth: 1.5,
             borderColor: myBalance === 0 ? theme.success + '30' : myBalance > 0 ? theme.success + '30' : theme.danger + '30',
           }}>
-            <Text style={{ fontSize: 12, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>
+            <Text style={{ fontSize: 12, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 , fontFamily: 'FjallaOne_400Regular'}}>
               Your Balance
             </Text>
             {myBalance === 0 ? (
               <View>
-                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success , fontFamily: 'Outfit_700Bold'}}>All Settled! 🎉</Text>
-                <Text style={{ fontSize: 14, color: theme.muted, fontWeight: '600', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>No pending dues</Text>
+                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success , fontFamily: 'FjallaOne_400Regular'}}>All Settled!</Text>
+                <Text style={{ fontSize: 14, color: theme.muted, fontWeight: '600', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>No pending dues</Text>
               </View>
             ) : myBalance > 0 ? (
               <View>
-                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
-                <Text style={{ fontSize: 14, color: theme.success, fontWeight: '700', marginTop: 4 , fontFamily: 'Inter_700Bold'}}>Others owe you 💰</Text>
+                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
+                <Text style={{ fontSize: 14, color: theme.success, fontWeight: '700', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>Others owe you</Text>
               </View>
             ) : (
               <View>
-                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
-                <Text style={{ fontSize: 14, color: theme.danger, fontWeight: '700', marginTop: 4 , fontFamily: 'Inter_700Bold'}}>You owe others 😅</Text>
+                <Text style={{ fontSize: 24, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
+                <Text style={{ fontSize: 14, color: theme.danger, fontWeight: '700', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>You owe others</Text>
               </View>
             )}
           </View>
@@ -297,11 +300,11 @@ export default function SharedRoom() {
           <View style={{ backgroundColor: theme.card, borderRadius: 16, padding: 14, marginBottom: 20, borderWidth: 1, borderColor: theme.border }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
               <Users size={16} color={theme.primary} />
-              <Text style={{ fontSize: 14, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Members ({memberList.length})</Text>
+              <Text style={{ fontSize: 14, fontWeight: '800', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Members ({memberList.length})</Text>
               <View style={{ flex: 1 }} />
               <TouchableOpacity onPress={copyCode} activeOpacity={0.7} style={{ flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, backgroundColor: theme.primary + '12' }}>
                 <Copy size={12} color={theme.primary} />
-                <Text style={{ fontSize: 11, fontWeight: '800', color: theme.primary , fontFamily: 'Outfit_700Bold'}}>{roomCode}</Text>
+                <Text style={{ fontSize: 11, fontWeight: '800', color: theme.primary , fontFamily: 'FjallaOne_400Regular'}}>{roomCode}</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -310,9 +313,9 @@ export default function SharedRoom() {
                 return (
                   <View key={id} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: isMe ? theme.primary + '15' : theme.surface, paddingHorizontal: 12, paddingVertical: 7, borderRadius: 20, borderWidth: 1, borderColor: isMe ? theme.primary + '30' : theme.border }}>
                     <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: isMe ? theme.primary : theme.success, alignItems: 'center', justifyContent: 'center' }}>
-                      <Text style={{ fontSize: 10, fontWeight: '900', color: '#fff' , fontFamily: 'Outfit_700Bold'}}>{m.name.charAt(0).toUpperCase()}</Text>
+                      <Text style={{ fontSize: 10, fontWeight: '900', color: '#fff' , fontFamily: 'FjallaOne_400Regular'}}>{(m.name || 'U').charAt(0).toUpperCase()}</Text>
                     </View>
-                    <Text style={{ fontSize: 13, fontWeight: '700', color: isMe ? theme.primary : theme.ink , fontFamily: 'Inter_700Bold'}}>{m.name}{isMe ? ' (You)' : ''}</Text>
+                    <Text style={{ fontSize: 13, fontWeight: '700', color: isMe ? theme.primary : theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{m.name || 'Unknown'}{isMe ? ' (You)' : ''}</Text>
                   </View>
                 );
               })}
@@ -321,16 +324,16 @@ export default function SharedRoom() {
 
           {/* Entries Header */}
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Entries 📒</Text>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted , fontFamily: 'Inter_700Bold'}}>Long press to manage</Text>
+            <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Entries</Text>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>Long press to manage</Text>
           </View>
 
           {/* Entry List */}
           {entries.length === 0 ? (
             <View style={{ backgroundColor: theme.card, borderRadius: 22, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed' }}>
-              <Text style={{ fontSize: 36, marginBottom: 12 , fontFamily: 'Inter_500Medium'}}>📝</Text>
-              <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink, marginBottom: 6 , fontFamily: 'Outfit_700Bold'}}>No entries yet</Text>
-              <Text style={{ fontSize: 13, color: theme.muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'Inter_500Medium'}}>Tap + to add who paid for what</Text>
+              <Receipt size={36} color={theme.primary} style={{ marginBottom: 12 }} />
+              <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink, marginBottom: 6 , fontFamily: 'FjallaOne_400Regular'}}>No entries yet</Text>
+              <Text style={{ fontSize: 13, color: theme.muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'FjallaOne_400Regular'}}>Tap + to add who paid for what</Text>
             </View>
           ) : (
             <View style={{ backgroundColor: theme.card, borderRadius: 22, borderWidth: 1, borderColor: theme.border, overflow: 'hidden' }}>
@@ -357,19 +360,19 @@ export default function SharedRoom() {
                       {isMe ? <ArrowUpRight size={18} color={entryColor} strokeWidth={2.5} /> : <ArrowDownLeft size={18} color={entryColor} strokeWidth={2.5} />}
                     </View>
                     <View style={{ flex: 1, marginRight: 10 }}>
-                      <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, marginBottom: 3, textDecorationLine: isPaid ? 'line-through' : 'none' , fontFamily: 'Inter_700Bold'}} numberOfLines={1}>{entry.description}</Text>
+                      <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink, marginBottom: 3, textDecorationLine: isPaid ? 'line-through' : 'none' , fontFamily: 'FjallaOne_400Regular'}} numberOfLines={1}>{entry.description}</Text>
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                         <View style={{ backgroundColor: entryColor + '15', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8 }}>
-                          <Text style={{ fontSize: 10, fontWeight: '800', color: entryColor, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>
+                          <Text style={{ fontSize: 10, fontWeight: '800', color: entryColor, textTransform: 'uppercase' , fontFamily: 'FjallaOne_400Regular'}}>
                             {entry.paidByName} paid
                           </Text>
                         </View>
-                        <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>
+                        <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>
                           {new Date(entry.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                         </Text>
                       </View>
                     </View>
-                    <Text style={{ fontSize: 16, fontWeight: '900', color: entryColor, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>₹{entry.amount.toLocaleString('en-IN')}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '900', color: entryColor, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>₹{entry.amount.toLocaleString('en-IN')}</Text>
                   </TouchableOpacity>
                 );
               })}
@@ -403,11 +406,11 @@ export default function SharedRoom() {
           <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
           <View style={{ backgroundColor: theme.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 380 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-              <Text style={{ fontSize: 20, fontWeight: '900', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{editingId ? 'Edit Entry ✏️' : 'Add Entry 📝'}</Text>
+              <Text style={{ fontSize: 20, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{editingId ? 'Edit Entry' : 'Add Entry'}</Text>
               <TouchableOpacity onPress={() => setShowModal(false)}><X size={24} color={theme.muted} /></TouchableOpacity>
             </View>
 
-            <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>What was it for?</Text>
+            <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>What was it for?</Text>
             <TextInput
               style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.ink, fontSize: 16, marginBottom: 16, fontWeight: '600' }}
               placeholder="e.g. Groceries, Electricity"
@@ -416,7 +419,7 @@ export default function SharedRoom() {
               onChangeText={setFormDesc}
             />
 
-            <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Amount (₹)</Text>
+            <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>Amount (₹)</Text>
             <TextInput
               style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.success, fontSize: 24, fontWeight: '900', marginBottom: 16, fontVariant: ['tabular-nums'] }}
               placeholder="0"
@@ -426,7 +429,7 @@ export default function SharedRoom() {
               onChangeText={setFormAmount}
             />
 
-            <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'Inter_700Bold'}}>Date (YYYY-MM-DD)</Text>
+            <Text style={{ color: theme.muted, fontWeight: '700', marginBottom: 8, fontSize: 13 , fontFamily: 'FjallaOne_400Regular'}}>Date (YYYY-MM-DD)</Text>
             <TextInput
               style={{ backgroundColor: theme.card, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.ink, fontSize: 16, marginBottom: 10, fontWeight: '600' }}
               placeholder="2026-07-21"
@@ -441,7 +444,7 @@ export default function SharedRoom() {
                 return (
                   <TouchableOpacity key={label} onPress={() => setFormDate(val)} activeOpacity={0.7}
                     style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 18, borderWidth: 1.5, borderColor: formDate === val ? theme.primary : theme.border, backgroundColor: formDate === val ? theme.primary + '15' : theme.surface }}>
-                    <Text style={{ fontSize: 12, fontWeight: '700', color: formDate === val ? theme.primary : theme.muted , fontFamily: 'Inter_700Bold'}}>{label}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: '700', color: formDate === val ? theme.primary : theme.muted , fontFamily: 'FjallaOne_400Regular'}}>{label}</Text>
                   </TouchableOpacity>
                 );
               })}
@@ -456,7 +459,7 @@ export default function SharedRoom() {
                 style={{ padding: 18, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
               >
                 <Check size={22} color="#fff" strokeWidth={3} />
-                <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'Outfit_700Bold'}}>{editingId ? 'Save Changes' : 'Add Entry'}</Text>
+                <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'FjallaOne_400Regular'}}>{editingId ? 'Save Changes' : 'Add Entry'}</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>

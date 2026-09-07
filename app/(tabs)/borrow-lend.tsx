@@ -4,7 +4,7 @@ import { useThemeStore } from '../../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useState } from 'react';
 import { BorrowRecord, LendRecord } from '../../types/database';
-import { Plus, HandCoins, Handshake, Clock, AlertTriangle, MessageCircle, Bell, BellOff } from 'lucide-react-native';
+import { Plus, HandCoins, Handshake, Clock, AlertTriangle, MessageCircle } from 'lucide-react-native';
 import { Link, useFocusEffect, router } from 'expo-router';
 import { Colors, Gradients } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -83,7 +83,7 @@ export default function BorrowLend() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* HEADER */}
       <LinearGradient
-        colors={['#A855F7', '#7C3AED']}
+        colors={theme.primaryGradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
@@ -97,8 +97,8 @@ export default function BorrowLend() {
       >
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <View>
-            <Text style={{ fontSize: 32, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>Debt Tracker</Text>
-            <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'Inter_500Medium'}}>Long press a record to delete</Text>
+            <Text style={{ fontSize: 32, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'FjallaOne_400Regular'}}>Debt Tracker</Text>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>Long press a record to delete</Text>
           </View>
         </View>
       </LinearGradient>
@@ -110,8 +110,8 @@ export default function BorrowLend() {
           { label: 'I Owe Homies', value: totalBorrowed, color: theme.danger },
         ].map(({ label, value, color }) => (
           <View key={label} style={{ flex: 1, backgroundColor: theme.card, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: theme.border }}>
-            <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', marginBottom: 6 , fontFamily: 'Outfit_700Bold'}}>{label}</Text>
-            <Text style={{ fontSize: 22, fontWeight: '900', color, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}} adjustsFontSizeToFit numberOfLines={1}>
+            <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, textTransform: 'uppercase', marginBottom: 6 , fontFamily: 'FjallaOne_400Regular'}}>{label}</Text>
+            <Text style={{ fontSize: 22, fontWeight: '900', color, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}} adjustsFontSizeToFit numberOfLines={1}>
               ₹{value.toLocaleString('en-IN')}
             </Text>
           </View>
@@ -126,7 +126,7 @@ export default function BorrowLend() {
           return (
             <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} activeOpacity={0.8}
               style={{ flex: 1, paddingVertical: 12, borderRadius: 14, alignItems: 'center', backgroundColor: isActive ? theme.card : 'transparent', elevation: isActive ? 2 : 0 }}>
-              <Text style={{ fontSize: 14, fontWeight: '800', color: isActive ? tabColor : theme.muted, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>
+              <Text style={{ fontSize: 14, fontWeight: '800', color: isActive ? tabColor : theme.muted, textTransform: 'uppercase' , fontFamily: 'FjallaOne_400Regular'}}>
                 {tab === 'borrowed' ? 'I Borrowed' : 'I Lent'}
               </Text>
             </TouchableOpacity>
@@ -143,8 +143,8 @@ export default function BorrowLend() {
             <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: activeAccent + '15', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
               {activeTab === 'borrowed' ? <HandCoins size={32} color={activeAccent} /> : <Handshake size={32} color={activeAccent} />}
             </View>
-            <Text style={{ fontSize: 17, fontWeight: '900', color: theme.ink, marginBottom: 6 , fontFamily: 'Outfit_700Bold'}}>No debts here! 🎉</Text>
-            <Text style={{ fontSize: 13, color: theme.muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ fontSize: 17, fontWeight: '900', color: theme.ink, marginBottom: 6 , fontFamily: 'FjallaOne_400Regular'}}>No debts here! 🎉</Text>
+            <Text style={{ fontSize: 13, color: theme.muted, textAlign: 'center', lineHeight: 20 , fontFamily: 'FjallaOne_400Regular'}}>
               Tap the + button to add a record.
             </Text>
           </View>
@@ -171,24 +171,24 @@ export default function BorrowLend() {
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 }}>
                       <View style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: urgColor + '15', alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 18, fontWeight: '900', color: urgColor , fontFamily: 'Outfit_700Bold'}}>{record.person.charAt(0).toUpperCase()}</Text>
+                        <Text style={{ fontSize: 18, fontWeight: '900', color: urgColor , fontFamily: 'FjallaOne_400Regular'}}>{record.person.charAt(0).toUpperCase()}</Text>
                       </View>
                       <View style={{ flex: 1 }}>
-                        <Text style={{ fontSize: 17, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>{record.person}</Text>
+                        <Text style={{ fontSize: 17, fontWeight: '800', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{record.person}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 3 }}>
                           {isOverdue ? <AlertTriangle size={13} color={urgColor} /> : <Clock size={13} color={theme.muted} />}
-                          <Text style={{ fontSize: 12, fontWeight: '700', color: isOverdue ? urgColor : theme.muted , fontFamily: 'Inter_700Bold'}}>
+                          <Text style={{ fontSize: 12, fontWeight: '700', color: isOverdue ? urgColor : theme.muted , fontFamily: 'FjallaOne_400Regular'}}>
                             {isOverdue ? `${Math.abs(daysLeft)}d late 💀` : daysLeft === 0 ? 'Due today 🚨' : `${daysLeft}d left ⏳`}
                           </Text>
                         </View>
                       </View>
                     </View>
                     <View style={{ alignItems: 'flex-end' }}>
-                      <Text style={{ fontSize: 20, fontWeight: '900', color: activeAccent, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+                      <Text style={{ fontSize: 20, fontWeight: '900', color: activeAccent, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>
                         ₹{record.amount.toLocaleString('en-IN')}
                       </Text>
                       <View style={{ paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, backgroundColor: isPending ? theme.warning + '20' : theme.success + '20', marginTop: 5 }}>
-                        <Text style={{ fontSize: 10, fontWeight: '800', textTransform: 'uppercase', color: isPending ? theme.warning : theme.success , fontFamily: 'Outfit_700Bold'}}>
+                        <Text style={{ fontSize: 10, fontWeight: '800', textTransform: 'uppercase', color: isPending ? theme.warning : theme.success , fontFamily: 'FjallaOne_400Regular'}}>
                           {record.status}
                         </Text>
                       </View>
@@ -197,7 +197,7 @@ export default function BorrowLend() {
 
                   {/* Notes */}
                   {(record as any).notes ? (
-                    <Text style={{ fontSize: 13, color: theme.muted, marginBottom: 12, backgroundColor: theme.surface, padding: 10, borderRadius: 10, fontWeight: '500' , fontFamily: 'Inter_500Medium'}}>
+                    <Text style={{ fontSize: 13, color: theme.muted, marginBottom: 12, backgroundColor: theme.surface, padding: 10, borderRadius: 10, fontWeight: '500' , fontFamily: 'FjallaOne_400Regular'}}>
                       "{(record as any).notes}"
                     </Text>
                   ) : null}
@@ -206,7 +206,7 @@ export default function BorrowLend() {
                   {hasPhone && (
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
                       <View style={{ backgroundColor: WA_GREEN + '20', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 }}>
-                        <Text style={{ fontSize: 11, fontWeight: '700', color: WA_GREEN , fontFamily: 'Inter_700Bold'}}>
+                        <Text style={{ fontSize: 11, fontWeight: '700', color: WA_GREEN , fontFamily: 'FjallaOne_400Regular'}}>
                           📱 +91 {(record as any).phone}
                         </Text>
                       </View>
@@ -217,7 +217,7 @@ export default function BorrowLend() {
                   <TouchableOpacity onPress={() => sendWhatsApp(record, activeTab)} activeOpacity={0.75}
                     style={{ backgroundColor: WA_GREEN + '15', paddingVertical: 11, borderRadius: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderWidth: 1, borderColor: WA_GREEN + '30' }}>
                     <MessageCircle size={17} color={WA_GREEN} />
-                    <Text style={{ color: WA_GREEN, fontWeight: '800', fontSize: 14 , fontFamily: 'Outfit_700Bold'}}>
+                    <Text style={{ color: WA_GREEN, fontWeight: '800', fontSize: 14 , fontFamily: 'FjallaOne_400Regular'}}>
                       {hasPhone ? 'Open Chat Directly' : 'Send via WhatsApp'}
                     </Text>
                   </TouchableOpacity>

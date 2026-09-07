@@ -37,7 +37,7 @@ export default function ReceiptOcr() {
         <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
           <ArrowLeft size={22} color={theme.ink} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'Outfit_700Bold'}}>Scan Receipt</Text>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Scan Receipt</Text>
       </View>
 
       <View style={{ flex: 1, padding: 20 }}>
@@ -50,8 +50,8 @@ export default function ReceiptOcr() {
             <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
               <Camera size={32} color={theme.muted} />
             </View>
-            <Text style={{ fontSize: 16, fontWeight: '700', color: theme.ink , fontFamily: 'Inter_700Bold'}}>Tap to Select Receipt</Text>
-            <Text style={{ color: theme.muted, marginTop: 8, textAlign: 'center', paddingHorizontal: 32, fontSize: 13, lineHeight: 20 , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Tap to Select Receipt</Text>
+            <Text style={{ color: theme.muted, marginTop: 8, textAlign: 'center', paddingHorizontal: 32, fontSize: 13, lineHeight: 20 , fontFamily: 'FjallaOne_400Regular'}}>
               Take a photo or select an image of your receipt to extract the total.
             </Text>
           </TouchableOpacity>
@@ -63,7 +63,7 @@ export default function ReceiptOcr() {
               activeOpacity={0.7}
               style={{ position: 'absolute', top: 12, right: 12, backgroundColor: 'rgba(0,0,0,0.55)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 }}
             >
-              <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' , fontFamily: 'Inter_700Bold'}}>Clear</Text>
+              <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' , fontFamily: 'FjallaOne_400Regular'}}>Clear</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -81,7 +81,7 @@ export default function ReceiptOcr() {
             style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8, padding: 16 }}
           >
             <ScanText size={20} color={image ? '#fff' : theme.muted} />
-            <Text style={{ fontWeight: '800', fontSize: 16, color: image ? '#fff' : theme.muted , fontFamily: 'Outfit_700Bold'}}>
+            <Text style={{ fontWeight: '800', fontSize: 16, color: image ? '#fff' : theme.muted , fontFamily: 'FjallaOne_400Regular'}}>
               {isProcessing ? 'Processing...' : 'Extract Data'}
             </Text>
           </LinearGradient>

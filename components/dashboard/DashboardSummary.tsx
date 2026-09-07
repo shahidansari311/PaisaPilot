@@ -1,12 +1,11 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { TrendingUp, TrendingDown } from 'lucide-react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Gradients } from '../../constants/Colors';
 
 interface Props {
   income: number;
   expense: number;
   safeSpend: number;
+  todayExpense?: number;
   isDark: boolean;
   colors: {
     card: string;
@@ -21,13 +20,17 @@ interface Props {
   };
 }
 
-export function DashboardSummary({ income, expense, safeSpend, isDark, colors }: Props) {
+export function DashboardSummary({ income, expense, safeSpend, todayExpense = 0, isDark, colors }: Props) {
+  const isOverLimit = todayExpense > safeSpend && safeSpend > 0;
+  const overAmount = todayExpense - safeSpend;
+  const leftToday = Math.max(0, safeSpend - todayExpense);
+
   return (
     <View style={{ marginHorizontal: 20, marginBottom: 20 }}>
       
       {/* Section Header */}
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 16, fontWeight: '900', color: colors.ink, fontFamily: 'Outfit_700Bold' }}>Your Money</Text>
+        <Text style={{ fontSize: 16, fontWeight: '900', color: colors.ink, fontFamily: 'FjallaOne_400Regular' }}>Your Money</Text>
       </View>
 
       {/* Income & Expense Cards */}
@@ -62,16 +65,30 @@ export function DashboardSummary({ income, expense, safeSpend, isDark, colors }:
       </View>
 
       {/* Safe to Spend Banner (Insight style) */}
-      {safeSpend > 0 && (
+      {safeSpend > 0 && !isOverLimit && (
         <View style={[styles.insightBanner, { backgroundColor: isDark ? '#19191E' : colors.primaryGradient[0] + '15' }]}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Text style={{ fontSize: 14 }}>✨</Text>
-            <Text style={{ color: isDark ? '#FFFFFF' : colors.ink, fontSize: 12, fontWeight: '700', fontFamily: 'Inter_700Bold' }}>
+            <Text style={{ color: isDark ? '#FFFFFF' : colors.ink, fontSize: 12, fontWeight: '700', fontFamily: 'FjallaOne_400Regular' }}>
               Safe to spend today
             </Text>
           </View>
-          <Text style={{ color: '#A855F7', fontSize: 14, fontWeight: '900', fontFamily: 'Outfit_700Bold' }}>
-            ₹{safeSpend.toLocaleString('en-IN')} / day
+          <Text style={{ color: '#A855F7', fontSize: 14, fontWeight: '900', fontFamily: 'FjallaOne_400Regular' }}>
+            ₹{leftToday.toLocaleString('en-IN')}
+          </Text>
+        </View>
+      )}
+
+      {isOverLimit && (
+        <View style={[styles.insightBanner, { backgroundColor: isDark ? 'rgba(244, 63, 94, 0.15)' : 'rgba(244, 63, 94, 0.1)' }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Text style={{ fontSize: 14 }}>⚠️</Text>
+            <Text style={{ color: colors.danger, fontSize: 12, fontWeight: '700', fontFamily: 'FjallaOne_400Regular' }}>
+              Over today's limit
+            </Text>
+          </View>
+          <Text style={{ color: colors.danger, fontSize: 14, fontWeight: '900', fontFamily: 'FjallaOne_400Regular' }}>
+            -₹{overAmount.toLocaleString('en-IN')}
           </Text>
         </View>
       )}
@@ -101,13 +118,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 11, 
     fontWeight: '600', 
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'FjallaOne_400Regular',
   },
   amount: {
     fontSize: 16, 
     fontWeight: '900', 
     fontVariant: ['tabular-nums'], 
-    fontFamily: 'Outfit_700Bold',
+    fontFamily: 'FjallaOne_400Regular',
+    paddingLeft: 6,
   },
   insightBanner: {
     flexDirection: 'row',

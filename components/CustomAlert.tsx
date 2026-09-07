@@ -5,7 +5,8 @@ import { useEffect, useRef } from 'react';
 
 export default function CustomAlert() {
   const { visible, title, message, buttons, hideAlert } = useAlertStore();
-  const { isDark, accentColor } = useThemeStore();
+  const { isDark } = useThemeStore();
+  const accentColor = '#8B5CF6';
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;

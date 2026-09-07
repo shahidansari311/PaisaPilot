@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { Moon, Sun, Bell, ChevronDown, User, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { Moon, Sun, User, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Gradients } from '../../constants/Colors';
@@ -21,6 +21,7 @@ interface Props {
     ink: string;
     card: string;
     border: string;
+    primaryGradient: readonly [string, string];
   };
   totalBalance: number;
   currentDate: Date;
@@ -34,7 +35,7 @@ export function DashboardHeader({ userName, isDark, toggleTheme, colors, totalBa
 
   return (
     <LinearGradient
-      colors={['#A855F7', '#7C3AED']} // Vibrant purple gradient similar to image
+      colors={colors.primaryGradient}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={{
@@ -62,7 +63,7 @@ export function DashboardHeader({ userName, isDark, toggleTheme, colors, totalBa
             <ChevronLeft size={16} color="#FFFFFF" />
           </TouchableOpacity>
           
-          <Text style={{ marginHorizontal: 8, fontSize: 12, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Outfit_700Bold', minWidth: 60, textAlign: 'center' }}>
+          <Text style={{ marginHorizontal: 8, fontSize: 12, fontWeight: '800', color: '#FFFFFF', fontFamily: 'FjallaOne_400Regular', minWidth: 60, textAlign: 'center' }}>
             {currentDate.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' })}
           </Text>
           
@@ -80,15 +81,15 @@ export function DashboardHeader({ userName, isDark, toggleTheme, colors, totalBa
 
       {/* Balance Area */}
       <View style={{ alignItems: 'center', marginBottom: 16 }}>
-        <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: '600', marginBottom: 8, fontFamily: 'Inter_500Medium' }}>
+        <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: '600', marginBottom: 8, fontFamily: 'FjallaOne_400Regular' }}>
           Current Balance
         </Text>
-        <Text style={{ color: '#FFFFFF', fontSize: 44, fontWeight: '900', letterSpacing: -1, fontFamily: 'Outfit_700Bold', fontVariant: ['tabular-nums'] }}>
+        <Text style={{ color: '#FFFFFF', fontSize: 44, fontWeight: '900', letterSpacing: -1, fontFamily: 'FjallaOne_400Regular', fontVariant: ['tabular-nums'] }}>
           ₹{totalBalance.toLocaleString('en-IN')}
         </Text>
         <View style={{ backgroundColor: 'rgba(255,255,255,0.15)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, marginTop: 8 }}>
-          <Text style={{ color: '#FFFFFF', fontSize: 12, fontWeight: '700', fontFamily: 'Inter_700Bold' }}>
-            {getGreeting()}, {userName || 'Pilot'} 👋
+          <Text style={{ color: '#FFFFFF', fontSize: 12, fontWeight: '700', fontFamily: 'FjallaOne_400Regular' }}>
+            {getGreeting()}, {userName || 'Pilot'}
           </Text>
         </View>
       </View>

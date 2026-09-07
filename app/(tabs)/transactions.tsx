@@ -5,7 +5,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { useCallback, useState } from 'react';
 import { Transaction } from '../../types/database';
 import { Link, router, useFocusEffect } from 'expo-router';
-import { Plus, ReceiptText, Coffee, Car, ShoppingBag, Book, Heart, FileText, Smile, MoreHorizontal, Briefcase, Laptop, Gift, CircleDashed, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { Plus, ReceiptText, Coffee, Car, ShoppingBag, Book, Heart, FileText, Smile, MoreHorizontal, Briefcase, Laptop, Gift, CircleDashed, ChevronLeft, ChevronRight, Smartphone, CreditCard } from 'lucide-react-native';
 import { Colors, Gradients } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ReportView } from '../../components/report/ReportView';
@@ -13,7 +13,7 @@ import { ReportView } from '../../components/report/ReportView';
 const IconMap: Record<string, any> = {
   coffee: Coffee, car: Car, bag: ShoppingBag, book: Book, heart: Heart, 
   file: FileText, smile: Smile, more: MoreHorizontal, briefcase: Briefcase, 
-  laptop: Laptop, gift: Gift
+  laptop: Laptop, gift: Gift, smartphone: Smartphone, 'credit-card': CreditCard
 };
 
 type TxWithCategory = Transaction & { categoryName?: string; categoryIcon?: string; categoryColor?: string; };
@@ -118,27 +118,27 @@ export default function Transactions() {
           backgroundColor: catColor + '20', alignItems: 'center', justifyContent: 'center',
           borderWidth: 1, borderColor: catColor + '40'
         }}>
-          {IconComp ? <IconComp size={22} color={catColor} strokeWidth={2.5} /> : <Text style={{ fontSize: 20, fontWeight: '900', color: catColor , fontFamily: 'Outfit_700Bold'}}>{initial}</Text>}
+          {IconComp ? <IconComp size={22} color={catColor} strokeWidth={2.5} /> : <Text style={{ fontSize: 20, fontWeight: '900', color: catColor , fontFamily: 'FjallaOne_400Regular'}}>{initial}</Text>}
         </View>
         
         <View style={{ flex: 1, marginRight: 10 }}>
-          <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink, marginBottom: 4 , fontFamily: 'Outfit_700Bold'}} numberOfLines={1}>
+          <Text style={{ fontSize: 16, fontWeight: '800', color: theme.ink, marginBottom: 4 , fontFamily: 'FjallaOne_400Regular'}} numberOfLines={1}>
             {item.note || 'Transaction'}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             {item.categoryName && (
               <View style={{ backgroundColor: theme.surface, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 }}>
-                <Text style={{ fontSize: 10, fontWeight: '700', color: theme.muted, textTransform: 'uppercase' , fontFamily: 'Inter_700Bold'}}>{item.categoryName}</Text>
+                <Text style={{ fontSize: 10, fontWeight: '700', color: theme.muted, textTransform: 'uppercase' , fontFamily: 'FjallaOne_400Regular'}}>{item.categoryName}</Text>
               </View>
             )}
-            <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted , fontFamily: 'Inter_500Medium'}}>
+            <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>
               {new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
             </Text>
           </View>
         </View>
         
         <View style={{ alignItems: 'flex-end' }}>
-          <Text style={{ fontSize: 17, fontWeight: '900', color: amountColor, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}>
+          <Text style={{ fontSize: 17, fontWeight: '900', color: amountColor, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>
             {isExp ? '−' : '+'}₹{item.amount.toLocaleString('en-IN')}
           </Text>
         </View>
@@ -150,7 +150,7 @@ export default function Transactions() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Header */}
       <LinearGradient
-        colors={['#A855F7', '#7C3AED']}
+        colors={theme.primaryGradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
@@ -164,14 +164,17 @@ export default function Transactions() {
         }}
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ fontSize: 32, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'Outfit_700Bold'}}>History</Text>
+          <View>
+            <Text style={{ fontSize: 32, fontWeight: '900', color: '#FFFFFF', letterSpacing: -1 , fontFamily: 'FjallaOne_400Regular'}}>History</Text>
+            <Text style={{ fontSize: 14, fontWeight: '600', color: 'rgba(255,255,255,0.8)', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>View past transactions</Text>
+          </View>
           
           <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: 4 }}>
             <TouchableOpacity onPress={prevMonth} style={{ padding: 6, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 16 }}>
               <ChevronLeft size={20} color="#FFFFFF" />
             </TouchableOpacity>
             
-            <Text style={{ marginHorizontal: 12, fontSize: 14, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Outfit_700Bold', minWidth: 80, textAlign: 'center' }}>
+            <Text style={{ marginHorizontal: 12, fontSize: 14, fontWeight: '800', color: '#FFFFFF', fontFamily: 'FjallaOne_400Regular', minWidth: 80, textAlign: 'center' }}>
               {currentDate.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}
             </Text>
             
@@ -186,13 +189,13 @@ export default function Transactions() {
             onPress={() => setViewMode('list')}
             activeOpacity={0.8}
             style={{ flex: 1, paddingVertical: 10, alignItems: 'center', backgroundColor: viewMode === 'list' ? 'rgba(255,255,255,0.25)' : 'transparent', borderRadius: 20 }}>
-            <Text style={{ fontSize: 13, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Outfit_700Bold' }}>List</Text>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: '#FFFFFF', fontFamily: 'FjallaOne_400Regular' }}>List</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setViewMode('report')}
             activeOpacity={0.8}
             style={{ flex: 1, paddingVertical: 10, alignItems: 'center', backgroundColor: viewMode === 'report' ? 'rgba(255,255,255,0.25)' : 'transparent', borderRadius: 20 }}>
-            <Text style={{ fontSize: 13, fontWeight: '800', color: '#FFFFFF', fontFamily: 'Outfit_700Bold' }}>Report</Text>
+            <Text style={{ fontSize: 13, fontWeight: '800', color: '#FFFFFF', fontFamily: 'FjallaOne_400Regular' }}>Report</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -216,8 +219,8 @@ export default function Transactions() {
                 }}>
                   <ReceiptText size={40} color={theme.muted} strokeWidth={1.5} />
                 </View>
-                <Text style={{ fontSize: 20, fontWeight: '800', color: theme.ink, marginBottom: 8 , fontFamily: 'Outfit_700Bold'}}>Ghost town 👻</Text>
-                <Text style={{ fontSize: 15, color: theme.muted, textAlign: 'center', lineHeight: 22, fontWeight: '500' , fontFamily: 'Inter_500Medium'}}>
+                <Text style={{ fontSize: 20, fontWeight: '800', color: theme.ink, marginBottom: 8 , fontFamily: 'FjallaOne_400Regular'}}>Ghost town 👻</Text>
+                <Text style={{ fontSize: 15, color: theme.muted, textAlign: 'center', lineHeight: 22, fontWeight: '500' , fontFamily: 'FjallaOne_400Regular'}}>
                   Every rupee you spend or earn will show up here. Add one now!
                 </Text>
               </View>

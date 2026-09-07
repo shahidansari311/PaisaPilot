@@ -140,6 +140,12 @@ export async function initializeDatabase(db: SQLiteDatabase) {
     try { await db.execAsync('ALTER TABLE borrow_records ADD COLUMN phone TEXT'); } catch {}
     try { await db.execAsync('ALTER TABLE lend_records ADD COLUMN phone TEXT'); } catch {}
 
+    // Category migrations — add new categories to existing installs
+    await db.runAsync(`INSERT OR IGNORE INTO categories (id, name, icon, color, type, createdAt) VALUES ('cat-recharge', 'Recharge', 'smartphone', '#3B82F6', 'expense', datetime('now'))`);
+    await db.runAsync(`INSERT OR IGNORE INTO categories (id, name, icon, color, type, createdAt) VALUES ('cat-emi', 'EMI', 'credit-card', '#F43F5E', 'expense', datetime('now'))`);
+    await db.runAsync(`INSERT OR IGNORE INTO categories (id, name, icon, color, type, createdAt) VALUES ('cat-bills', 'Bills', 'file', '#64748B', 'expense', datetime('now'))`);
+    await db.runAsync(`INSERT OR IGNORE INTO categories (id, name, icon, color, type, createdAt) VALUES ('cat-fun', 'Fun & Outings', 'smile', '#EC4899', 'expense', datetime('now'))`);
+
     // Profile/settings key-value store
     await db.execAsync(`
       CREATE TABLE IF NOT EXISTS app_settings (
@@ -147,6 +153,8 @@ export async function initializeDatabase(db: SQLiteDatabase) {
         value TEXT NOT NULL
       );
     `);
+    // Default settings migration (must run after app_settings table is created)
+    await db.runAsync(`INSERT OR IGNORE INTO app_settings (key, value) VALUES ('include_debt_in_stats', 'false')`);
     // Auto-create hidden default wallet (used by all transactions)
     await db.runAsync(
       `INSERT OR IGNORE INTO accounts (id, name, type, balance, createdAt) VALUES (?, ?, ?, ?, ?)`,
@@ -164,6 +172,8 @@ export async function initializeDatabase(db: SQLiteDatabase) {
           ('cat-education',  'Education',     'book',         '#3B82F6', 'expense', datetime('now')),
           ('cat-health',     'Health',        'heart',        '#10B981', 'expense', datetime('now')),
           ('cat-bills',      'Bills',         'file',         '#64748B', 'expense', datetime('now')),
+          ('cat-recharge',   'Recharge',      'smartphone',   '#3B82F6', 'expense', datetime('now')),
+          ('cat-emi',        'EMI',           'credit-card',  '#F43F5E', 'expense', datetime('now')),
           ('cat-fun',        'Fun & Outings', 'smile',        '#EC4899', 'expense', datetime('now')),
           ('cat-other-exp',  'Other',         'more',         '#94A3B8', 'expense', datetime('now')),
           ('cat-salary',     'Salary',        'briefcase',    '#10B981', 'income',  datetime('now')),

@@ -70,12 +70,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 17, 
     fontWeight: '800', 
-    fontFamily: 'Outfit_700Bold',
+    fontFamily: 'FjallaOne_400Regular',
   },
   subtitle: {
     fontSize: 13, 
     marginTop: 2, 
     fontWeight: '600', 
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'FjallaOne_400Regular',
   },
 });

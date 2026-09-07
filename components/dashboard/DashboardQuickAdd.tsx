@@ -64,6 +64,6 @@ const styles = StyleSheet.create({
     color: '#fff', 
     fontWeight: '800', 
     fontSize: 16, 
-    fontFamily: 'Outfit_700Bold',
+    fontFamily: 'FjallaOne_400Regular',
   }
 });

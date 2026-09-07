@@ -32,11 +32,11 @@ export function DashboardBorrowLend({ totalBorrowed, totalLent, colors }: Props)
         <Repeat size={20} color="#fff" strokeWidth={2.5} />
       </LinearGradient>
       <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 15, fontWeight: '800', color: colors.ink, marginBottom: 6, fontFamily: 'Outfit_700Bold' }}>Homies Owe / You Owe</Text>
+        <Text style={{ fontSize: 15, fontWeight: '800', color: colors.ink, marginBottom: 6, fontFamily: 'FjallaOne_400Regular' }}>Homies Owe / You Owe</Text>
         <View style={{ flexDirection: 'row', gap: 14 }}>
-          {totalBorrowed > 0 && <Text style={{ fontSize: 13, fontWeight: '700', color: colors.danger, fontVariant: ['tabular-nums'], fontFamily: 'Inter_600SemiBold' }}>You owe ₹{totalBorrowed.toLocaleString('en-IN')}</Text>}
-          {totalLent > 0 && <Text style={{ fontSize: 13, fontWeight: '700', color: colors.success, fontVariant: ['tabular-nums'], fontFamily: 'Inter_600SemiBold' }}>Get ₹{totalLent.toLocaleString('en-IN')}</Text>}
-          {totalBorrowed === 0 && totalLent === 0 && <Text style={{ fontSize: 13, fontWeight: '700', color: colors.muted, fontFamily: 'Inter_700Bold' }}>All settled 🎉</Text>}
+          {totalBorrowed > 0 && <Text style={{ fontSize: 13, fontWeight: '700', color: colors.danger, fontVariant: ['tabular-nums'], fontFamily: 'FjallaOne_400Regular' }}>You owe ₹{totalBorrowed.toLocaleString('en-IN')}</Text>}
+          {totalLent > 0 && <Text style={{ fontSize: 13, fontWeight: '700', color: colors.success, fontVariant: ['tabular-nums'], fontFamily: 'FjallaOne_400Regular' }}>Get ₹{totalLent.toLocaleString('en-IN')}</Text>}
+          {totalBorrowed === 0 && totalLent === 0 && <Text style={{ fontSize: 13, fontWeight: '700', color: colors.muted, fontFamily: 'FjallaOne_400Regular' }}>All settled 🎉</Text>}
         </View>
       </View>
       <ChevronRight size={20} color={colors.muted} />

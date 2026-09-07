@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 46,
     color: '#ffffff',
-    fontFamily: 'Outfit_700Bold',
+    fontFamily: 'FjallaOne_400Regular',
     letterSpacing: -1,
   }
 });

@@ -1,4 +1,6 @@
+// @ts-ignore
 import { initializeApp } from 'firebase/app';
+// @ts-ignore
 import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {

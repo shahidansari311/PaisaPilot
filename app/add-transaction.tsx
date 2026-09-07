@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Modal } from 'react-native';
 import { CustomAlert as Alert } from '../utils/alert';
 import { useThemeStore } from '../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -6,12 +6,13 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Check, Calendar } from 'lucide-react-native';
+import { ArrowLeft, Check, Calendar, Plus, X } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Category, Transaction } from '../types/database';
 import { Colors, Gradients } from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { guessCategoryId } from '../utils/autoCategorize';
+import { getLocalDateString } from '../utils/dateUtils';
 
 const transactionSchema = z.object({
   amount: z.coerce.number().min(1, 'Amount must be greater than 0'),
@@ -22,12 +23,7 @@ const transactionSchema = z.object({
 });
 type TransactionForm = z.infer<typeof transactionSchema>;
 
-const getLocalDateString = (d: Date = new Date()) => {
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+
 
 const todayStr = () => getLocalDateString();
 
@@ -38,6 +34,9 @@ export default function AddTransaction() {
   const params = useLocalSearchParams<{ id?: string; prefillDate?: string; prefillType?: string }>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isEditing, setIsEditing] = useState(false);
+  
+  const [showCatModal, setShowCatModal] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
 
   const defaultType = (params.prefillType === 'income' ? 'income' : 'expense') as 'income' | 'expense';
 
@@ -73,6 +72,24 @@ export default function AddTransaction() {
   const validateDate = (dateStr: string): Date | null => {
     const d = new Date(dateStr + 'T00:00:00');
     return isNaN(d.getTime()) ? null : d;
+  };
+
+  const saveCustomCategory = async () => {
+    const name = newCatName.trim();
+    if (!name) return;
+    try {
+      const id = 'cat-custom-' + Date.now();
+      await db.runAsync(
+        `INSERT INTO categories (id, name, icon, color, type, createdAt) VALUES (?, ?, ?, ?, ?, ?)`,
+        [id, name, 'star', selectedType === 'expense' ? '#64748B' : '#10B981', selectedType, new Date().toISOString()]
+      );
+      setNewCatName('');
+      setShowCatModal(false);
+      await loadOptions();
+      setValue('categoryId', id);
+    } catch (e) {
+      Alert.alert('Error', 'Failed to save custom category');
+    }
   };
 
   const onSubmit = async (data: TransactionForm) => {
@@ -120,7 +137,8 @@ export default function AddTransaction() {
   return (
     <KeyboardAvoidingView 
       style={{ flex: 1, backgroundColor: theme.background }} 
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 20}
     >
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 56, paddingBottom: 16, backgroundColor: theme.card, borderBottomWidth: 1, borderBottomColor: theme.border, zIndex: 10 }}>
@@ -129,14 +147,14 @@ export default function AddTransaction() {
           <ArrowLeft size={22} color={theme.ink} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 22, fontWeight: '900', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'Outfit_700Bold'}}>
-            {isEditing ? 'Edit Record 📝' : (isExpense ? 'Add Expense 💸' : 'Add Income 💰')}
+          <Text style={{ fontSize: 22, fontWeight: '700', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'FjallaOne_400Regular'}}>
+            {isEditing ? 'Edit Record' : (isExpense ? 'Add Expense' : 'Add Income')}
           </Text>
-          <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'Inter_500Medium'}}>{dateDisplay}</Text>
+          <Text style={{ fontSize: 12, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'FjallaOne_400Regular'}}>{dateDisplay}</Text>
         </View>
       </View>
 
-      <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 20 }}>
+      <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} automaticallyAdjustKeyboardInsets={true} contentContainerStyle={{ paddingVertical: 20, paddingBottom: 100 }}>
 
         {/* Type Toggle */}
         <View style={{ marginHorizontal: 20, backgroundColor: theme.surface, borderRadius: 18, padding: 5, flexDirection: 'row', borderWidth: 1, borderColor: theme.border, marginBottom: 20 }}>
@@ -146,8 +164,8 @@ export default function AddTransaction() {
             return (
               <TouchableOpacity key={type} onPress={() => { setValue('type', type); setValue('categoryId', undefined); }} activeOpacity={0.8}
                 style={{ flex: 1, paddingVertical: 13, borderRadius: 14, alignItems: 'center', backgroundColor: isActive ? theme.card : 'transparent' }}>
-                <Text style={{ fontSize: 14, fontWeight: '800', color: isActive ? c : theme.muted, textTransform: 'uppercase', letterSpacing: 0.8 , fontFamily: 'Outfit_700Bold'}}>
-                  {type === 'expense' ? 'Outflow 💸' : 'Inflow 💰'}
+                <Text style={{ fontSize: 14, fontWeight: '600', color: isActive ? c : theme.muted, textTransform: 'uppercase', letterSpacing: 0.8 , fontFamily: 'FjallaOne_400Regular'}}>
+                  {type === 'expense' ? 'Expense' : 'Income'}
                 </Text>
               </TouchableOpacity>
             );
@@ -156,24 +174,24 @@ export default function AddTransaction() {
 
         {/* Amount */}
         <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 16, borderWidth: 1, borderColor: theme.border, marginBottom: 16 }}>
-          <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 , fontFamily: 'Outfit_700Bold'}}>How much?</Text>
+          <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 , fontFamily: 'FjallaOne_400Regular'}}>How much?</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ fontSize: 32, fontWeight: '900', color: primaryColor, marginRight: 6 , fontFamily: 'Outfit_700Bold'}}>₹</Text>
+            <Text style={{ fontSize: 32, fontWeight: '900', color: primaryColor, marginRight: 6 , fontFamily: 'FjallaOne_400Regular'}}>₹</Text>
             <Controller control={control} name="amount" render={({ field: { onChange, value } }) => (
-              <TextInput style={{ flex: 1, fontSize: 40, fontWeight: '900', color: primaryColor, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}
+              <TextInput style={{ flex: 1, fontSize: 40, fontWeight: '900', color: primaryColor, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}
                 keyboardType="numeric" placeholder="0" placeholderTextColor={theme.muted + '50'}
                 value={value ? value.toString() : ''} onChangeText={onChange} />
             )} />
           </View>
-          {errors.amount && <Text style={{ color: theme.danger, fontSize: 12, fontWeight: '600', marginTop: 6 , fontFamily: 'Inter_500Medium'}}>{errors.amount.message}</Text>}
+          {errors.amount && <Text style={{ color: theme.danger, fontSize: 12, fontWeight: '600', marginTop: 6 , fontFamily: 'FjallaOne_400Regular'}}>{errors.amount.message}</Text>}
         </View>
 
         {/* Note */}
         <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 16, borderWidth: 1, borderColor: theme.border, marginBottom: 16 }}>
-          <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 , fontFamily: 'Outfit_700Bold'}}>What was it for?</Text>
+          <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 10 , fontFamily: 'FjallaOne_400Regular'}}>What was it for?</Text>
           <Controller control={control} name="note" render={({ field: { onChange, value } }) => (
-            <TextInput style={{ fontSize: 17, fontWeight: '600', color: theme.ink, padding: 0 , fontFamily: 'Inter_500Medium'}}
-              placeholder={isExpense ? 'e.g. Late night pizza 🍕' : 'e.g. Pocket money 💵'}
+            <TextInput style={{ fontSize: 17, fontWeight: '600', color: theme.ink, padding: 0 , fontFamily: 'FjallaOne_400Regular'}}
+              placeholder={isExpense ? 'e.g. Late night pizza' : 'e.g. Pocket money'}
               placeholderTextColor={theme.muted} value={value} onChangeText={onChange} />
           )} />
         </View>
@@ -182,15 +200,15 @@ export default function AddTransaction() {
         <View style={{ marginHorizontal: 20, backgroundColor: theme.card, borderRadius: 22, padding: 16, borderWidth: 1, borderColor: theme.border, marginBottom: 16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <Calendar size={16} color={theme.primary} />
-            <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase' , fontFamily: 'Outfit_700Bold'}}>Date</Text>
+            <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase' , fontFamily: 'FjallaOne_400Regular'}}>Date</Text>
             {!isDateToday && (
               <View style={{ paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20, backgroundColor: theme.primary + '20' }}>
-                <Text style={{ fontSize: 10, fontWeight: '800', color: theme.primary , fontFamily: 'Outfit_700Bold'}}>Past Entry</Text>
+                <Text style={{ fontSize: 10, fontWeight: '800', color: theme.primary , fontFamily: 'FjallaOne_400Regular'}}>Past Entry</Text>
               </View>
             )}
           </View>
           <Controller control={control} name="date" render={({ field: { onChange, value } }) => (
-            <TextInput style={{ fontSize: 18, fontWeight: '800', color: theme.ink, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'Outfit_700Bold'}}
+            <TextInput style={{ fontSize: 18, fontWeight: '800', color: theme.ink, padding: 0, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}
               placeholder="YYYY-MM-DD" placeholderTextColor={theme.muted} value={value} onChangeText={onChange} keyboardType="numeric" />
           )} />
           {/* Quick shortcuts */}
@@ -203,7 +221,7 @@ export default function AddTransaction() {
             ].map(({ label, val }) => (
               <TouchableOpacity key={label} onPress={() => setValue('date', val)} activeOpacity={0.75}
                 style={{ paddingHorizontal: 12, paddingVertical: 7, borderRadius: 18, borderWidth: 1.5, backgroundColor: selectedDate === val ? theme.primary : 'transparent', borderColor: selectedDate === val ? theme.primary : theme.border }}>
-                <Text style={{ fontSize: 12, fontWeight: '700', color: selectedDate === val ? '#fff' : theme.muted , fontFamily: 'Inter_700Bold'}}>{label}</Text>
+                <Text style={{ fontSize: 12, fontWeight: '700', color: selectedDate === val ? '#fff' : theme.muted , fontFamily: 'FjallaOne_400Regular'}}>{label}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -211,20 +229,53 @@ export default function AddTransaction() {
 
         {/* Category */}
         <View style={{ marginHorizontal: 20, marginBottom: 32 }}>
-          <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 , fontFamily: 'Outfit_700Bold'}}>Category (optional)</Text>
+          <Text style={{ fontSize: 11, fontWeight: '800', color: theme.muted, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 , fontFamily: 'FjallaOne_400Regular'}}>Category (optional)</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
             {typeCategories.map(cat => {
               const sel = selectedCategoryId === cat.id;
               return (
                 <TouchableOpacity key={cat.id} onPress={() => setValue('categoryId', sel ? undefined : cat.id)} activeOpacity={0.7}
                   style={{ paddingHorizontal: 16, paddingVertical: 10, borderRadius: 22, borderWidth: 2, backgroundColor: sel ? primaryColor : 'transparent', borderColor: sel ? primaryColor : theme.border }}>
-                  <Text style={{ fontSize: 14, fontWeight: '700', color: sel ? '#fff' : theme.ink , fontFamily: 'Inter_700Bold'}}>{cat.name}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: '700', color: sel ? '#fff' : theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{cat.name}</Text>
                 </TouchableOpacity>
               );
             })}
+            <TouchableOpacity onPress={() => setShowCatModal(true)} activeOpacity={0.7}
+              style={{ paddingHorizontal: 16, paddingVertical: 10, borderRadius: 22, borderWidth: 2, backgroundColor: 'transparent', borderColor: theme.border, borderStyle: 'dashed', flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Plus size={14} color={theme.muted} />
+              <Text style={{ fontSize: 14, fontWeight: '700', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>Add New</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
+
+      {/* Custom Category Modal */}
+      <Modal visible={showCatModal} animationType="fade" transparent>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 24 }}>
+            <View style={{ backgroundColor: theme.card, borderRadius: 24, padding: 24 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <Text style={{ fontSize: 18, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>New Category</Text>
+                <TouchableOpacity onPress={() => setShowCatModal(false)}><X size={24} color={theme.muted} /></TouchableOpacity>
+              </View>
+              <TextInput
+                style={{ backgroundColor: theme.surface, borderWidth: 1, borderColor: theme.border, borderRadius: 14, padding: 14, color: theme.ink, fontSize: 16, marginBottom: 20, fontWeight: '600' }}
+                placeholder="Category Name"
+                placeholderTextColor={theme.muted}
+                value={newCatName}
+                onChangeText={setNewCatName}
+                autoFocus
+              />
+              <TouchableOpacity onPress={saveCustomCategory} activeOpacity={0.85}
+                style={{ borderRadius: 18, overflow: 'hidden' }}>
+                <LinearGradient colors={primaryGradient} start={Gradients.diagonal.start} end={Gradients.diagonal.end} style={{ padding: 16, alignItems: 'center' }}>
+                  <Text style={{ color: '#fff', fontSize: 16, fontWeight: '900' , fontFamily: 'FjallaOne_400Regular'}}>Save Category</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
 
       {/* Submit */}
       <View style={{ paddingHorizontal: 20, paddingVertical: 16, paddingBottom: 36, borderTopWidth: 1, borderTopColor: theme.border, backgroundColor: theme.card }}>
@@ -237,7 +288,7 @@ export default function AddTransaction() {
             style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 16, borderRadius: 20 }}
           >
             <Check size={22} color="#fff" strokeWidth={3} />
-            <Text style={{ color: '#fff', fontWeight: '900', fontSize: 17 , fontFamily: 'Outfit_700Bold'}}>{isEditing ? 'Save Changes 💾' : 'Lock it in 🔒'}</Text>
+            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 16 , fontFamily: 'FjallaOne_400Regular'}}>{isEditing ? 'Save Changes' : 'Save Transaction'}</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
