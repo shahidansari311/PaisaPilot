@@ -97,26 +97,17 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
 
   return (
     <View style={{
+      paddingBottom: Platform.OS === 'ios' ? 32 : 16,
+      paddingTop: 8,
+      backgroundColor: isDark ? '#262629' : '#FFFFFF',
       flexDirection: 'row',
-      backgroundColor: isDark ? '#18181B' : '#FFFFFF',
-      borderRadius: 24,
-      marginHorizontal: 16,
-      marginBottom: insets.bottom > 0 ? insets.bottom : 20,
-      paddingHorizontal: 8,
-      paddingVertical: 8,
       alignItems: 'center',
       justifyContent: 'space-around',
-      borderWidth: 1,
-      borderColor: theme.border,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 12 },
+      shadowColor: isDark ? '#000' : '#9CA3AF',
+      shadowOffset: { width: 0, height: -8 },
       shadowOpacity: isDark ? 0.4 : 0.15,
       shadowRadius: 20,
       elevation: 24,
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
     }}>
       {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
