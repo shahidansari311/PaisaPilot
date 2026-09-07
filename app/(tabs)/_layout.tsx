@@ -1,6 +1,5 @@
 import { Tabs } from 'expo-router';
 import { View, TouchableOpacity, Animated as RNAnimated, Platform } from 'react-native';
-import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, List, Repeat, Menu, Users } from 'lucide-react-native';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -97,24 +96,28 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
   const insets = useSafeAreaInsets();
 
   return (
-    <BlurView 
-      intensity={isDark ? 30 : 60}
-      tint={isDark ? 'dark' : 'light'}
-      style={{
-        marginHorizontal: 16,
-        marginBottom: insets.bottom > 0 ? insets.bottom : 20,
-        borderRadius: 24,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        borderWidth: 1,
-        borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-        overflow: 'hidden',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-      }}>
+    <View style={{
+      flexDirection: 'row',
+      backgroundColor: isDark ? '#18181B' : '#FFFFFF',
+      borderRadius: 24,
+      marginHorizontal: 16,
+      marginBottom: insets.bottom > 0 ? insets.bottom : 20,
+      paddingHorizontal: 8,
+      paddingVertical: 8,
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      borderWidth: 1,
+      borderColor: theme.border,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: isDark ? 0.4 : 0.15,
+      shadowRadius: 20,
+      elevation: 24,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+    }}>
       {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
         const label =
@@ -163,7 +166,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           />
         );
       })}
-    </BlurView>
+    </View>
   );
 }
 
