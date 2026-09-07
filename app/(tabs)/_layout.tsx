@@ -1,9 +1,10 @@
 import { Tabs } from 'expo-router';
 import { View, TouchableOpacity, Animated as RNAnimated, Platform } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, List, Repeat, Menu, Users } from 'lucide-react-native';
 import { useThemeStore } from '../../store/useThemeStore';
-import { Colors, Gradients } from '../../constants/Colors';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Colors } from '../../constants/Colors';
 import { useEffect, useRef } from 'react';
 
 function TabBarButton({ isFocused, onPress, onLongPress, routeName, theme, isDark }: any) {
@@ -32,7 +33,6 @@ function TabBarButton({ isFocused, onPress, onLongPress, routeName, theme, isDar
 
   const activeBgColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)';
 
-  // Icon color: solid bright/dark for active, muted for inactive
   const iconColor = isFocused 
     ? (isDark ? '#FFFFFF' : '#111827') 
     : (isDark ? '#6B7280' : '#9CA3AF');
@@ -53,7 +53,6 @@ function TabBarButton({ isFocused, onPress, onLongPress, routeName, theme, isDar
           justifyContent: 'center',
         }}
       >
-        {/* Animated Background Layer */}
         <RNAnimated.View 
           style={{
             position: 'absolute',
@@ -73,7 +72,6 @@ function TabBarButton({ isFocused, onPress, onLongPress, routeName, theme, isDar
           <IconComponent size={22} color={iconColor} strokeWidth={2.5} />
         </RNAnimated.View>
         
-        {/* Green Dash Indicator */}
         <RNAnimated.View 
           style={{
             position: 'absolute',
@@ -81,7 +79,7 @@ function TabBarButton({ isFocused, onPress, onLongPress, routeName, theme, isDar
             width: 14,
             height: 4,
             borderRadius: 2,
-            backgroundColor: '#8CC63F', // Green dash from the design
+            backgroundColor: '#8CC63F',
             opacity: anim,
             transform: [{
               scaleX: anim.interpolate({ inputRange: [0, 1], outputRange: [0.3, 1] })
@@ -96,21 +94,27 @@ function TabBarButton({ isFocused, onPress, onLongPress, routeName, theme, isDar
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const { isDark } = useThemeStore();
   const theme = isDark ? Colors.dark : Colors.light;
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={{
-      paddingBottom: Platform.OS === 'ios' ? 32 : 16,
-      paddingTop: 8,
-      backgroundColor: isDark ? '#262629' : '#FFFFFF',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-around',
-      shadowColor: isDark ? '#000' : '#9CA3AF',
-      shadowOffset: { width: 0, height: -8 },
-      shadowOpacity: isDark ? 0.4 : 0.15,
-      shadowRadius: 20,
-      elevation: 24,
-    }}>
+    <BlurView 
+      intensity={isDark ? 30 : 60}
+      tint={isDark ? 'dark' : 'light'}
+      style={{
+        marginHorizontal: 16,
+        marginBottom: insets.bottom > 0 ? insets.bottom : 20,
+        borderRadius: 24,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        borderWidth: 1,
+        borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+      }}>
       {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
         const label =
@@ -159,7 +163,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           />
         );
       })}
-    </View>
+    </BlurView>
   );
 }
 

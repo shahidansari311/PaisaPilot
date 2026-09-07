@@ -5,8 +5,8 @@ export const Colors = {
     border: '#E5E7EB',
     ink: '#111827',
     muted: '#6B7280',
-    primary: '#6366F1', // Electric Indigo
-    primaryGradient: ['#6366F1', '#4F46E5'] as const,
+    primary: '#9333EA', // Purple
+    primaryGradient: ['#9333EA', '#7E22CE'] as const,
     success: '#10B981', // Clean Emerald
     successGradient: ['#10B981', '#059669'] as const,
     danger: '#EF4444', // Clean Red
@@ -21,8 +21,8 @@ export const Colors = {
     border: '#27272A',
     ink: '#FAFAFA',
     muted: '#A1A1AA',
-    primary: '#6366F1', // Electric Indigo
-    primaryGradient: ['#818CF8', '#6366F1'] as const,
+    primary: '#A855F7', // Bright Purple
+    primaryGradient: ['#C084FC', '#9333EA'] as const,
     success: '#10B981', // Clean Emerald
     successGradient: ['#34D399', '#10B981'] as const,
     danger: '#EF4444', // Clean Red
