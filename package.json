@@ -35,7 +35,6 @@
     "expo-sqlite": "~57.0.2",
     "expo-status-bar": "~57.0.1",
     "expo-updates": "~57.0.21",
-    "firebase": "^12.18.0",
     "lucide-react-native": "^1.25.0",
     "papaparse": "^5.5.4",
     "react": "19.2.3",
