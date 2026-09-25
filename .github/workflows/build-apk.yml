@@ -29,11 +29,13 @@ jobs:
         run: npm ci || npm install
 
       - name: 🏗️ Generate Native Android Code (Expo Prebuild)
-        run: npx expo prebuild --platform android --clean
+        env:
+          EXPO_NO_TELEMETRY: 1
+        run: npx expo prebuild --platform android --clean --no-interactive
 
       - name: 🔨 Build APK
         working-directory: android
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --no-daemon -x lint -x lintVitalRelease -x lintVitalAnalyzeRelease
 
       - name: 🚀 Upload APK Artifact
         uses: actions/upload-artifact@v4
