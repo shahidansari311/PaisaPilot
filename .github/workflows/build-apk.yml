@@ -16,7 +16,7 @@ jobs:
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
 
       - name: ☕ Setup Java (JDK 17)
@@ -31,7 +31,8 @@ jobs:
       - name: 🏗️ Generate Native Android Code (Expo Prebuild)
         env:
           EXPO_NO_TELEMETRY: 1
-        run: npx expo prebuild --platform android --clean --no-interactive
+          CI: 1
+        run: npx expo prebuild --platform android --clean
 
       - name: 🔨 Build APK
         working-directory: android
