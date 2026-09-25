@@ -3,7 +3,10 @@ import { useThemeStore } from '../../store/useThemeStore';
 import { useSQLiteContext } from 'expo-sqlite';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Settings, Target, ChevronRight, User, CalendarDays, MessageSquare } from 'lucide-react-native';
+import { Modal } from 'react-native';
+import { Settings, Target, ChevronRight, User, CalendarDays, MessageSquare, CalendarClock } from 'lucide-react-native';
+import { Colors } from '../../constants/Colors';
+import { useSettingsStore } from '../../store/useSettingsStore';
 import { Colors } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -16,7 +19,11 @@ export default function MenuScreen() {
     db.getFirstAsync<{ value: string }>("SELECT value FROM app_settings WHERE key = 'user_name'")
       .then(row => { if (row?.value) setUserName(row.value); })
       .catch(console.error);
+    loadSettings(db);
   }, []));
+
+  const { monthStartDay, setMonthStartDay, loadSettings } = useSettingsStore();
+  const [showDayPicker, setShowDayPicker] = useState(false);
 
   const theme = isDark ? Colors.dark : Colors.light;
 
@@ -78,7 +85,7 @@ export default function MenuScreen() {
               key={item.title} 
               onPress={() => router.push(item.route as any)}
               activeOpacity={0.7}
-              style={{ flexDirection: 'row', alignItems: 'center', padding: 14, borderBottomWidth: index === menuItems.length - 1 ? 0 : 1, borderBottomColor: theme.border }}
+              style={{ flexDirection: 'row', alignItems: 'center', padding: 14, borderBottomWidth: 1, borderBottomColor: theme.border }}
             >
               <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: theme.primary + '15', alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
                 {item.icon}
@@ -90,9 +97,61 @@ export default function MenuScreen() {
               <ChevronRight size={18} color={theme.muted} />
             </TouchableOpacity>
           ))}
+          
+          <TouchableOpacity 
+            onPress={() => setShowDayPicker(true)}
+            activeOpacity={0.7}
+            style={{ flexDirection: 'row', alignItems: 'center', padding: 14 }}
+          >
+            <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: theme.primary + '15', alignItems: 'center', justifyContent: 'center', marginRight: 14 }}>
+              <CalendarClock size={20} color={theme.primary} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 15, fontWeight: '800', color: theme.ink, marginBottom: 2 , fontFamily: 'FjallaOne_400Regular'}}>Month Starts On</Text>
+              <Text style={{ fontSize: 12, fontWeight: '500', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>Currently set to {monthStartDay}{['st','nd','rd'][((monthStartDay+90)%100-10)%10-1]||'th'} of month</Text>
+            </View>
+            <ChevronRight size={18} color={theme.muted} />
+          </TouchableOpacity>
         </View>
 
       </ScrollView>
+
+      {/* Day Picker Modal */}
+      <Modal visible={showDayPicker} transparent animationType="fade">
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <View style={{ backgroundColor: theme.card, borderRadius: 24, width: '100%', padding: 24, maxHeight: '80%' }}>
+            <Text style={{ fontSize: 22, fontWeight: '900', color: theme.ink, marginBottom: 8, fontFamily: 'FjallaOne_400Regular' }}>Select Start Date</Text>
+            <Text style={{ fontSize: 14, color: theme.muted, marginBottom: 20, fontFamily: 'FjallaOne_400Regular' }}>When do you get your salary or pocket money?</Text>
+            
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 12, paddingBottom: 20 }}>
+              {Array.from({length: 28}, (_, i) => i + 1).map(day => (
+                <TouchableOpacity
+                  key={day}
+                  onPress={() => {
+                    setMonthStartDay(db, day);
+                    setShowDayPicker(false);
+                  }}
+                  style={{
+                    width: 50, height: 50, borderRadius: 25,
+                    backgroundColor: monthStartDay === day ? theme.primary : theme.surface,
+                    alignItems: 'center', justifyContent: 'center',
+                    borderWidth: 1, borderColor: monthStartDay === day ? theme.primary : theme.border
+                  }}
+                >
+                  <Text style={{ fontSize: 18, fontWeight: '700', color: monthStartDay === day ? '#fff' : theme.ink, fontFamily: 'FjallaOne_400Regular' }}>{day}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            
+            <TouchableOpacity 
+              onPress={() => setShowDayPicker(false)}
+              style={{ padding: 16, alignItems: 'center', backgroundColor: theme.surface, borderRadius: 16, marginTop: 10 }}
+            >
+              <Text style={{ fontSize: 16, fontWeight: '700', color: theme.ink, fontFamily: 'FjallaOne_400Regular' }}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

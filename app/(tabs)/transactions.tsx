@@ -9,6 +9,8 @@ import { Plus, ReceiptText, Coffee, Car, ShoppingBag, Book, Heart, FileText, Smi
 import { Colors, Gradients } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ReportView } from '../../components/report/ReportView';
+import { getMonthRange, getDisplayMonth, addMonths } from '../../utils/dateUtils';
+import { useSettingsStore } from '../../store/useSettingsStore';
 
 const IconMap: Record<string, any> = {
   coffee: Coffee, car: Car, bag: ShoppingBag, book: Book, heart: Heart, 
@@ -24,41 +26,35 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState<TxWithCategory[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<'list' | 'report'>('list');
+  const { monthStartDay, loadSettings, loaded: settingsLoaded } = useSettingsStore();
 
   useFocusEffect(
     useCallback(() => {
-      loadTransactions(currentDate);
-    }, [currentDate])
+      if (!settingsLoaded) loadSettings(db);
+      else loadTransactions(currentDate);
+    }, [currentDate, settingsLoaded, monthStartDay])
   );
 
   const loadTransactions = async (date: Date) => {
     try {
-      const monthStr = date.toISOString().substring(0, 7); // YYYY-MM
+      const { start, end } = getMonthRange(date, monthStartDay);
       const allTx = await db.getAllAsync<TxWithCategory>(`
         SELECT t.*, c.name as categoryName, c.icon as categoryIcon, c.color as categoryColor 
         FROM transactions t 
         LEFT JOIN categories c ON t.categoryId = c.id 
-        WHERE strftime('%Y-%m', t.date) = ?
+        WHERE t.date >= ? AND t.date < ?
         ORDER BY date DESC
-      `, [monthStr]);
+      `, [start, end]);
       setTransactions(allTx);
     } catch (e) { console.error(e); }
   };
 
   const nextMonth = () => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(newDate.getMonth() + 1);
-      return newDate;
-    });
+    setCurrentDate(prev => addMonths(prev, 1));
   };
 
   const prevMonth = () => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(newDate.getMonth() - 1);
-      return newDate;
-    });
+    setCurrentDate(prev => addMonths(prev, -1));
   };
 
   const deleteTransaction = async (id: string) => {
@@ -86,7 +82,9 @@ export default function Transactions() {
   const theme = isDark ? Colors.dark : Colors.light;
   
   const now = new Date();
-  const isCurrentMonth = currentDate.getMonth() === now.getMonth() && currentDate.getFullYear() === now.getFullYear();
+  const { start: viewStart } = getMonthRange(currentDate, monthStartDay);
+  const { start: currentStart } = getMonthRange(now, monthStartDay);
+  const isCurrentMonth = viewStart === currentStart;
 
   const renderItem = ({ item }: { item: TxWithCategory }) => {
     const isExp = item.type === 'expense';
@@ -175,7 +173,7 @@ export default function Transactions() {
             </TouchableOpacity>
             
             <Text style={{ marginHorizontal: 12, fontSize: 14, fontWeight: '800', color: '#FFFFFF', fontFamily: 'FjallaOne_400Regular', minWidth: 80, textAlign: 'center' }}>
-              {currentDate.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}
+              {getDisplayMonth(currentDate, monthStartDay)}
             </Text>
             
             <TouchableOpacity onPress={nextMonth} disabled={isCurrentMonth} style={{ padding: 6, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 16, opacity: isCurrentMonth ? 0.3 : 1 }}>

@@ -155,6 +155,7 @@ export async function initializeDatabase(db: SQLiteDatabase) {
     `);
     // Default settings migration (must run after app_settings table is created)
     await db.runAsync(`INSERT OR IGNORE INTO app_settings (key, value) VALUES ('include_debt_in_stats', 'false')`);
+    await db.runAsync(`INSERT OR IGNORE INTO app_settings (key, value) VALUES ('month_start_day', '1')`);
     // Auto-create hidden default wallet (used by all transactions)
     await db.runAsync(
       `INSERT OR IGNORE INTO accounts (id, name, type, balance, createdAt) VALUES (?, ?, ?, ?, ?)`,

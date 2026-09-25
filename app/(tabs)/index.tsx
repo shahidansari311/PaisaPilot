@@ -5,7 +5,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Transaction } from '../../types/database';
 import { useFocusEffect } from 'expo-router';
 import { useSharedRoomStore } from '../../store/useSharedRoomStore';
-import { getMonthKey } from '../../utils/dateUtils';
+import { getMonthKey, getMonthRange, addMonths } from '../../utils/dateUtils';
+import { useSettingsStore } from '../../store/useSettingsStore';
 
 import { DashboardHeader } from '../../components/dashboard/DashboardHeader';
 import { DashboardAchievements } from '../../components/dashboard/DashboardAchievements';
@@ -35,39 +36,47 @@ export default function Dashboard() {
   const [totalBorrowed, setTotalBorrowed] = useState(0);
   const [totalLent, setTotalLent] = useState(0);
   const { rooms, loadRooms, loaded: sharedLoaded } = useSharedRoomStore();
+  const { monthStartDay, loadSettings, loaded: settingsLoaded } = useSettingsStore();
 
-  useEffect(() => { if (!sharedLoaded) loadRooms(); }, []);
+  useEffect(() => { 
+    if (!sharedLoaded) loadRooms(); 
+    if (!settingsLoaded) loadSettings(db);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      loadDashboardData();
+      if (settingsLoaded) loadDashboardData();
     }, 60000);
     return () => clearInterval(timer);
-  }, []);
+  }, [currentDate, settingsLoaded, monthStartDay]);
 
-  useFocusEffect(useCallback(() => { loadDashboardData(); }, [currentDate]));
+  useFocusEffect(useCallback(() => { 
+    if (settingsLoaded) loadDashboardData(); 
+  }, [currentDate, settingsLoaded, monthStartDay]));
 
   const loadDashboardData = async () => {
     try {
       const nameRow = await db.getFirstAsync<{ value: string }>(`SELECT value FROM app_settings WHERE key = 'user_name'`);
       setUserName(nameRow?.value || null);
 
-      const month = getMonthKey(currentDate);
+      const { start, end } = getMonthRange(currentDate, monthStartDay);
+      const currentMonthKeyStr = `${new Date(start).getFullYear()}-${String(new Date(start).getMonth() + 1).padStart(2, '0')}`;
+      
       const recent = await db.getAllAsync<Transaction>('SELECT * FROM transactions ORDER BY date DESC LIMIT 5');
       setRecentTransactions(recent);
 
       const incRow = await db.getFirstAsync<{ total: number }>(
-        `SELECT SUM(amount) as total FROM transactions WHERE type = 'income' AND strftime('%Y-%m', date) = ?`, [month]);
+        `SELECT SUM(amount) as total FROM transactions WHERE type = 'income' AND date >= ? AND date < ?`, [start, end]);
       const expRow = await db.getFirstAsync<{ total: number }>(
-        `SELECT SUM(amount) as total FROM transactions WHERE type = 'expense' AND strftime('%Y-%m', date) = ?`, [month]);
+        `SELECT SUM(amount) as total FROM transactions WHERE type = 'expense' AND date >= ? AND date < ?`, [start, end]);
 
       let calculatedIncome = incRow?.total || 0;
       let calculatedExpense = expRow?.total || 0;
 
       const debtSetting = await db.getFirstAsync<{ value: string }>(`SELECT value FROM app_settings WHERE key = 'include_debt_in_stats'`);
       if (debtSetting?.value === 'true') {
-        const lentRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM lend_records WHERE strftime('%Y-%m', createdAt) = ?`, [month]);
-        const borrowRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM borrow_records WHERE strftime('%Y-%m', createdAt) = ?`, [month]);
+        const lentRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM lend_records WHERE createdAt >= ? AND createdAt < ?`, [start, end]);
+        const borrowRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM borrow_records WHERE createdAt >= ? AND createdAt < ?`, [start, end]);
         calculatedExpense += (lentRow?.total || 0);
         calculatedIncome += (borrowRow?.total || 0);
       }
@@ -77,7 +86,7 @@ export default function Dashboard() {
 
       let calcTodayExp = 0;
       const now = new Date();
-      if (currentDate.getMonth() === now.getMonth() && currentDate.getFullYear() === now.getFullYear()) {
+      if (now.toISOString() >= start && now.toISOString() < end) {
         const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
         const todayExpRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM transactions WHERE type = 'expense' AND date LIKE ?`, [`${todayStr}%`]);
         calcTodayExp = todayExpRow?.total || 0;
@@ -91,7 +100,7 @@ export default function Dashboard() {
 
 
       const budgetRow = await db.getFirstAsync<{ amount: number }>(
-        `SELECT amount FROM budgets WHERE period = 'monthly' AND month = ? LIMIT 1`, [month]);
+        `SELECT amount FROM budgets WHERE period = 'monthly' AND (month = ? OR month IS NULL OR month = '') LIMIT 1`, [currentMonthKeyStr]);
       setBudgetAmount(budgetRow?.amount || 0);
 
       const bRec = await db.getAllAsync<{ amount: number }>("SELECT amount FROM borrow_records WHERE status = 'pending'");
@@ -114,8 +123,9 @@ export default function Dashboard() {
       const csvObj = await db.getFirstAsync<{value:string}>("SELECT value FROM app_settings WHERE key = 'has_imported_csv'");
       if (csvObj?.value === 'true') unlockedCount++;
 
-      const totalIncObj = await db.getFirstAsync<{t:number}>(`SELECT SUM(amount) as t FROM transactions WHERE type='income' AND strftime('%Y-%m', date) = ?`, [month]);
-      const totalExpObj = await db.getFirstAsync<{t:number}>(`SELECT SUM(amount) as t FROM transactions WHERE type='expense' AND strftime('%Y-%m', date) = ?`, [month]);
+      const { start, end } = getMonthRange(currentDate, monthStartDay);
+      const totalIncObj = await db.getFirstAsync<{t:number}>(`SELECT SUM(amount) as t FROM transactions WHERE type='income' AND date >= ? AND date < ?`, [start, end]);
+      const totalExpObj = await db.getFirstAsync<{t:number}>(`SELECT SUM(amount) as t FROM transactions WHERE type='expense' AND date >= ? AND date < ?`, [start, end]);
       const bal = (totalIncObj?.t || 0) - (totalExpObj?.t || 0);
       setTotalBalance(bal);
       
@@ -137,35 +147,31 @@ export default function Dashboard() {
   const progressColor = pct >= 0.9 ? colors.danger : pct >= 0.7 ? colors.warning : colors.success;
   const progressGradient = pct >= 0.9 ? colors.dangerGradient : pct >= 0.7 ? colors.warningGradient : colors.successGradient;
 
-  const daysLeft = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() - currentDate.getDate() + 1;
   const now = new Date();
-  const isCurrentMonth = currentDate.getMonth() === now.getMonth() && currentDate.getFullYear() === now.getFullYear();
+  const { start: viewStart, end: viewEnd } = getMonthRange(currentDate, monthStartDay);
+  const { start: currentStart } = getMonthRange(now, monthStartDay);
+  const isCurrentMonth = viewStart === currentStart;
+
+  const endDate = new Date(viewEnd);
+  const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
   const expensesBeforeToday = isCurrentMonth ? expense - todayExpense : expense;
   const remainingBeforeToday = budgetAmount + income - expensesBeforeToday;
 
   let safeSpend = 0;
   if (isCurrentMonth && remainingBeforeToday > 0) {
-    safeSpend = Math.floor(remainingBeforeToday / daysLeft);
+    safeSpend = Math.floor(remainingBeforeToday / Math.max(1, daysLeft));
   } else if (!isCurrentMonth && remaining > 0) {
-    safeSpend = Math.floor(remaining / daysLeft);
+    safeSpend = Math.floor(remaining / Math.max(1, daysLeft));
   }
 
 
   const nextMonth = () => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(newDate.getMonth() + 1);
-      return newDate;
-    });
+    setCurrentDate(prev => addMonths(prev, 1));
   };
 
   const prevMonth = () => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev);
-      newDate.setMonth(newDate.getMonth() - 1);
-      return newDate;
-    });
+    setCurrentDate(prev => addMonths(prev, -1));
   };
 
   return (

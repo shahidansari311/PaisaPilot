@@ -7,7 +7,8 @@ import { useFocusEffect, router } from 'expo-router';
 import { Colors, Gradients } from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ArrowLeft, Check, Edit3, Target, TrendingDown, TrendingUp, Trash2, AlertTriangle, Crosshair } from 'lucide-react-native';
-import { getMonthKey } from '../utils/dateUtils';
+import { getMonthRange, getDisplayMonth } from '../utils/dateUtils';
+import { useSettingsStore } from '../store/useSettingsStore';
 
 interface MonthBudget {
   id: string;
@@ -20,13 +21,6 @@ interface MonthStats {
   totalIncome: number;
 }
 
-
-
-const monthLabel = (key: string) => {
-  const [y, m] = key.split('-');
-  return new Date(parseInt(y), parseInt(m) - 1, 1).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
-};
-
 export default function BudgetScreen() {
   const isDark = useThemeStore((s) => s.isDark);
   const theme = isDark ? Colors.dark : Colors.light;
@@ -35,11 +29,18 @@ export default function BudgetScreen() {
   const [stats, setStats] = useState<MonthStats>({ totalExpense: 0, totalIncome: 0 });
   const [editing, setEditing] = useState(false);
   const [inputAmount, setInputAmount] = useState('');
-  useFocusEffect(useCallback(() => { loadData(); }, []));
+  
+  const { monthStartDay, loadSettings, loaded: settingsLoaded } = useSettingsStore();
+
+  useFocusEffect(useCallback(() => { 
+    if (!settingsLoaded) loadSettings(db);
+    else loadData(); 
+  }, [settingsLoaded, monthStartDay]));
 
   const loadData = async () => {
     try {
-      const month = getMonthKey();
+      const { start, end } = getMonthRange(new Date(), monthStartDay);
+      const month = `${new Date(start).getFullYear()}-${String(new Date(start).getMonth() + 1).padStart(2, '0')}`;
       
       // Auto-carryover budget
       let b = await db.getFirstAsync<MonthBudget>(
@@ -66,18 +67,18 @@ export default function BudgetScreen() {
       const includeDebt = setting?.value === 'true';
 
       const expRow = await db.getFirstAsync<{ total: number }>(
-        `SELECT SUM(amount) as total FROM transactions WHERE type = 'expense' AND strftime('%Y-%m', date) = ?`, [month]
+        `SELECT SUM(amount) as total FROM transactions WHERE type = 'expense' AND date >= ? AND date < ?`, [start, end]
       );
       const incRow = await db.getFirstAsync<{ total: number }>(
-        `SELECT SUM(amount) as total FROM transactions WHERE type = 'income' AND strftime('%Y-%m', date) = ?`, [month]
+        `SELECT SUM(amount) as total FROM transactions WHERE type = 'income' AND date >= ? AND date < ?`, [start, end]
       );
       
       let totalExpense = expRow?.total || 0;
       let totalIncome = incRow?.total || 0;
 
       if (includeDebt) {
-        const lentRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM lend_records WHERE strftime('%Y-%m', createdAt) = ?`, [month]);
-        const borrowRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM borrow_records WHERE strftime('%Y-%m', createdAt) = ?`, [month]);
+        const lentRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM lend_records WHERE createdAt >= ? AND createdAt < ?`, [start, end]);
+        const borrowRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM borrow_records WHERE createdAt >= ? AND createdAt < ?`, [start, end]);
         
         totalExpense += (lentRow?.total || 0);
         totalIncome += (borrowRow?.total || 0);
@@ -91,7 +92,8 @@ export default function BudgetScreen() {
     const amount = parseFloat(inputAmount);
     if (!amount || amount <= 0) { Alert.alert('Oops!', 'Please enter a valid budget amount.'); return; }
     try {
-      const month = getMonthKey();
+      const { start } = getMonthRange(new Date(), monthStartDay);
+      const month = `${new Date(start).getFullYear()}-${String(new Date(start).getMonth() + 1).padStart(2, '0')}`;
       if (budget) {
         await db.runAsync('UPDATE budgets SET amount = ? WHERE id = ?', [amount, budget.id]);
       } else {
@@ -141,7 +143,7 @@ export default function BudgetScreen() {
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 18, fontWeight: '700', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'FjallaOne_400Regular'}}>Monthly Budget</Text>
-          <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'FjallaOne_400Regular'}}>{monthLabel(getMonthKey())}</Text>
+          <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted, marginTop: 2 , fontFamily: 'FjallaOne_400Regular'}}>{getDisplayMonth(new Date(), monthStartDay)}</Text>
         </View>
         {budget && !editing && (
           <TouchableOpacity onPress={() => { setInputAmount(String(budget.amount)); setEditing(true); }}
@@ -260,9 +262,11 @@ export default function BudgetScreen() {
 
             {/* Daily Safe Spend */}
             {!isOverBudget && remaining > 0 && (() => {
-              const today = new Date();
-              const daysLeft = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() - today.getDate() + 1;
-              const daily = Math.floor(remaining / daysLeft);
+              const { end } = getMonthRange(new Date(), monthStartDay);
+              const endDate = new Date(end);
+              const now = new Date();
+              const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+              const daily = Math.floor(remaining / Math.max(1, daysLeft));
               return (
                 <View style={{ backgroundColor: theme.success + '12', borderRadius: 16, padding: 12, marginBottom: 16, borderWidth: 1, borderColor: theme.success + '25' }}>
                   <Text style={{ fontSize: 10, fontWeight: '800', color: theme.success, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 , fontFamily: 'FjallaOne_400Regular'}}>Daily Safe Spend</Text>
