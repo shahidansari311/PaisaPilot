@@ -16,7 +16,10 @@ export function getMonthRange(referenceDate: Date, startDay: number): { start: s
   let startYear = currentYear;
   let startMonth = currentMonth;
 
-  if (currentDay < startDay) {
+  const maxDaysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const effectiveStartDayThisMonth = Math.min(startDay, maxDaysInCurrentMonth);
+
+  if (currentDay < effectiveStartDayThisMonth) {
     // We are in the "previous" billing month
     startMonth -= 1;
     if (startMonth < 0) {
@@ -25,8 +28,14 @@ export function getMonthRange(referenceDate: Date, startDay: number): { start: s
     }
   }
 
-  const startDate = new Date(startYear, startMonth, startDay, 0, 0, 0, 0);
-  const endDate = new Date(startYear, startMonth + 1, startDay, 0, 0, 0, 0);
+  const maxDaysInStartMonth = new Date(startYear, startMonth + 1, 0).getDate();
+  const actualStartDay = Math.min(startDay, maxDaysInStartMonth);
+  
+  const maxDaysInEndMonth = new Date(startYear, startMonth + 2, 0).getDate();
+  const actualEndDay = Math.min(startDay, maxDaysInEndMonth);
+
+  const startDate = new Date(startYear, startMonth, actualStartDay, 0, 0, 0, 0);
+  const endDate = new Date(startYear, startMonth + 1, actualEndDay, 0, 0, 0, 0);
 
   return {
     start: startDate.toISOString(),

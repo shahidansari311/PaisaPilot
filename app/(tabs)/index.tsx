@@ -123,7 +123,6 @@ export default function Dashboard() {
       const csvObj = await db.getFirstAsync<{value:string}>("SELECT value FROM app_settings WHERE key = 'has_imported_csv'");
       if (csvObj?.value === 'true') unlockedCount++;
 
-      const { start, end } = getMonthRange(currentDate, monthStartDay);
       const totalIncObj = await db.getFirstAsync<{t:number}>(`SELECT SUM(amount) as t FROM transactions WHERE type='income' AND date >= ? AND date < ?`, [start, end]);
       const totalExpObj = await db.getFirstAsync<{t:number}>(`SELECT SUM(amount) as t FROM transactions WHERE type='expense' AND date >= ? AND date < ?`, [start, end]);
       const bal = (totalIncObj?.t || 0) - (totalExpObj?.t || 0);
@@ -153,6 +152,8 @@ export default function Dashboard() {
   const isCurrentMonth = viewStart === currentStart;
 
   const endDate = new Date(viewEnd);
+  const startDateObj = new Date(viewStart);
+  const totalDays = Math.ceil((endDate.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24));
   const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
   const expensesBeforeToday = isCurrentMonth ? expense - todayExpense : expense;
@@ -162,7 +163,7 @@ export default function Dashboard() {
   if (isCurrentMonth && remainingBeforeToday > 0) {
     safeSpend = Math.floor(remainingBeforeToday / Math.max(1, daysLeft));
   } else if (!isCurrentMonth && remaining > 0) {
-    safeSpend = Math.floor(remaining / Math.max(1, daysLeft));
+    safeSpend = Math.floor(remaining / Math.max(1, totalDays));
   }
 
 

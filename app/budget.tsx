@@ -262,9 +262,11 @@ export default function BudgetScreen() {
 
             {/* Daily Safe Spend */}
             {!isOverBudget && remaining > 0 && (() => {
-              const { end } = getMonthRange(new Date(), monthStartDay);
+              const { start, end } = getMonthRange(new Date(), monthStartDay);
               const endDate = new Date(end);
+              const startDate = new Date(start);
               const now = new Date();
+              const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
               const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
               const daily = Math.floor(remaining / Math.max(1, daysLeft));
               return (
@@ -273,7 +275,7 @@ export default function BudgetScreen() {
                   <Text style={{ fontSize: 20, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>
                     ₹{daily.toLocaleString('en-IN')}<Text style={{ fontSize: 13, fontWeight: '700', opacity: 0.8 , fontFamily: 'FjallaOne_400Regular'}}>/day</Text>
                   </Text>
-                  <Text style={{ fontSize: 11, color: theme.success, marginTop: 4, fontWeight: '600' , fontFamily: 'FjallaOne_400Regular'}}>{daysLeft} days remaining this month</Text>
+                  <Text style={{ fontSize: 11, color: theme.success, marginTop: 4, fontWeight: '600' , fontFamily: 'FjallaOne_400Regular'}}>{daysLeft} of {totalDays} days remaining this cycle</Text>
                 </View>
               );
             })()}

@@ -1,20 +1,26 @@
-import * as Notifications from 'expo-notifications';
+// import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 // Configure how notifications should be handled when the app is in the foreground
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: true,
+//     shouldSetBadge: false,
+//     shouldShowBanner: true,
+//     shouldShowList: true,
+//   }),
+// });
 
 export async function setupDailyReminder() {
   if (Platform.OS === 'web') return;
 
+  // DISABLED for Expo Go on SDK 53+:
+  // Android Push notifications were removed from Expo Go, and the module
+  // currently throws an error on import. 
+  // To use this feature, a custom development build is required.
+
+  /*
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
   
@@ -47,4 +53,5 @@ export async function setupDailyReminder() {
       },
     });
   }
+  */
 }

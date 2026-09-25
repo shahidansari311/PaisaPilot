@@ -7,7 +7,6 @@ import { Modal } from 'react-native';
 import { Settings, Target, ChevronRight, User, CalendarDays, MessageSquare, CalendarClock } from 'lucide-react-native';
 import { Colors } from '../../constants/Colors';
 import { useSettingsStore } from '../../store/useSettingsStore';
-import { Colors } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function MenuScreen() {
@@ -124,7 +123,7 @@ export default function MenuScreen() {
             <Text style={{ fontSize: 14, color: theme.muted, marginBottom: 20, fontFamily: 'FjallaOne_400Regular' }}>When do you get your salary or pocket money?</Text>
             
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 12, paddingBottom: 20 }}>
-              {Array.from({length: 28}, (_, i) => i + 1).map(day => (
+              {Array.from({length: 31}, (_, i) => i + 1).map(day => (
                 <TouchableOpacity
                   key={day}
                   onPress={() => {
