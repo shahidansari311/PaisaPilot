@@ -6,10 +6,17 @@
     "scheme": "paisapilot",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
+    "privacy": "public",
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.shahid310.PaisaPilot"
+      "supportsTablet": false,
+      "bundleIdentifier": "com.shahid310.PaisaPilot",
+      "requireFullScreen": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "PaisaPilot uses the camera to scan receipts for OCR.",
+        "NSPhotoLibraryUsageDescription": "PaisaPilot needs photo library access to pick receipt images.",
+        "NSUserNotificationsUsageDescription": "PaisaPilot sends daily reminders to log your expenses."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +24,37 @@
         "backgroundColor": "#0f1729"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.shahid310.PaisaPilot"
+      "package": "com.shahid310.PaisaPilot",
+      "softwareKeyboardLayoutMode": "pan",
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_CONTACTS",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.BLUETOOTH"
+      ],
+      "allowBackup": false,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "paisapilot"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/icon.png"
@@ -51,7 +88,17 @@
             "useLegacyPackaging": false,
             "gifEnabled": false,
             "webpEnabled": false
+          },
+          "ios": {
+            "useFrameworks": "static"
           }
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "PaisaPilot needs photo library access to pick receipt images.",
+          "cameraPermission": "PaisaPilot uses the camera to scan receipts for OCR."
         }
       ]
     ],
@@ -59,7 +106,9 @@
       "router": {},
       "eas": {
         "projectId": "1eb90e68-fe72-474c-ab2f-f08d1ffbd592"
-      }
+      },
+      "privacyPolicyUrl": "https://paisapilot.app/privacy",
+      "supportEmail": "support@paisapilot.app"
     }
   }
 }

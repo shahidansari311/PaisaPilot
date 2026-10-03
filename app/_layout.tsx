@@ -43,15 +43,11 @@ export default function RootLayout() {
   const isReady = fjallaLoaded;
 
   useEffect(() => {
-    if (isReady && showSplash) {
-      // Hide the native splash screen, revealing our JS AnimatedSplashScreen
-      SplashScreen.hideAsync().catch(() => {});
-      setupDailyReminder();
-    } else if (isReady && !showSplash) {
+    if (isReady) {
       SplashScreen.hideAsync().catch(() => {});
       setupDailyReminder();
     }
-  }, [isReady, showSplash]);
+  }, [isReady]);
 
   if (!isReady) return null;
 
@@ -64,15 +60,6 @@ export default function RootLayout() {
           </Stack>
           <CustomAlert />
           <StatusBar style={isDark ? 'light' : 'dark'} />
-          
-          {showSplash && (
-            <AnimatedSplashScreen 
-              onAnimationFinish={() => {
-                hasAppLaunched = true;
-                setShowSplash(false);
-              }} 
-            />
-          )}
         </View>
       </SQLiteProvider>
     </GestureHandlerRootView>

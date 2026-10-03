@@ -84,7 +84,7 @@ export default function EditBorrowLend() {
   return (
     <KeyboardAvoidingView 
       style={{ flex: 1, backgroundColor: theme.background }} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 20}
     >
       {/* Header */}

@@ -37,9 +37,19 @@ export function getMonthRange(referenceDate: Date, startDay: number): { start: s
   const startDate = new Date(startYear, startMonth, actualStartDay, 0, 0, 0, 0);
   const endDate = new Date(startYear, startMonth + 1, actualEndDay, 0, 0, 0, 0);
 
+  const formatLocal = (d: Date) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const mins = String(d.getMinutes()).padStart(2, '0');
+    const secs = String(d.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${mins}:${secs}`;
+  };
+
   return {
-    start: startDate.toISOString(),
-    end: endDate.toISOString()
+    start: formatLocal(startDate),
+    end: formatLocal(endDate)
   };
 }
 

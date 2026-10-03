@@ -7,6 +7,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { Users, Plus, ChevronRight, X, Cloud } from 'lucide-react-native';
 import { SplitGroup } from '../../types/database';
 import { useSharedRoomStore } from '../../store/useSharedRoomStore';
+import { useLiveSplitStore } from '../../store/useLiveSplitStore';
 import { Colors, Gradients } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -16,8 +17,12 @@ export default function SplitGroups() {
   const db = useSQLiteContext();
   const [groups, setGroups] = useState<SplitGroup[]>([]);
   const { rooms, loadRooms, loaded: sharedLoaded } = useSharedRoomStore();
+  const { groups: liveGroups, loadGroups: loadLiveGroups, loaded: liveLoaded } = useLiveSplitStore();
 
-  useEffect(() => { if (!sharedLoaded) loadRooms(); }, []);
+  useEffect(() => { 
+    if (!sharedLoaded) loadRooms(); 
+    if (!liveLoaded) loadLiveGroups();
+  }, []);
 
   // Group form
   const [isAddingGroup, setIsAddingGroup] = useState(false);
@@ -157,12 +162,18 @@ export default function SplitGroups() {
             <Users size={18} color={theme.primary} />
             <Text style={{ fontSize: 16, fontWeight: '900', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>Split Groups</Text>
           </View>
-          <TouchableOpacity onPress={() => { setIsAddingGroup(!isAddingGroup); if(isAddingGroup) { setEditingGroupId(null); setNewGroupName(''); } }} activeOpacity={0.7}
+          <TouchableOpacity onPress={() => {
+              Alert.alert('New Split Group', 'Choose how you want to split expenses:', [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Local Group (Only on this phone)', onPress: () => { setIsAddingGroup(true); setEditingGroupId(null); setNewGroupName(''); } },
+                { text: 'Live Group (Sync with friends)', onPress: () => router.push('/join-live-group' as any) }
+              ]);
+            }} activeOpacity={0.7}
             style={{ shadowColor: theme.primary, shadowOpacity: isAddingGroup ? 0 : 0.4, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: isAddingGroup ? 0 : 4 }}>
             {isAddingGroup ? (
-              <View style={{ width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.surface }}>
+              <TouchableOpacity onPress={() => { setIsAddingGroup(false); }} style={{ width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.surface }}>
                 <X size={20} color={theme.muted} />
-              </View>
+              </TouchableOpacity>
             ) : (
               <LinearGradient
                 colors={theme.primaryGradient}
@@ -206,7 +217,7 @@ export default function SplitGroups() {
           </View>
         )}
 
-        {groups.length === 0 && !isAddingGroup ? (
+        {groups.length === 0 && liveGroups.length === 0 && !isAddingGroup ? (
           <View style={{ backgroundColor: theme.card, borderRadius: 20, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderStyle: 'dashed', marginTop: 8 }}>
             <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
               <Users size={24} color={theme.muted} />
@@ -217,25 +228,50 @@ export default function SplitGroups() {
             </Text>
           </View>
         ) : (
-          groups.map(group => (
-            <TouchableOpacity
-              key={group.id}
-              onPress={() => router.push(`/group/${group.id}`)}
-              onLongPress={() => handleGroupAction(group)}
-              delayLongPress={350}
-              activeOpacity={0.75}
-              style={{ backgroundColor: theme.card, borderRadius: 20, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: theme.border, flexDirection: 'row', alignItems: 'center', gap: 14 }}
-            >
-              <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: theme.primary + '18', alignItems: 'center', justifyContent: 'center' }}>
-                <Users size={22} color={theme.primary} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{group.name}</Text>
-                <Text style={{ fontSize: 12, color: theme.muted, marginTop: 2 , fontFamily: 'FjallaOne_400Regular'}}>Tap to view details</Text>
-              </View>
-              <ChevronRight size={18} color={theme.muted} />
-            </TouchableOpacity>
-          ))
+          <View>
+            {/* Render Live Groups First */}
+            {liveGroups.map(group => (
+              <TouchableOpacity
+                key={group.groupId}
+                onPress={() => router.push(`/live-group/${group.groupId}` as any)}
+                activeOpacity={0.75}
+                style={{ backgroundColor: theme.card, borderRadius: 20, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: theme.border, flexDirection: 'row', alignItems: 'center', gap: 14 }}
+              >
+                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: theme.primary + '18', alignItems: 'center', justifyContent: 'center' }}>
+                  <Cloud size={22} color={theme.primary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{group.groupName}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                    <Text style={{ fontSize: 11, fontWeight: '700', color: theme.primary, backgroundColor: theme.primary + '12', paddingHorizontal: 6, paddingVertical: 1, borderRadius: 6 , fontFamily: 'FjallaOne_400Regular'}}>{group.groupId}</Text>
+                    <Text style={{ fontSize: 11, color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>LIVE</Text>
+                  </View>
+                </View>
+                <ChevronRight size={18} color={theme.muted} />
+              </TouchableOpacity>
+            ))}
+            
+            {/* Render Local Groups */}
+            {groups.map(group => (
+              <TouchableOpacity
+                key={group.id}
+                onPress={() => router.push(`/group/${group.id}`)}
+                onLongPress={() => handleGroupAction(group)}
+                delayLongPress={350}
+                activeOpacity={0.75}
+                style={{ backgroundColor: theme.card, borderRadius: 20, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: theme.border, flexDirection: 'row', alignItems: 'center', gap: 14 }}
+              >
+                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: theme.surface, alignItems: 'center', justifyContent: 'center' }}>
+                  <Users size={22} color={theme.muted} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 15, fontWeight: '700', color: theme.ink , fontFamily: 'FjallaOne_400Regular'}}>{group.name}</Text>
+                  <Text style={{ fontSize: 12, color: theme.muted, marginTop: 2 , fontFamily: 'FjallaOne_400Regular'}}>Local Group</Text>
+                </View>
+                <ChevronRight size={18} color={theme.muted} />
+              </TouchableOpacity>
+            ))}
+          </View>
         )}
         <View style={{ height: 24 }} />
       </ScrollView>

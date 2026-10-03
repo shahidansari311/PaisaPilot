@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SharedRoomEntry, SharedRoomMember } from '../types/database';
 
 const STORAGE_KEY = 'shared_rooms';
+const CACHE_KEY = 'shared_room_cache';
 
 export interface LocalSharedRoom {
   roomCode: string;
@@ -11,18 +13,30 @@ export interface LocalSharedRoom {
   joinedAt: string;
 }
 
+export interface SharedRoomCache {
+  members: Record<string, SharedRoomMember>;
+  entries: SharedRoomEntry[];
+  roomName: string;
+  lastSynced: string;
+}
+
 interface SharedRoomState {
   rooms: LocalSharedRoom[];
   loaded: boolean;
+  cachedRoomData: Record<string, SharedRoomCache>;
   loadRooms: () => Promise<void>;
+  loadCache: () => Promise<void>;
   addRoom: (room: LocalSharedRoom) => Promise<void>;
   removeRoom: (roomCode: string) => Promise<void>;
   getRoomByCode: (roomCode: string) => LocalSharedRoom | undefined;
+  setCachedRoom: (roomCode: string, data: SharedRoomCache) => Promise<void>;
+  getCachedRoom: (roomCode: string) => SharedRoomCache | undefined;
 }
 
 export const useSharedRoomStore = create<SharedRoomState>((set, get) => ({
   rooms: [],
   loaded: false,
+  cachedRoomData: {},
 
   loadRooms: async () => {
     try {
@@ -35,6 +49,17 @@ export const useSharedRoomStore = create<SharedRoomState>((set, get) => ({
     } catch (e) {
       console.error('Failed to load shared rooms', e);
       set({ loaded: true });
+    }
+  },
+
+  loadCache: async () => {
+    try {
+      const raw = await AsyncStorage.getItem(CACHE_KEY);
+      if (raw) {
+        set({ cachedRoomData: JSON.parse(raw) });
+      }
+    } catch (e) {
+      console.error('Failed to load shared room cache', e);
     }
   },
 
@@ -51,9 +76,28 @@ export const useSharedRoomStore = create<SharedRoomState>((set, get) => ({
     const updated = get().rooms.filter(r => r.roomCode !== roomCode);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     set({ rooms: updated });
+    // Also clear the cache for this room
+    const currentCache = { ...get().cachedRoomData };
+    delete currentCache[roomCode];
+    await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(currentCache));
+    set({ cachedRoomData: currentCache });
   },
 
   getRoomByCode: (roomCode: string) => {
     return get().rooms.find(r => r.roomCode === roomCode);
+  },
+
+  setCachedRoom: async (roomCode: string, data: SharedRoomCache) => {
+    const updated = { ...get().cachedRoomData, [roomCode]: data };
+    set({ cachedRoomData: updated });
+    try {
+      await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(updated));
+    } catch (e) {
+      console.error('Failed to write shared room cache', e);
+    }
+  },
+
+  getCachedRoom: (roomCode: string) => {
+    return get().cachedRoomData[roomCode];
   },
 }));

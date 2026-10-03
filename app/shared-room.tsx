@@ -3,18 +3,19 @@ import { CustomAlert as Alert } from '../utils/alert';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useThemeStore } from '../store/useThemeStore';
 import { useSharedRoomStore } from '../store/useSharedRoomStore';
-import { useEffect, useState } from 'react';
-import { ArrowLeft, Plus, X, Check, Trash2, ArrowUpRight, ArrowDownLeft, CheckCircle, Circle, Copy, Users, Cloud, LogOut , Receipt} from 'lucide-react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowLeft, Plus, X, Check, Trash2, ArrowUpRight, ArrowDownLeft, CheckCircle, Circle, Copy, Users, Cloud, LogOut, Receipt, WifiOff, Wifi } from 'lucide-react-native';
 import { SharedRoomEntry, SharedRoomMember } from '../types/database';
 import { supabase } from '../config/supabaseConfig';
 import { Colors, Gradients } from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import { isInternetReachable } from '../utils/network';
 
 export default function SharedRoom() {
   const { code } = useLocalSearchParams();
   const roomCode = (code as string) || '';
   const { isDark } = useThemeStore();
-  const { getRoomByCode, removeRoom } = useSharedRoomStore();
+  const { getRoomByCode, removeRoom, getCachedRoom, setCachedRoom, loadCache } = useSharedRoomStore();
   const localRoom = getRoomByCode(roomCode);
 
   const [roomName, setRoomName] = useState(localRoom?.roomName || 'Shared Room');
@@ -22,6 +23,8 @@ export default function SharedRoom() {
   const [entries, setEntries] = useState<SharedRoomEntry[]>([]);
   const [netBalances, setNetBalances] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [isOnline, setIsOnline] = useState(true);
+  const [lastSynced, setLastSynced] = useState<string | null>(null);
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
@@ -35,49 +38,124 @@ export default function SharedRoom() {
   const myMemberId = localRoom?.myMemberId || '';
   const myName = localRoom?.myName || 'Me';
 
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+
+  // ── Check network and load cache on mount ──
+  useEffect(() => {
+    if (!roomCode) return;
+
+    const init = async () => {
+      // Load cache first for instant offline display
+      await loadCache();
+      const cached = getCachedRoom(roomCode);
+      if (cached) {
+        setRoomName(cached.roomName || localRoom?.roomName || 'Shared Room');
+        setMembers(cached.members || {});
+        setEntries(cached.entries || []);
+        setLastSynced(cached.lastSynced || null);
+        setLoading(false); // Show cached immediately
+      }
+
+      // Check connectivity
+      const online = await isInternetReachable();
+      setIsOnline(online);
+
+      if (online) {
+        await fetchRoomData();
+        subscribeRealtime();
+      } else {
+        setLoading(false);
+      }
+    };
+
+    init();
+
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
+    };
+  }, [roomCode]);
+
+  // ── Poll network state every 5s to auto-reconnect ──
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const online = await isInternetReachable();
+      if (online && !isOnline) {
+        // Just came back online — sync
+        setIsOnline(true);
+        await fetchRoomData();
+        subscribeRealtime();
+      } else if (!online && isOnline) {
+        setIsOnline(false);
+        if (channelRef.current) {
+          supabase.removeChannel(channelRef.current);
+          channelRef.current = null;
+        }
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isOnline]);
+
+  const subscribeRealtime = () => {
+    if (channelRef.current) return; // Already subscribed
+    const channel = supabase.channel(`room_${roomCode}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_members', filter: `room_code=eq.${roomCode}` }, () => fetchRoomData())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_entries', filter: `room_code=eq.${roomCode}` }, () => fetchRoomData())
+      .subscribe();
+    channelRef.current = channel;
+  };
+
   // ── Shared data fetcher ──
   const fetchRoomData = async () => {
-    const { data: roomData } = await supabase.from('shared_rooms').select('room_name').eq('code', roomCode).single();
-    if (roomData) setRoomName(roomData.room_name);
-    const { data: membersData } = await supabase.from('room_members').select('*').eq('room_code', roomCode);
-    if (membersData) {
+    try {
+      const { data: roomData } = await supabase.from('shared_rooms').select('room_name').eq('code', roomCode).single();
+      const fetchedRoomName = roomData?.room_name || localRoom?.roomName || 'Shared Room';
+      if (roomData) setRoomName(fetchedRoomName);
+
+      const { data: membersData } = await supabase.from('room_members').select('*').eq('room_code', roomCode);
       const memObj: Record<string, SharedRoomMember> = {};
-      membersData.forEach(m => memObj[m.id] = { name: m.name, joinedAt: m.joined_at });
-      setMembers(memObj);
-    }
-    const { data: entriesData } = await supabase.from('room_entries').select('*').eq('room_code', roomCode).order('date', { ascending: false }).order('created_at', { ascending: false });
-    if (entriesData) {
-      setEntries(entriesData.map(e => ({
-        id: e.id, paidByMemberId: e.paid_by_member_id, paidByName: e.paid_by_name,
-        amount: Number(e.amount), description: e.description, date: e.date, isPaid: e.is_paid, createdAt: e.created_at
-      })));
+      if (membersData) {
+        membersData.forEach(m => memObj[m.id] = { name: m.name, joinedAt: m.joined_at });
+        setMembers(memObj);
+      }
+
+      const { data: entriesData } = await supabase.from('room_entries').select('*').eq('room_code', roomCode).order('date', { ascending: false }).order('created_at', { ascending: false });
+      const mappedEntries: SharedRoomEntry[] = [];
+      if (entriesData) {
+        entriesData.forEach(e => mappedEntries.push({
+          id: e.id, paidByMemberId: e.paid_by_member_id, paidByName: e.paid_by_name,
+          amount: Number(e.amount), description: e.description, date: e.date, isPaid: e.is_paid, createdAt: e.created_at
+        }));
+        setEntries(mappedEntries);
+      }
+
+      // Update cache
+      const now = new Date().toISOString();
+      setLastSynced(now);
+      await setCachedRoom(roomCode, {
+        roomName: fetchedRoomName,
+        members: memObj,
+        entries: mappedEntries,
+        lastSynced: now,
+      });
+    } catch (err) {
+      console.warn('Supabase Load Error:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
   };
 
-  // ── Real-time listeners (Supabase) ──
-  useEffect(() => {
-    if (!roomCode) return;
-    const loadData = async () => {
-      try {
-        await fetchRoomData();
-        setLoading(false);
-        setRefreshing(false);
-      } catch (err) {
-        console.warn('Supabase Load Error:', err);
-        setLoading(false);
-        setRefreshing(false);
-        Alert.alert('Error', 'Could not sync room data.');
-      }
-    };
-    loadData();
-    const channel = supabase.channel(`room_${roomCode}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_members', filter: `room_code=eq.${roomCode}` }, () => loadData())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_entries', filter: `room_code=eq.${roomCode}` }, () => loadData())
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [roomCode]);
-
-  const onRefresh = () => {
+  const onRefresh = async () => {
+    const online = await isInternetReachable();
+    setIsOnline(online);
+    if (!online) {
+      setRefreshing(false);
+      Alert.alert('Offline', 'Cannot refresh — no internet connection. Showing cached data.');
+      return;
+    }
     setRefreshing(true);
     fetchRoomData().catch(() => {}).finally(() => setRefreshing(false));
   };
@@ -90,11 +168,11 @@ export default function SharedRoom() {
 
     for (const e of pending) {
       if (!bals[e.paidByMemberId]) bals[e.paidByMemberId] = 0;
-      bals[e.paidByMemberId] += e.amount; // They are owed this full amount
+      bals[e.paidByMemberId] += e.amount;
       for (const mid of memberIds) {
         if (mid !== e.paidByMemberId) {
           if (!bals[mid]) bals[mid] = 0;
-          bals[mid] -= e.amount; // Deducted from others in full
+          bals[mid] -= e.amount;
         }
       }
     }
@@ -104,7 +182,12 @@ export default function SharedRoom() {
   const myBalance = netBalances[myMemberId] || 0;
 
   // ── Entry CRUD ──
-  const openAddModal = () => {
+  const openAddModal = async () => {
+    const online = await isInternetReachable();
+    if (!online) {
+      Alert.alert('You\'re Offline', 'Connect to the internet to add entries.');
+      return;
+    }
     setEditingId(null);
     setFormAmount('');
     setFormDesc('');
@@ -121,6 +204,12 @@ export default function SharedRoom() {
   };
 
   const saveEntry = async () => {
+    const online = await isInternetReachable();
+    if (!online) {
+      Alert.alert('You\'re Offline', 'Connect to the internet to save entries.');
+      return;
+    }
+
     const amt = parseFloat(formAmount);
     if (!amt || amt <= 0) { Alert.alert('Error', 'Enter a valid amount'); return; }
     if (!formDesc.trim()) { Alert.alert('Error', 'Description is required'); return; }
@@ -157,6 +246,8 @@ export default function SharedRoom() {
   };
 
   const togglePaid = async (entry: SharedRoomEntry) => {
+    const online = await isInternetReachable();
+    if (!online) { Alert.alert('You\'re Offline', 'Connect to the internet to update entries.'); return; }
     try {
       await supabase.from('room_entries').update({ is_paid: !entry.isPaid }).eq('id', entry.id);
     } catch { Alert.alert('Error', 'Failed to update'); }
@@ -166,6 +257,8 @@ export default function SharedRoom() {
     Alert.alert('Delete Entry?', 'This will be removed for everyone.', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Delete', style: 'destructive', onPress: async () => {
+        const online = await isInternetReachable();
+        if (!online) { Alert.alert('You\'re Offline', 'Connect to the internet to delete entries.'); return; }
         try {
           await supabase.from('room_entries').delete().eq('id', entryId);
         } catch { Alert.alert('Error', 'Failed to delete'); }
@@ -190,6 +283,8 @@ export default function SharedRoom() {
     Alert.alert('Room Options', 'You can leave this room. If you are the last person, the room will be deleted permanently.', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Leave Room', style: 'destructive', onPress: async () => {
+        const online = await isInternetReachable();
+        if (!online) { Alert.alert('You\'re Offline', 'Connect to the internet to leave the room.'); return; }
         try {
           await supabase.from('room_members').delete().eq('id', myMemberId);
           
@@ -209,6 +304,13 @@ export default function SharedRoom() {
 
   const memberList = Object.entries(members);
   const absBalance = Math.abs(myBalance);
+
+  // Format last synced time
+  const formatSyncTime = (iso: string | null) => {
+    if (!iso) return null;
+    const d = new Date(iso);
+    return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  };
 
   if (!localRoom) {
     return (
@@ -240,8 +342,20 @@ export default function SharedRoom() {
           <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 20, fontWeight: '700', color: theme.ink, letterSpacing: -0.5 , fontFamily: 'FjallaOne_400Regular'}} numberOfLines={1}>{roomName}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 2 }}>
-              <Cloud size={11} color={theme.primary} />
-              <Text style={{ fontSize: 11, fontWeight: '700', color: theme.primary , fontFamily: 'FjallaOne_400Regular'}}>Live Synced</Text>
+              {isOnline ? (
+                <>
+                  <Wifi size={11} color={theme.primary} />
+                  <Text style={{ fontSize: 11, fontWeight: '700', color: theme.primary , fontFamily: 'FjallaOne_400Regular'}}>Live Synced</Text>
+                </>
+              ) : (
+                <>
+                  <WifiOff size={11} color={theme.danger} />
+                  <Text style={{ fontSize: 11, fontWeight: '700', color: theme.danger , fontFamily: 'FjallaOne_400Regular'}}>Offline</Text>
+                  {lastSynced && (
+                    <Text style={{ fontSize: 11, color: theme.muted, fontFamily: 'FjallaOne_400Regular' }}>• cached {formatSyncTime(lastSynced)}</Text>
+                  )}
+                </>
+              )}
               <Text style={{ fontSize: 11, color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>•</Text>
               <Text style={{ fontSize: 11, fontWeight: '600', color: theme.muted , fontFamily: 'FjallaOne_400Regular'}}>{roomCode}</Text>
             </View>
@@ -252,6 +366,16 @@ export default function SharedRoom() {
           <LogOut size={18} color={theme.danger} />
         </TouchableOpacity>
       </View>
+
+      {/* Offline Banner */}
+      {!isOnline && (
+        <View style={{ backgroundColor: theme.danger + '15', borderBottomWidth: 1, borderBottomColor: theme.danger + '30', paddingHorizontal: 20, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <WifiOff size={14} color={theme.danger} />
+          <Text style={{ fontSize: 12, fontWeight: '700', color: theme.danger, fontFamily: 'FjallaOne_400Regular', flex: 1 }}>
+            You're offline — showing cached data. Writes are disabled.
+          </Text>
+        </View>
+      )}
 
       {loading ? (
         <View style={{ flex: 1, padding: 20 }}>
@@ -286,12 +410,12 @@ export default function SharedRoom() {
             ) : myBalance > 0 ? (
               <View>
                 <Text style={{ fontSize: 24, fontWeight: '900', color: theme.success, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
-                <Text style={{ fontSize: 14, color: theme.success, fontWeight: '700', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>Others owe you</Text>
+                <Text style={{ fontSize: 14, color: theme.success, fontWeight: '700', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>You will receive (Take)</Text>
               </View>
             ) : (
               <View>
                 <Text style={{ fontSize: 24, fontWeight: '900', color: theme.danger, fontVariant: ['tabular-nums'] , fontFamily: 'FjallaOne_400Regular'}}>₹{absBalance.toLocaleString('en-IN')}</Text>
-                <Text style={{ fontSize: 14, color: theme.danger, fontWeight: '700', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>You owe others</Text>
+                <Text style={{ fontSize: 14, color: theme.danger, fontWeight: '700', marginTop: 4 , fontFamily: 'FjallaOne_400Regular'}}>You have to give (Pay)</Text>
               </View>
             )}
           </View>
@@ -391,7 +515,7 @@ export default function SharedRoom() {
         overflow: 'hidden'
       }}>
         <LinearGradient
-          colors={theme.primaryGradient}
+          colors={isOnline ? theme.primaryGradient : [theme.muted, theme.muted]}
           start={Gradients.diagonal.start}
           end={Gradients.diagonal.end}
           style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}
@@ -402,7 +526,7 @@ export default function SharedRoom() {
 
       {/* Add/Edit Modal */}
       <Modal visible={showModal} animationType="slide" transparent>
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
           <View style={{ backgroundColor: theme.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, minHeight: 380 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>

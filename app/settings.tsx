@@ -64,7 +64,13 @@ export default function Settings() {
                 await db.runAsync(`DELETE FROM accounts WHERE id != 'default-wallet'`);
                 await db.runAsync(`UPDATE accounts SET balance = 0 WHERE id = 'default-wallet'`);
               });
-              await AsyncStorage.removeItem('shared_rooms');
+              // Clear all AsyncStorage keys (membership records + offline caches)
+              await AsyncStorage.multiRemove([
+                'shared_rooms',
+                'shared_room_cache',
+                'live_split_groups',
+                'live_split_cache',
+              ]);
               Alert.alert('Done', 'All data has been deleted. Fresh start!');
             } catch (e) {
               console.error(e);

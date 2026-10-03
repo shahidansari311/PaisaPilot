@@ -303,7 +303,9 @@
           <TouchableOpacity onPress={() => setMode('choose')} activeOpacity={0.7} style={{ marginRight: 12, padding: 4 }}>
             <ArrowLeft size={22} color={theme.ink} />
           </TouchableOpacity>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: theme.ink, fontFamily: 'FjallaOne_400Regular' }}>
             {isCreate ? 'Create Room' : 'Join Room'}
+          </Text>
         </View>
 
         <ScrollView contentContainerStyle={{ padding: 24 }} keyboardShouldPersistTaps="handled">

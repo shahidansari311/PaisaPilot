@@ -86,7 +86,18 @@ export default function Dashboard() {
 
       let calcTodayExp = 0;
       const now = new Date();
-      if (now.toISOString() >= start && now.toISOString() < end) {
+      
+      const formatLocal = (d: Date) => {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const hours = String(d.getHours()).padStart(2, '0');
+        const mins = String(d.getMinutes()).padStart(2, '0');
+        const secs = String(d.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${mins}:${secs}`;
+      };
+      
+      if (formatLocal(now) >= start && formatLocal(now) < end) {
         const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
         const todayExpRow = await db.getFirstAsync<{ total: number }>(`SELECT SUM(amount) as total FROM transactions WHERE type = 'expense' AND date LIKE ?`, [`${todayStr}%`]);
         calcTodayExp = todayExpRow?.total || 0;

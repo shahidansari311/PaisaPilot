@@ -152,3 +152,29 @@ export interface SharedRoomEntry {
   isPaid: boolean;
   createdAt: string;
 }
+
+// ─── Live Split Groups (Cloud-synced Advanced Splits) ───
+
+export interface LiveSplitGroup {
+  id: string; // Room Code
+  name: string;
+  created_at: string;
+  created_by?: string;
+}
+
+export interface LiveSplitMember {
+  id: string;
+  group_id: string;
+  name: string;
+  joined_at: string;
+}
+
+export interface LiveSplitExpense {
+  id: string;
+  group_id: string;
+  paid_by_member_id: string;
+  total_amount: number;
+  description: string;
+  split_between_ids: string[]; // JSON array of member IDs who are included
+  created_at: string;
+}

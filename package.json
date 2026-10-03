@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.4",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-preset-expo": "~57.0.0",
     "typescript": "~6.0.3"
   },

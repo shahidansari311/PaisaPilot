@@ -13,6 +13,7 @@ import { Colors, Gradients } from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { guessCategoryId } from '../utils/autoCategorize';
 import { getLocalDateString } from '../utils/dateUtils';
+import { Keyboard } from 'react-native';
 
 const transactionSchema = z.object({
   amount: z.coerce.number().min(1, 'Amount must be greater than 0'),
@@ -37,6 +38,14 @@ export default function AddTransaction() {
   
   const [showCatModal, setShowCatModal] = useState(false);
   const [newCatName, setNewCatName] = useState('');
+  
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const showSub = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', () => setKeyboardVisible(true));
+    const hideSub = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', () => setKeyboardVisible(false));
+    return () => { showSub.remove(); hideSub.remove(); };
+  }, []);
 
   const defaultType = (params.prefillType === 'income' ? 'income' : 'expense') as 'income' | 'expense';
 
@@ -137,7 +146,7 @@ export default function AddTransaction() {
   return (
     <KeyboardAvoidingView 
       style={{ flex: 1, backgroundColor: theme.background }} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 20}
     >
       {/* Header */}
@@ -251,7 +260,7 @@ export default function AddTransaction() {
 
       {/* Custom Category Modal */}
       <Modal visible={showCatModal} animationType="fade" transparent>
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 24 }}>
             <View style={{ backgroundColor: theme.card, borderRadius: 24, padding: 24 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
@@ -278,20 +287,22 @@ export default function AddTransaction() {
       </Modal>
 
       {/* Submit */}
-      <View style={{ paddingHorizontal: 20, paddingVertical: 16, paddingBottom: 36, borderTopWidth: 1, borderTopColor: theme.border, backgroundColor: theme.card }}>
-        <TouchableOpacity onPress={handleSubmit(onSubmit as any)} activeOpacity={0.85}
-          style={{ shadowColor: primaryColor, shadowOpacity: 0.4, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 10 }}>
-          <LinearGradient
-            colors={primaryGradient}
-            start={Gradients.diagonal.start}
-            end={Gradients.diagonal.end}
-            style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 16, borderRadius: 20 }}
-          >
-            <Check size={22} color="#fff" strokeWidth={3} />
-            <Text style={{ color: '#fff', fontWeight: '700', fontSize: 16 , fontFamily: 'FjallaOne_400Regular'}}>{isEditing ? 'Save Changes' : 'Save Transaction'}</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
+      {(!isKeyboardVisible || Platform.OS === 'ios') && (
+        <View style={{ paddingHorizontal: 20, paddingVertical: 16, paddingBottom: 36, borderTopWidth: 1, borderTopColor: theme.border, backgroundColor: theme.card }}>
+          <TouchableOpacity onPress={handleSubmit(onSubmit as any)} activeOpacity={0.85}
+            style={{ shadowColor: primaryColor, shadowOpacity: 0.4, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 10 }}>
+            <LinearGradient
+              colors={primaryGradient}
+              start={Gradients.diagonal.start}
+              end={Gradients.diagonal.end}
+              style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, padding: 16, borderRadius: 20 }}
+            >
+              <Check size={22} color="#fff" strokeWidth={3} />
+              <Text style={{ color: '#fff', fontWeight: '700', fontSize: 16 , fontFamily: 'FjallaOne_400Regular'}}>{isEditing ? 'Save Changes' : 'Save Transaction'}</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 }
