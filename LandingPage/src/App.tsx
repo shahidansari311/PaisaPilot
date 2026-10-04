@@ -4,14 +4,33 @@ import { Phone, HomeScreen, TripScreen, screens } from './AppScreens'
 import {
   Download, WifiOff, MessageSquareText, Users, Home, HandCoins, FileDown,
   CalendarDays, ShieldCheck, Zap, Star, ArrowUpRight, Plus, Minus, Check, Smartphone,
+  Mail, Globe
 } from 'lucide-react'
 
 function Github({ className = '' }: { className?: string }) {
   return <svg className={className} viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5Z"/></svg>
 }
 
+function Linkedin({ className = '' }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+      <rect x="2" y="9" width="4" height="12"></rect>
+      <circle cx="4" cy="4" r="2"></circle>
+    </svg>
+  );
+}
+
+function Twitter({ className = '' }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+    </svg>
+  );
+}
+
 const REPO = 'https://github.com/shahidansari311/PaisaPilot'
-const DOWNLOAD = `${REPO}/releases/latest`
+const DOWNLOAD = `${REPO}/releases/latest/download/PaisaPilot.apk`
 const ext = { target: '_blank', rel: 'noreferrer' }
 
 function DownloadBtn({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
@@ -351,10 +370,22 @@ export default function App() {
       </section>
 
       <footer className="border-t border-line/60">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-fog text-center md:flex-row">
-          <span className="flex items-center gap-2"><img src="/icon.png" alt="" className="h-6 w-6 rounded-md" /> PaisaPilot · Track • Plan • Grow</span>
-          <span>© 2026 Shahid Ansari · Open source</span>
-          <a href={REPO} {...ext} className="flex items-center gap-1.5 hover:text-ink"><Github className="h-4 w-4" />shahidansari311/PaisaPilot</a>
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 text-sm text-fog md:flex-row">
+          <div className="flex flex-col items-center gap-2 md:items-start">
+            <span className="flex items-center gap-2 font-display text-base font-bold text-ink"><img src="/icon.png" alt="" className="h-6 w-6 rounded-md" /> PaisaPilot</span>
+            <span>© 2026 Shahid Ansari · Open source</span>
+          </div>
+          <div className="flex flex-col items-center gap-4 md:items-end">
+            <span className="font-semibold text-ink">Connect with the Developer</span>
+            <div className="flex items-center gap-5">
+              <a href="mailto:shahidansari945256@gmail.com" className="transition hover:-translate-y-0.5 hover:text-ink"><Mail className="h-5 w-5" /></a>
+              <a href="https://www.linkedin.com/in/shahidansari-/" {...ext} className="transition hover:-translate-y-0.5 hover:text-[#0077b5]"><Linkedin className="h-5 w-5" /></a>
+              <a href="https://github.com/shahidansari311" {...ext} className="transition hover:-translate-y-0.5 hover:text-ink"><Github className="h-5 w-5" /></a>
+              <a href="https://twitter.com/Shahid_310_" {...ext} className="transition hover:-translate-y-0.5 hover:text-[#1DA1F2]"><Twitter className="h-5 w-5" /></a>
+              <a href="https://shahidansari.vercel.app/" {...ext} title="Portfolio" className="transition hover:-translate-y-0.5 hover:text-mint"><Globe className="h-5 w-5" /></a>
+              <a href="https://leetcode.com/shahid310" {...ext} title="LeetCode" className="font-display text-sm font-bold transition hover:-translate-y-0.5 hover:text-[#FFA116]">LC</a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
