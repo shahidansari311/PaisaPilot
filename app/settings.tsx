@@ -135,8 +135,7 @@ export default function Settings() {
         <SectionLabel title="Data & Export" />
         <View style={{ backgroundColor: theme.card, borderRadius: 16, borderWidth: 1, borderColor: theme.border, overflow: 'hidden', marginBottom: 20 }}>
           <SettingRow icon={<UploadCloud size={16} color={theme.primary} />} label="Import CSV Statement" onPress={() => router.push('/csv-import')} />
-          <SettingRow icon={<FileSpreadsheet size={16} color='#10B981' />} label="Export as Excel / CSV" onPress={() => handleExport('csv')} />
-          <SettingRow icon={<FileText size={16} color='#3B82F6' />} label="Generate PDF Report" onPress={() => handleExport('pdf')} noBorder />
+          <SettingRow icon={<FileSpreadsheet size={16} color='#10B981' />} label="Export as Excel / CSV" onPress={() => handleExport('csv')} noBorder />
         </View>
 
 

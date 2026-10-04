@@ -250,31 +250,27 @@ export const exportSplitGroupPDF = async (db: SQLiteDatabase, groupId: string) =
 const shareFile = async (uri: string, mimeType: string, uti: string, title: string) => {
   if (await Sharing.isAvailableAsync()) {
     try {
-      let fileToShare = uri;
-      const docDir = (FileSystem as any).documentDirectory;
-      if (docDir && !uri.startsWith(docDir)) {
-        const fileName = uri.split('/').pop() || `export_${Date.now()}.pdf`;
-        const newUri = docDir + fileName;
-        try {
-          const fileContent = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
-          await FileSystem.writeAsStringAsync(newUri, fileContent, { encoding: FileSystem.EncodingType.Base64 });
-          fileToShare = newUri;
-        } catch (e) {
-          console.warn('Fallback copy failed, using original URI', e);
-        }
-      }
-      await Sharing.shareAsync(fileToShare, { UTI: uti, mimeType, dialogTitle: title });
-    } catch (err) {
-      console.error('Sharing failed with exact uri:', uri, err);
-      // Fallback: sometimes the FileProvider on Android blocks certain URIs. 
-      // We can try to share without specifying mimeType/UTI.
+      // Always copy to cacheDirectory first — expo-print saves to its own
+      // internal cache dir which the Android FileProvider can't expose.
+      const fileName = uri.split('/').pop() || `export_${Date.now()}.pdf`;
+      const sourceFile = new File(uri);
+      const destFile = new File(Paths.cache, fileName);
+
       try {
-        await Sharing.shareAsync(uri, { dialogTitle: title });
-      } catch (fallbackErr) {
-        throw new Error('Failed to share file. Please check app permissions.');
+        await sourceFile.copy(destFile, { overwrite: true });
+      } catch {
+        // If copy also fails, try base64 round-trip as last resort
+        const base64 = await sourceFile.base64();
+        destFile.write(base64, { encoding: 'base64' });
       }
+
+      await Sharing.shareAsync(destFile.uri, { UTI: uti, mimeType, dialogTitle: title });
+    } catch (err) {
+      console.error('Sharing failed:', err);
+      throw new Error('Failed to share file. Please check app permissions.');
     }
   } else {
     throw new Error('Sharing is not available on this platform.');
   }
 };
+

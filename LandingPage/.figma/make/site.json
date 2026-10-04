@@ -1,0 +1,18 @@
+{
+  "title": "PaisaPilot — Track, Plan & Grow Every Rupee",
+  "description": "Free offline-first expense tracker for students & salaried pros. Budgets on your salary cycle, SMS parsing, live trip splits, roommate ledger & WhatsApp reminders — no ads, open source.",
+  "language": "en",
+  "robots": {
+    "index": true
+  },
+  "icons": {
+    "icon": "/icon.png"
+  },
+  "openGraph": {
+    "image": "/icon.png"
+  },
+  "accessibility": {
+    "addBypassLinks": true,
+    "ignoreReducedMotion": false
+  }
+}

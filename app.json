@@ -10,6 +10,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.shahid310.PaisaPilot",
+      "googleServiceInfo": "./GoogleService-Info.plist",
       "requireFullScreen": true,
       "infoPlist": {
         "NSCameraUsageDescription": "PaisaPilot uses the camera to scan receipts for OCR.",
@@ -24,6 +25,7 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.shahid310.PaisaPilot",
+      "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
       "permissions": [
         "android.permission.INTERNET",
@@ -51,7 +53,10 @@
               "scheme": "paisapilot"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -69,6 +74,8 @@
     },
     "plugins": [
       "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
       "expo-sqlite",
       "expo-secure-store",
       "expo-updates",
@@ -83,7 +90,9 @@
             "enableProguardInReleaseBuilds": true,
             "enableMinifyInReleaseBuilds": true,
             "shrinkResources": true,
-            "buildArchs": ["arm64-v8a"],
+            "buildArchs": [
+              "arm64-v8a"
+            ],
             "useLegacyPackaging": false,
             "gifEnabled": false,
             "webpEnabled": false
@@ -99,7 +108,8 @@
           "photosPermission": "PaisaPilot needs photo library access to pick receipt images.",
           "cameraPermission": "PaisaPilot uses the camera to scan receipts for OCR."
         }
-      ]
+      ],
+      "@react-native-firebase/analytics"
     ],
     "extra": {
       "router": {},

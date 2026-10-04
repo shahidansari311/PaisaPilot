@@ -80,7 +80,11 @@ export function DashboardHeader({ userName, isDark, toggleTheme, colors, totalBa
       </View>
 
       {/* Balance Area */}
-      <View style={{ alignItems: 'center', marginBottom: 16 }}>
+      <TouchableOpacity 
+        activeOpacity={0.8}
+        onPress={() => router.push('/budget')}
+        style={{ alignItems: 'center', marginBottom: 16 }}
+      >
         <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: '600', marginBottom: 8, fontFamily: 'FjallaOne_400Regular' }}>
           Current Balance
         </Text>
@@ -92,7 +96,7 @@ export function DashboardHeader({ userName, isDark, toggleTheme, colors, totalBa
             {getGreeting()}, {userName || 'Pilot'}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     </LinearGradient>
   );
 }

@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Manrope', sans-serif;
+  --color-night: var(--t-bg);
+  --color-navy: var(--t-alt);
+  --color-panel: var(--t-card);
+  --color-line: var(--t-line);
+  --color-ink: var(--t-ink);
+  --color-mint: var(--t-mint);
+  --color-emerald: var(--t-primary2);
+  --color-gold: #f59e0b;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-violet: var(--t-violet);
+  --color-fog: var(--t-muted);
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes float { 50% { transform: translateY(-14px); } }
+}
+
+html { scroll-behavior: smooth; }
+:root {
+  /* PaisaPilot app dark palette (constants/Colors.ts) */
+  --t-bg: #09090b; --t-alt: #111113; --t-card: #18181b; --t-line: #27272a;
+  --t-ink: #fafafa; --t-muted: #a1a1aa; --t-mint: #a855f7; --t-primary2: #9333ea; --t-violet: #c084fc;
+  color-scheme: dark;
+}
+:root.light {
+  /* PaisaPilot app light palette */
+  --t-bg: #fafafa; --t-alt: #f3f4f6; --t-card: #ffffff; --t-line: #e5e7eb;
+  --t-ink: #111827; --t-muted: #6b7280; --t-mint: #9333ea; --t-primary2: #7e22ce; --t-violet: #7e22ce;
+  color-scheme: light;
+}
+body { transition: background-color .3s; }
+body { background: var(--color-night); }
+
+/* Phone mockups — PaisaPilot app palette */
+:root {
+  --s-bg: #09090b; --s-card: #18181b; --s-line: #27272a; --s-soft: #27272a;
+  --s-ink: #fafafa; --s-muted: #a1a1aa; --s-accent: #a855f7; --s-accent-soft: #1c1426;
+}
+:root.light {
+  --s-bg: #fafafa; --s-card: #ffffff; --s-line: #e5e7eb; --s-soft: #f3f4f6;
+  --s-ink: #111827; --s-muted: #6b7280; --s-accent: #9333ea; --s-accent-soft: #f3e8ff;
+}
+.s-grad { background: linear-gradient(135deg, #c084fc, #9333ea); }
+.light .s-grad { background: linear-gradient(135deg, #9333ea, #7e22ce); }
